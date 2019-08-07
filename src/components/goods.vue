@@ -4,8 +4,9 @@
       <img :src="good.imageUrl" mode="aspectFill">
       <van-cell-group>
         <van-cell>
-          <div class="zm-goods__name">{{good.name}}</div>
-          <div class="zm-goods__price">{{'￥' + good.price}}</div>
+          <div class="zm-goods__name">{{goodInfo.name}}</div>
+          <div class="zm-goods__price">{{'￥' + goodInfo.price}}</div>
+          <div class="zm-goods__price">{{ goodInfo.id}}</div>
         </van-cell>
         <van-cell custom-class="demo"
                   title="会员5张9折券，本次至少可省￥13.80"  is-link value="立即开通" />
@@ -62,6 +63,7 @@
 
 <script>
   export default {
+    props:['goodInfo'],
     data () {
       return {
           good: {

@@ -1,78 +1,127 @@
 <template>
   <div class="container">
-    <van-tabs v-model="active" @change="getProductInfoByCategoryId" animated>
-      <van-tab v-for="(item, index) in categoryInfo" :title="item.name" :key="index" >
-        <!--连续两个v-for index名称不能相同-->
-        <card  v-for="(item, index_) in cardInfo" :cardInfo="item" :key="item.id"></card>
-      </van-tab>
-    </van-tabs>
+    <div class="swipe">
+      <swiper class="category-c" indicator-dots="true" indicator-color="#999"
+              autoplay="true" interval="5000" duration="1000" indicator-active-color="#FFC24A">
+        <div v-for="(item, index) in recommendProducts" :key="index">
+          <swiper-item>
+                <img class="item-img" :src="item.url"  mode="aspectFill" @click="navigateToProduct">
+          </swiper-item>
+        </div>
+      </swiper>
+    </div>
+    <div class="index_category">
+      <van-row gutter="15">
+        <van-col v-for="(item, index) in iconList" :key="index"
+                 span="6" custom-class="col_hh">
+          <img class="svg_icon" :src="item.iconUrl" @click="navigateToList(item)"/>
+          <div class="text_hh">{{item.iconName}}</div>
+        </van-col>
+      </van-row>
+    </div>
+    <div class="index_nav">
+      <van-cell
+        is-link
+        title="推荐购买"
+        link-type="navigateTo"
+        value="更多"
+        url="/pages/list/main"
+      />
+    </div>
+
   </div>
 </template>
 
 <script>
 
-  import card from '@/components/card';
-  import {GET_PRODUCT_CATEGORY_URL, GET_PRODUCT_BY_CATEGORY_ID} from '@/utils/api';
-  import {request} from "@/utils/request";
+  export default {
 
-export default {
-  components: {
-    card
-  },
   data() {
     return {
-      categoryInfo: {},
-      cardInfo: {},
-      cakeCardInfo: {
-        name: "蛋糕",
-        englishName: "Toast",
-        headUrl:"https://static.excake.com/media/5fcaa940-5af7-42b4-a10b-86fc0ae51580.jpg?imageView2/1/w/600/h/600"
-      }
+      iconList: [
+        {
+          "iconUrl":"/static/svg/icon_cake_coloured.svg",
+          "iconName": "慕斯蛋糕"
+
+        },
+        {
+          "iconUrl":"/static/svg/icon_cake_coloured.svg",
+          "iconName": "奶油蛋糕"
+
+        },
+        {
+          "iconUrl":"/static/svg/icon_cake_coloured.svg",
+          "iconName": "现烤面包"
+
+        },
+        {
+          "iconUrl":"/static/svg/icon_cake_coloured.svg",
+          "iconName": "水果茶饮"
+
+        }
+      ],
+      recommendProducts: [
+        {
+          "url":"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2110043351,777600299&fm=15&gp=0.jpg"
+
+        },
+        {
+          "url":"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3914758650,85542706&fm=26&gp=0.jpg"
+
+        },
+        {
+          "url":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1564905069188&di=c16925fd532081963e83ac2930cad37e&imgtype=0&src=http%3A%2F%2Fimg6.ph.126.net%2FURpAxxOED0FrXOIiD_V3vA%3D%3D%2F2733403498854464136.jpg"
+
+        }
+      ],
+
+      active:2
     }
   },
   methods: {
-    async getProductCategory() {
-      let categoryInfo = await request(
-        GET_PRODUCT_CATEGORY_URL,
-        'GET',
-        {}
-      );
-      this.categoryInfo = categoryInfo;
-      this.getProductInfoByCategoryId2(this.categoryInfo[0].id);
+    onChange() {
+      console.log("onChange")
     },
-    async getProductInfoByCategoryId(event) {
-      this.cardInfo = {};
+    navigateToList(event, item) {
       console.log(event);
-      let index = event.target.index;
-      let categoryId = this.categoryInfo[index].id;
-      let cardInfo = await request(
-        GET_PRODUCT_BY_CATEGORY_ID,
-        'GET',
-        {categoryId: categoryId}
-      );
-      this.cardInfo = cardInfo;
-      console.log(this.cardInfo);
+      console.log(item);
+      var url = "../list/main?active=" + this.active
+      wx.navigateTo({
+        url
+      });
     },
-    async getProductInfoByCategoryId2(categoryId) {
-      let cardInfo = await request(
-        GET_PRODUCT_BY_CATEGORY_ID,
-        'GET',
-        {categoryId: categoryId}
-      );
-      this.cardInfo = cardInfo;
-      console.log(this.cardInfo);
-    },
-
-  },
-  created() {
-    console.log("index 页面初始化");
-    this.getProductCategory();
+    navigateToProduct() {
+      console.log("navigateToProduct hhhh");
+    }
   }
-
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
+  custom_style {
+    display: block;
+    margin: 20px 0 10px;
+    color: #323233;
+  }
+  /*注意class 加.  和不加.的区别*/
+  /*使用vant组件的时候不要忘记引入*/
+
+  .svg_icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .text_hh {
+    font-size: 10px ;
+
+  }
+  .col_hh {
+    display:block ;
+  }
+  .index_category {
+    margin-top: 15px;
+    margin-left: 15px;
+  }
 
 
 </style>

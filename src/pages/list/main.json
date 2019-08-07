@@ -5,12 +5,7 @@
     "van-badge-group": "/static/vant/badge-group/index",
     "van-icon": "/static/vant/icon/index",
     "van-tabs": "/static/vant/tabs/index",
-    "van-tab": "/static/vant/tab/index",
-    "van-tabbar": "/static/vant/tabbar/index",
-    "van-tabbar-item": "/static/vant/tabbar-item/index",
-    "van-col": "/static/vant/col/index",
-    "van-row": "/static/vant/row/index",
-    "van-cell": "/static/vant/cell/index"
+    "van-tab": "/static/vant/tab/index"
   },
   "navigationBarTitleText": "ZHI MU"
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <goods></goods>
+    <goods :goodInfo="good"></goods>
   </div>
 
 </template>
@@ -19,7 +19,8 @@ export default {
   data() {
     return {
       good : {
-        title: "测试title"
+        title: "测试title",
+        name:"yangyu测试"
       }
     }
 

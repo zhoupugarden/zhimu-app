@@ -1,5 +1,5 @@
 <template>
-  <div class="zm-panel">
+  <div class="zm-panel" @click="navigateToProduct">
     <div class="zm-card">
       <div class="zm-card__thumb">
         <img class="zm-card__img" mode="aspectFill"
@@ -24,10 +24,21 @@
     props:['cardInfo'],
     data () {
       return {
-        data: {}
+        data: {
+          productId: '123'
+        }
       }
     },
-    methods: {}
+    methods: {
+      navigateToProduct() {
+        console.log("navigateToProduct")
+        console.log(this.productId)
+        var url = "../detail/main?productId=" + this.productId
+        wx.navigateTo({
+          url
+        });
+      }
+    }
   }
 </script>
 <style lang="scss"  scoped>
