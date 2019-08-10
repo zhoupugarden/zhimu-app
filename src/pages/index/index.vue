@@ -28,16 +28,25 @@
         url="/pages/list/main"
       />
     </div>
+    <div class="index_card">
+      <card  v-for="(item, index_) in hotProducts" :cardInfo="item" :key="index_"
+      ></card>
+    </div>
 
   </div>
 </template>
 
 <script>
-
+  import card from '@/components/card';
+  import {GET_HOT_PRODUCTS_INFO} from '@/utils/api';
+  import {request} from "@/utils/request";
   export default {
-
+    components: {
+      card
+    },
   data() {
     return {
+      hotProducts:[],
       iconList: [
         {
           "iconUrl":"/static/svg/icon_cake_coloured.svg",
@@ -74,7 +83,6 @@
 
         }
       ],
-
       active:2
     }
   },
@@ -92,8 +100,31 @@
     },
     navigateToProduct() {
       console.log("navigateToProduct hhhh");
+    },
+    async getHotProductsInfo() {
+      let hotProducts = await request(
+        GET_HOT_PRODUCTS_INFO,
+        'GET',
+        {}
+      );
+
+    //  后续要把名字和方法都优化 统一定义card 所需要的product 信息, 不要再这样转化
+      console.log(JSON.parse(hotProducts[0].urls).headUrl);
+      for (let i = 0; i < hotProducts.length; i++) {
+        let hotProduct = {};
+        hotProduct.productId = hotProducts[i].productId;
+        hotProduct.name = hotProducts[i].productName;
+        hotProduct.englishName = hotProducts[i].productEname;
+        hotProduct.headUrl = JSON.parse(hotProducts[i].urls).headUrl;
+        hotProduct.salePrice = hotProducts[i].salePrice;
+        this.hotProducts.push(hotProduct)
+      }
+      console.log("this.hotProduct: ",this.hotProducts)
     }
-  }
+  },
+  created() {
+    this.getHotProductsInfo();
+    }
 }
 </script>
 

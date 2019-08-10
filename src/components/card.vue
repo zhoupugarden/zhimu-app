@@ -31,13 +31,15 @@
     },
     methods: {
       navigateToProduct() {
-        console.log("navigateToProduct")
-        console.log(this.productId)
-        var url = "../detail/main?productId=" + this.productId
+        var url = "../detail/main?productId=" + this.cardInfo.productId;
+        console.log("url",url)
         wx.navigateTo({
           url
         });
       }
+    },
+    created() {
+      console.log(this.cardInfo)
     }
   }
 </script>
