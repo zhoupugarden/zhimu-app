@@ -48,7 +48,9 @@
     position: relative;
     background: #fff;
     margin-top: 10px;
+    margin-right: 10px;
     overflow: hidden;
+    height:120px;
     /*::after {*/
       /*content: '';*/
       /*position: absolute;*/
@@ -77,8 +79,8 @@
       border-width:1px;
       border-color:#E8EDF5;
       .zm-card__thumb{
-        width:320px;
-        height:180px;
+        width:160px;
+        height:80px;
         position:relative;
         margin-left:auto;
         margin-right:auto;
