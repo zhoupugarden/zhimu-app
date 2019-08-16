@@ -5,9 +5,11 @@
           :key="index"
           :data-index="index"
           @click="onClickNav"
-          class="van-ellipsis van-tree-select__nitem van-tree-select__nitem--active"
+          class="van-ellipsis van-tree-select__nitem "
+          :class=" index === mainActiveIndex ? 'van-tree-select__nitem--active' : ''"
           >
-      {{item.name}}
+      {{item.categoryName}}
+
     </view>
   </scroll-view>
 
@@ -20,7 +22,7 @@
           :key="index"
           @click="onSelectItem"
             class="van-ellipsis van-hairline--bottom van-tree-select__item">
-      <card :cardInfo="cardInfo"></card>
+      <card :cardInfo="subItem"></card>
     </view>
   </scroll-view>
 </div>
@@ -37,10 +39,6 @@
     },
     props: {
       items: Array,
-      mainActiveIndex: {
-        type: Number,
-        value: 0
-      },
       activeId: {
         type: [Number, String]
       },
@@ -56,10 +54,11 @@
           name:"测试面包",
           englishName:"test bread"
         },
-        subItems:[{"name":"1"},{"name":"2"}],
+        subItems:[],
         mainHeight: 1000,
         itemHeight: 1000,
-        isActive:false
+        isActive:true,
+        mainActiveIndex:0
       }
     },
     computed: {
@@ -90,28 +89,32 @@
       },
       // 当一个导航被点击时
       onClickNav(event) {
-        const { index } = event.currentTarget.dataset;
-          this.$emit('click-nav', { index });
+        console.log("event", event)
+        this.mainActiveIndex= event.mp.currentTarget.dataset.index || 0
       },
       // 更新子项列表
       updateSubItems() {
-        const { items, mainActiveIndex } = this.data;
-        const { children = [] } = items[mainActiveIndex] || {};
+        console.log("this.items[this.mainActiveIndex].briefResultLis", this.items[this.mainActiveIndex])
+        let children  = this.items[this.mainActiveIndex].briefResultList ;
+        console.log("children:", children)
         this.updateItemHeight(children);
         return this.subItems = children;
       },
       // 更新组件整体高度，根据最大高度和当前组件需要展示的高度来决定
       updateMainHeight() {
-        const { items = [], subItems = [] } = this.data;
-        const maxHeight = Math.max(items.length * ITEM_HEIGHT, subItems.length * ITEM_HEIGHT);
+        const maxHeight = Math.max(this.items.length * ITEM_HEIGHT, this.subItems.length * ITEM_HEIGHT);
         // this.set({ mainHeight: Math.min(maxHeight, this.data.maxHeight) });
         this.mainHeight = maxHeight < this.maxHeight ? maxHeight : this.maxHeight;
       },
       // 更新子项列表高度，根据可展示的最大高度和当前子项列表的高度决定
       updateItemHeight(subItems) {
-        const itemHeight = Math.min(subItems.length * ITEM_HEIGHT, this.data.maxHeight);
+        const itemHeight = Math.min(subItems.length * ITEM_HEIGHT, this.maxHeight);
         return this.itemHeight = itemHeight;
       }
+    },
+    created() {
+      this.subItems = this.items[0].briefResultList;
+      console.log("this.items{}", this.items)
     }
 
   }
@@ -174,8 +177,8 @@
   }
 
   .van-tree-select__item--active {
-    color: #f44
-  }
+       color: #f44
+     }
 
   .van-tree-select__item--disabled {
     color: #999

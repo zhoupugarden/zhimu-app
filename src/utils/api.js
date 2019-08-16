@@ -4,6 +4,10 @@ export const BASE_API_URL = 'http://localhost:8080';
 export const GET_PRODUCT_CATEGORY_URL = BASE_API_URL + '/productCategory/listAll';
 // 根据产品分类id获得所有产品信息
 export const GET_PRODUCT_BY_CATEGORY_ID = BASE_API_URL + '/product/listBriefProduct';
+
+// 获取所有分类信息及分类的产品简要信息
+export const GET_CATEGORY_AND_PRODUCT_BRIEF = BASE_API_URL + '/product/listProductAndCategory';
+
 // 根据商品id获得商品详情
 export const GET_PRODUCT_DETAIL_BY_ID = BASE_API_URL + '/product/listDetailById';
 
