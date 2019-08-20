@@ -1,7 +1,7 @@
 <template>
-  <div class="zm-panel" @click="navigateToProduct">
-    <div class="zm-card">
-      <div class="zm-card__thumb">
+  <div class="zm-panel" >
+    <div class="zm-card" >
+      <div class="zm-card__thumb" @click="navigateToProduct">
         <img class="zm-card__img" mode="aspectFill"
              :src="cardInfo.headUrl">
       </div>
@@ -12,7 +12,8 @@
         <div class="zm-card__detail__ename">
           <span>{{cardInfo.englishName}}</span>
         </div>
-        <van-icon name="shopping-cart-o" size = 20px class="zm-detail__icon"/>
+        <van-icon name="shopping-cart-o" @click="popCart"
+                  size = 20px class="zm-detail__icon"/>
       </div>
     </div>
 
@@ -21,7 +22,9 @@
 
 <script>
   export default {
-    props:['cardInfo'],
+    props: {
+      cardInfo:Object
+    },
     data () {
       return {
         data: {
@@ -36,6 +39,10 @@
         wx.navigateTo({
           url
         });
+      },
+      popCart() {
+        console.log("popCart waaaaa");
+        this.$emit('popCart', {"productId":this.cardInfo.productId});
       }
     },
     created() {
@@ -50,7 +57,7 @@
     margin-top: 10px;
     margin-right: 10px;
     overflow: hidden;
-    height:120px;
+    height:240px;
     /*::after {*/
       /*content: '';*/
       /*position: absolute;*/
@@ -79,8 +86,8 @@
       border-width:1px;
       border-color:#E8EDF5;
       .zm-card__thumb{
-        width:160px;
-        height:80px;
+        width:auto;
+        height:160px;
         position:relative;
         margin-left:auto;
         margin-right:auto;
@@ -109,11 +116,13 @@
           margin-top: 2px;
           margin-left: 10px;
           margin-bottom: 10px;
+          font-size: 10px;
+          font-weight: 100;
         }
         .zm-detail__icon {
           position: absolute;
           top:10px;
-          right: 20px;
+          left: 200px;
         }
       }
     }

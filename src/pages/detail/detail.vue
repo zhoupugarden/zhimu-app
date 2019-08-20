@@ -1,7 +1,7 @@
 <template>
   <div class="zm-goods__container">
     <div class="zm-goods__head">
-      <img :src="urls.headUrl" mode="aspectFill">
+      <img :src="good.headPicUrl" mode="aspectFill">
       <van-cell-group>
         <van-cell>
           <div class="zm-goods__name">{{good.name}}</div>
@@ -190,7 +190,7 @@
           wx.setNavigationBarTitle({
             title: this.good.name
           });
-          this.urls = JSON.parse(this.good.picUrls)
+          this.urls = JSON.parse(this.good.detailPicUrl)
         }
       )
     },

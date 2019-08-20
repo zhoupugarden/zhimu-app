@@ -1,158 +1,305 @@
 <template>
-  <div class="container">
-    <div class="swipe">
-      <swiper class="category-c" indicator-dots="true" indicator-color="#999"
-              autoplay="true" interval="5000" duration="1000" indicator-active-color="#FFC24A">
-        <div v-for="(item, index) in recommendProducts" :key="index">
-          <swiper-item>
-                <img class="item-img" :src="item.url"  mode="aspectFill" @click="navigateToProduct">
-          </swiper-item>
-        </div>
-      </swiper>
-    </div>
-    <div class="index_category">
-      <van-row gutter="15">
-        <van-col v-for="(item, index) in iconList" :key="index"
-                 span="6" custom-class="col_hh">
-          <img class="svg_icon" :src="item.iconUrl" @click="navigateToList(item)"/>
-          <div class="text_hh">{{item.iconName}}</div>
-        </van-col>
-      </van-row>
-    </div>
-    <div class="index_nav">
-      <van-cell
-        is-link
-        title="推荐购买"
-        link-type="navigateTo"
-        value="更多"
-        url="/pages/list/main"
-      />
-    </div>
-    <div class="index_card">
-      <card  v-for="(item, index_) in hotProducts" :cardInfo="item" :key="index_"
-      ></card>
-    </div>
+  <div class="van-tree-select" :style="setMainHeight">
+    <scroll-view scroll-y class="van-tree-select__nav">
+      <view v-for="(item, index) in items"
+            :key="index"
+            :data-index="index"
+            @click="onClickNav"
+            class="van-ellipsis van-tree-select__nitem "
+            :class=" index === mainActiveIndex ? 'van-tree-select__nitem--active' : ''"
+      >
+        {{item.categoryName}}
+      </view>
+    </scroll-view>
 
+    <scroll-view
+      scroll-y
+      class="van-tree-select__content"
+      :style="setItemHeight"
+    >
+      <view v-for="(subItem, index) in subItems"
+            :key="index"
+            @click="onSelectItem"
+            class="van-ellipsis van-hairline--bottom van-tree-select__item">
+        <card :cardInfo="subItem"
+          @popCart="onPopCart"
+        ></card>
+      </view>
+    </scroll-view>
+
+    <cart-pop :popShow="popCartActive" :productSKUs="productSKUs"
+              @popUpClose="closeActive" @setStorage="fff"></cart-pop>
   </div>
 </template>
-
 <script>
-  import card from '@/components/card';
-  import {GET_HOT_PRODUCTS_INFO} from '@/utils/api';
+  import {GET_PRODUCT_CATEGORY_URL,GET_CATEGORY_AND_PRODUCT_BRIEF,GET_PRODUCT_SKU_DETAIL_BY_ID,
+    GET_PRODUCT_BY_CATEGORY_ID} from '@/utils/api';
   import {request} from "@/utils/request";
-  export default {
+  import card from '@/components/card';
+  import cartPop from '@/components/cartPop';
+  const ITEM_HEIGHT = 260;
+  const defaultCategoryAndProductBriefInfo = {
+  };
+  export default{
     components: {
-      card
+      card, cartPop
     },
-  data() {
-    return {
-      hotProducts:[],
-      iconList: [
-        {
-          "iconUrl":"/static/svg/icon_cake_coloured.svg",
-          "iconName": "慕斯蛋糕"
-
+    data() {
+      return {
+        items:[],
+        activeId: '',
+        maxHeight: 1000,
+        cardInfo: {
         },
-        {
-          "iconUrl":"/static/svg/icon_cake_coloured.svg",
-          "iconName": "奶油蛋糕"
-
-        },
-        {
-          "iconUrl":"/static/svg/icon_cake_coloured.svg",
-          "iconName": "现烤面包"
-
-        },
-        {
-          "iconUrl":"/static/svg/icon_cake_coloured.svg",
-          "iconName": "水果茶饮"
-
-        }
-      ],
-      recommendProducts: [
-        {
-          "url":"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2110043351,777600299&fm=15&gp=0.jpg"
-
-        },
-        {
-          "url":"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3914758650,85542706&fm=26&gp=0.jpg"
-
-        },
-        {
-          "url":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1564905069188&di=c16925fd532081963e83ac2930cad37e&imgtype=0&src=http%3A%2F%2Fimg6.ph.126.net%2FURpAxxOED0FrXOIiD_V3vA%3D%3D%2F2733403498854464136.jpg"
-
-        }
-      ],
-      active:2
-    }
-  },
-  methods: {
-    onChange() {
-      console.log("onChange")
-    },
-    navigateToList(event, item) {
-      console.log(event);
-      console.log(item);
-      var url = "../list/main?active=" + this.active
-      wx.navigateTo({
-        url
-      });
-    },
-    navigateToProduct() {
-      console.log("navigateToProduct hhhh");
-    },
-    async getHotProductsInfo() {
-      let hotProducts = await request(
-        GET_HOT_PRODUCTS_INFO,
-        'GET',
-        {}
-      );
-
-    //  后续要把名字和方法都优化 统一定义card 所需要的product 信息, 不要再这样转化
-      console.log(JSON.parse(hotProducts[0].urls).headUrl);
-      for (let i = 0; i < hotProducts.length; i++) {
-        let hotProduct = {};
-        hotProduct.productId = hotProducts[i].productId;
-        hotProduct.name = hotProducts[i].productName;
-        hotProduct.englishName = hotProducts[i].productEname;
-        hotProduct.headUrl = JSON.parse(hotProducts[i].urls).headUrl;
-        hotProduct.salePrice = hotProducts[i].salePrice;
-        this.hotProducts.push(hotProduct)
+        subItems:[],
+        mainHeight: 1000,
+        itemHeight: 1000,
+        isActive:true,
+        mainActiveIndex:0,
+        popCartActive: false,
+        productSKUs:{}
       }
-      console.log("this.hotProduct: ",this.hotProducts)
+    },
+    computed: {
+      setMainHeight() {
+        return "height:" + this.mainHeight + "px";
+      },
+      setItemHeight() {
+        return "height:" + this.itemHeight + "px";
+      }
+    },
+    watch: {
+      popCartActive() {
+        console.log("popCartActive", this.popCartActive)
+      },
+      items() {
+        this.updateSubItems();
+      },
+      maxHeight() {
+        this.updateItemHeight(this.subItems);
+        this.updateMainHeight();
+      },
+      mainActiveIndex: 'updateSubItems'
+    },
+    methods: {
+      async getCategoryAndProductBrief() {
+        request(
+          GET_CATEGORY_AND_PRODUCT_BRIEF,
+          'GET',
+          {}
+        ).then(
+          response => {
+            this.items = response;
+          }
+        );
+        console.log("this.categoryAndProductBriefInfo: ", this.items);
+        this.subItems = this.items[0].briefResultList;
+      },
+
+      getProductSkuDetail(data) {
+        request(
+          GET_PRODUCT_SKU_DETAIL_BY_ID,
+          'GET',
+          data
+        ).then(
+          (response) => {
+            this.productSKUs = response;
+            console.log("this.good productSKUs response", this.productSKUs);
+          }
+        )
+      },
+      onSelectItem(event) {
+        const { item } = event.currentTarget.dataset;
+        this.$emit('click-item', item);
+      },
+      // 当一个导航被点击时
+      onClickNav(event) {
+        console.log("event", event)
+        this.mainActiveIndex= event.mp.currentTarget.dataset.index || 0
+      },
+      // 更新子项列表
+      updateSubItems() {
+        console.log("this.items[this.mainActiveIndex].briefResultLis", this.items[this.mainActiveIndex])
+        let children  = this.items[this.mainActiveIndex].briefResultList;
+        console.log("children:", children)
+        this.updateItemHeight(children);
+        return this.subItems = children;
+      },
+      // 更新组件整体高度，根据最大高度和当前组件需要展示的高度来决定
+      updateMainHeight() {
+        const maxHeight = Math.max(this.items.length * ITEM_HEIGHT, this.subItems.length * ITEM_HEIGHT);
+        // this.set({ mainHeight: Math.min(maxHeight, this.data.maxHeight) });
+        this.mainHeight = maxHeight < this.maxHeight ? maxHeight : this.maxHeight;
+      },
+      // 更新子项列表高度，根据可展示的最大高度和当前子项列表的高度决定
+      updateItemHeight(subItems) {
+        const itemHeight = Math.min(subItems.length * ITEM_HEIGHT, this.maxHeight);
+         this.itemHeight = itemHeight;
+      },
+      onPopCart(data) {
+        this.popCartActive = true;
+        console.log("data",data);
+        this.getProductSkuDetail(data);
+      },
+      closeActive() {
+        console.log("closeActive")
+        this.popCartActive = false;
+      },
+      fff(data) {
+        console.log("waaaaaa",data)
+      }
+    },
+    created() {
+      this.getCategoryAndProductBrief();
+      console.log("this.items{}", this.items)
     }
-  },
-  created() {
-    this.getHotProductsInfo();
     }
-}
+
 </script>
 
-<style lang="scss" >
-  custom_style {
-    display: block;
-    margin: 20px 0 10px;
-    color: #323233;
-  }
-  /*注意class 加.  和不加.的区别*/
-  /*使用vant组件的时候不要忘记引入*/
-
-  .svg_icon {
-    width: 28px;
-    height: 28px;
+<style scoped>
+  .van-tree-select {
+    position: relative;
+    font-size: 14px;
+    -webkit-user-select: none;
+    user-select: none
   }
 
-  .text_hh {
-    font-size: 10px ;
-
-  }
-  .col_hh {
-    display:block ;
-  }
-  .index_category {
-    margin-top: 15px;
-    margin-left: 15px;
+  .van-tree-select__nav {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 15%;
+    min-width: 95px;
+    background-color: #fafafa
   }
 
+  .van-tree-select__nitem {
+    position: relative;
+    padding: 0 9px 0 15px;
+    line-height: 44px
+  }
 
+  .van-tree-select__nitem--active:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 3.6px;
+    background-color: #f44;
+    content: ""
+  }
+
+  .van-tree-select__nitem--active {
+    font-weight: 700;
+    background-color: #fff
+  }
+
+  .van-tree-select__nitem--disabled {
+    color: #999
+  }
+
+  .van-tree-select__content {
+    width: 75%;
+    padding-left: 15px;
+    margin-left: 25%;
+    background-color: #fff;
+    box-sizing: border-box
+  }
+
+  .van-tree-select__item {
+    position: relative;
+    font-weight: 700;
+    line-height: 20px
+  }
+
+  .van-tree-select__item--active {
+    color: #f44
+  }
+
+  .van-tree-select__item--disabled {
+    color: #999
+  }
+
+  .van-tree-select__selected {
+    position: absolute;
+    top: 0;
+    right: 15px;
+    bottom: 0;
+    height: 24px;
+    margin: auto 0;
+    line-height: 24px
+  }
+
+  .van-ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
+  }
+
+  .van-multi-ellipsis--l2 {
+    -webkit-line-clamp: 2
+  }
+
+  .van-multi-ellipsis--l2, .van-multi-ellipsis--l3 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical
+  }
+
+  .van-multi-ellipsis--l3 {
+    -webkit-line-clamp: 3
+  }
+
+  .van-clearfix:after {
+    content: "";
+    display: table;
+    clear: both
+  }
+
+  .van-hairline, .van-hairline--bottom, .van-hairline--left, .van-hairline--right, .van-hairline--surround, .van-hairline--top, .van-hairline--top-bottom {
+    position: relative
+  }
+
+  .van-hairline--bottom:after, .van-hairline--left:after, .van-hairline--right:after, .van-hairline--surround:after, .van-hairline--top-bottom:after, .van-hairline--top:after, .van-hairline:after {
+    content: " ";
+    position: absolute;
+    pointer-events: none;
+    box-sizing: border-box;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+    top: -50%;
+    left: -50%;
+    right: -50%;
+    bottom: -50%;
+    -webkit-transform: scale(.5);
+    transform: scale(.5);
+    border: 0 solid #eee
+  }
+
+  .van-hairline--top:after {
+    border-top-width: 1px
+  }
+
+  .van-hairline--left:after {
+    border-left-width: 1px
+  }
+
+  .van-hairline--right:after {
+    border-right-width: 1px
+  }
+
+  .van-hairline--bottom:after {
+    border-bottom-width: 1px
+  }
+
+  .van-hairline--top-bottom:after {
+    border-width: 1px 0
+  }
+
+  .van-hairline--surround:after {
+    border-width: 1px
+  }
 </style>

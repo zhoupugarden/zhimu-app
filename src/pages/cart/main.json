@@ -5,7 +5,11 @@
     "van-cell-group": "/static/vant/cell-group/index",
     "van-cell": "/static/vant/cell/index",
     "van-action-sheet": "/static/vant/action-sheet/index",
-    "van-popup": "/static/vant/popup/index"
+    "van-popup": "/static/vant/popup/index",
+    "van-card": "/static/vant/card/index",
+    "van-stepper": "/static/vant/stepper/index",
+    "van-tag": "/static/vant/tag/index",
+    "van-icon": "/static/vant/icon/index"
   },
   "navigationBarTextStyle": "black"
 }

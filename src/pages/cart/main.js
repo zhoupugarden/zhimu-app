@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import App from './navlist'
+import App from './cart'
 
 // add this to handle exception
 Vue.config.errorHandler = function (err) {

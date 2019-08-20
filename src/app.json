@@ -1,9 +1,8 @@
 {
   "pages": [
-    "pages/navlist/main",
     "pages/index/main",
-    "pages/tuan/main",
     "pages/order/main",
+    "pages/cart/main",
     "pages/my/main",
     "pages/list/main",
     "pages/detail/main"
@@ -11,19 +10,18 @@
   "window": {
     "navigationBarBackgroundColor": "#ffffff",
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "微信接口功能演示",
     "backgroundColor": "#eeeeee",
     "backgroundTextStyle": "light"
   },
   "tabBar": {
     "list": [{
       "text": "首页",
-      "pagePath": "pages/navlist/main",
+      "pagePath": "pages/index/main",
       "iconPath": "static/tabs/home.png",
       "selectedIconPath": "static/tabs/home-active.png"
     },{
-      "text": "活动",
-      "pagePath": "pages/tuan/main",
+      "text": "购物车",
+      "pagePath": "pages/cart/main",
       "iconPath": "static/tabs/tuan.png",
       "selectedIconPath": "static/tabs/tuan-active.png"
     },{
