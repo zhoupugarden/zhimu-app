@@ -9,7 +9,8 @@
     "van-card": "/static/vant/card/index",
     "van-stepper": "/static/vant/stepper/index",
     "van-tag": "/static/vant/tag/index",
-    "van-icon": "/static/vant/icon/index"
+    "van-icon": "/static/vant/icon/index",
+    "van-button": "/static/vant/button/index"
   },
   "navigationBarTextStyle": "black"
 }
