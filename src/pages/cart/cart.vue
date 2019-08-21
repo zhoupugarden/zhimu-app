@@ -17,7 +17,24 @@
     </div>
 
     <div class="cart-container__fitting">
+      <div class="cart-container__fitting--nav">
 
+      </div>
+
+      <div class="cart-container__fitting--detail">
+
+      </div>
+
+    </div>
+
+    <div class="cart-container__popup">
+      <van-popup position="bottom"
+                 :show="popShow"
+                 :close-on-click-overlay="true"
+                 @close="popUpClose"
+                 :overlay="true">
+        哈哈哈
+      </van-popup>
     </div>
 
     <div class="cart-container__bottom">
@@ -65,7 +82,8 @@ export default {
         attribute:"1个"
       },
       totalAmount: 1000,
-      showTip:true
+      showTip:true,
+      popShow:false
     }
 
   },
