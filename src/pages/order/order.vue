@@ -1,40 +1,85 @@
 <template>
-  <div class="container">
-    <goods></goods>
+  <div class="order-container">
+
+    <van-tabs :active="active"
+              custom-class="van-tabs__custom"
+              @change="onChange">
+      <van-tab
+        tab-class="van-tabs__custom"
+        title="全部">
+
+        <div class="order-list">
+          <order-card></order-card>
+        </div>
+
+      </van-tab>
+      <van-tab title="待评价">
+
+        <div class="order-list">
+
+        </div>
+
+      </van-tab>
+      <van-tab title="待付款">
+
+        <div class="order-list">
+
+        </div>
+
+      </van-tab>
+    </van-tabs>
   </div>
 
 </template>
 
 <script>
-
-  import goods from '@/components/goods';
-
-
-export default {
+  import OrderCard from '@/components/OrderCard';
+  export default {
 
   components: {
-    goods
+    OrderCard
   },
 
   data() {
     return {
-      good : {
-        title: "测试title"
-      }
+      active:0
+
     }
 
   },
+  methods: {
+    onChange(event) {
+      console.log(event)
 
-  onLoad() {
-    console.log("测试title");
-    wx.setNavigationBarTitle({
-      title: this.good.title
-    });
+    }
   }
 
 }
 </script>
 
 <style scoped>
+  page {
+    height: 100%;
+  }
 
+  .order-container {
+    position: relative;
+    width: 100%;
+    height:100%;
+  }
+  .order-list {
+  }
+</style>
+<style lang="scss">
+  .van-tabs__custom {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<style lang="wxss">
+  page{
+    height: 100%;
+    background-color:#F4F4F4 !important;
+  }
 </style>
