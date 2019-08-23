@@ -1,27 +1,36 @@
 <template>
   <div class="order-card-container">
     <div class="order-card__status">
-      {{orderInfo.orderNo}} {{orderInfo.orderStatus}}
+      <div style="font-size: small;font-weight: lighter">
+        {{orderInfo.orderNo}}
+      </div>
+      <div style="font-size: small; font-weight: bold">
+        {{orderInfo.orderStatus}}
+      </div>
     </div>
     <div class="order-card__detail">
       <div class="order-card__detail-image">
-        <img :src="orderInfo.orderUrl">
+        <img :src="orderInfo.orderUrl" style="width: 80px;height: 80px;">
       </div>
       <div class="order-card__detail-info">
-        <div style="color: red">
-          {{orderInfo.price}}
+        <div style="color: red; font-size: small">
+          ￥{{orderInfo.price}}
         </div>
         <div style="font-size: small; font-weight: lighter">
           {{orderInfo.orderTime}}
         </div>
-        <div>
+        <div style="font-size: small;font-weight: lighter;width: 200px;">
           {{orderInfo.orderListName}}
         </div>
       </div>
     </div>
     <div class="order-card__operation">
-      <van-button size="small">取消订单</van-button>
-      <van-button size="small">马上付款</van-button>
+      <div style="padding: 5px">
+        <van-button size="small">取消订单</van-button>
+      </div>
+       <div>
+         <van-button size="small" type="primary">马上付款</van-button>
+       </div>
     </div>
   </div>
 
@@ -40,7 +49,7 @@
           orderStatus:"待支付",
           price:"12.22",
           orderTime:"2019-10-10 10:10:10",
-          orderListName:"杨宇测试|测试|依依"
+          orderListName:"杨宇测试|测试|依依 毒贩夫妇付 杨宇测试|测试|依依 毒贩夫妇付 "
         }
       }
     }
@@ -48,10 +57,40 @@
   }
 </script>
 <style lang="scss"  scoped>
+  .order-card-container {
+    position: relative;
+    background-color: white;
+    margin-top: 10px;
+  .order-card__status {
+    padding: 5px 8px;
+    display: flex;
+    justify-content: space-between;
+    height: 30px;
+  }
+
   .order-card__detail {
     display: flex;
     justify-content: flex-start;
+  .order-card__detail-image {
+    box-sizing: border-box;
+    padding-right: 8px;
+    padding-left: 8px;
   }
-  
+  .order-card__detail-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
 
+  }
+  .order-card__operation {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 5px 8px;
+    height: 40px;
+  }
+  }
 </style>
