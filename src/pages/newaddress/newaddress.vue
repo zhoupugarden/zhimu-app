@@ -7,13 +7,18 @@
       <van-tab
         tab-class="van-tabs__custom"
         title="全部">
+
         <div class="order-list">
           <order-card></order-card>
         </div>
+
       </van-tab>
       <van-tab title="待评价">
+
         <div class="order-list">
+
         </div>
+
       </van-tab>
       <van-tab title="待付款">
 

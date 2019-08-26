@@ -1,11 +1,13 @@
 {
   "usingComponents": {
     "van-button": "/static/vant/button/index",
-    "van-tag": "/static/vant/tag/index",
+    "van-tabs": "/static/vant/tabs/index",
+    "van-tab": "/static/vant/tab/index",
     "van-cell-group": "/static/vant/cell-group/index",
     "van-cell": "/static/vant/cell/index"
   },
-  "navigationBarTitleText": "ZHI MU"
+  "navigationBarTitleText": "会员问题"
+
 }
 
 

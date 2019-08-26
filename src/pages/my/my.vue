@@ -16,7 +16,6 @@
                       custom-class="mini-button"
                       size="mini">开通星球会员></van-button>
         </div>
-
       </div>
       <div class="my-wallet-info">
 
@@ -39,7 +38,6 @@
 
 
       </div>
-
     </div>
 
     <div class="my-operation">
@@ -47,7 +45,8 @@
         <van-cell title="收货地址管理" icon="location-o" is-link />
         <van-cell title="积分兑换" icon="location-o" is-link />
         <van-cell title="我的会员卡" icon="location-o" is-link />
-        <van-cell title="帮助中心" icon="location-o" is-link />
+        <van-cell title="帮助中心" icon="location-o" is-link link-type="navigateTo"
+                  url="/pages/help/main"/>
       </van-cell-group>
     </div>
 

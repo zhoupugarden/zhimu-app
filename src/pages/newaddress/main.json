@@ -1,0 +1,10 @@
+{
+  "usingComponents": {
+    "van-button": "/static/vant/button/index",
+    "van-tabs": "/static/vant/tabs/index",
+    "van-tab": "/static/vant/tab/index"
+  },
+  "navigationBarTextStyle": "black"
+}
+
+
