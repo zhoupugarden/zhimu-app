@@ -70,7 +70,11 @@
 
   .order-card__detail {
     display: flex;
+    position: relative;
     justify-content: flex-start;
+    padding-top : 5px;
+    padding-bottom : 5px;
+    box-sizing: border-box;
   .order-card__detail-image {
     box-sizing: border-box;
     padding-right: 8px;
@@ -85,6 +89,31 @@
   }
 
   }
+
+  /*line如何水平居中显示*/
+  .order-card__detail:before {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 90%;
+    height: 1px;
+    background: lightgray;
+  }
+
+  .order-card__detail:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 90%;
+    height: 1px;
+    background: lightgray;
+  }
+
+
   .order-card__operation {
     display: flex;
     align-items: center;

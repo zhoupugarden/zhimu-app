@@ -6,7 +6,7 @@
       {{name}}
     </div>
     <div class="paycard-container_price">
-      {{price}}
+      ￥{{price}}
       <van-button size="small">添加</van-button>
     </div>
 
@@ -66,9 +66,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  .paycard-container_button {
-    display: inline-block;
   }
   }
   

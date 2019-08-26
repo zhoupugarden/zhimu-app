@@ -5,7 +5,8 @@
     "pages/cart/main",
     "pages/my/main",
     "pages/list/main",
-    "pages/detail/main"
+    "pages/detail/main",
+    "pages/mysetting/main"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",

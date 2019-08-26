@@ -103,7 +103,7 @@ export default {
   data() {
     return {
       good : {
-        url: "https://upload-images.jianshu.io/upload_images/5804947-f12ec57c3896fb75.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/632/format/webp",
+        url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
         name:"yangyu测试",
         tag:"热销",
         price:"10.12",
