@@ -42,7 +42,8 @@
 
     <div class="my-operation">
       <van-cell-group>
-        <van-cell title="收货地址管理" icon="location-o" is-link />
+        <van-cell title="收货地址管理" icon="location-o" is-link link-type="navigateTo"
+                  url="/pages/myaddress/main"/>
         <van-cell title="积分兑换" icon="location-o" is-link />
         <van-cell title="我的会员卡" icon="location-o" is-link />
         <van-cell title="帮助中心" icon="location-o" is-link link-type="navigateTo"

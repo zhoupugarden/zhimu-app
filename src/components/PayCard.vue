@@ -1,5 +1,4 @@
 <template>
-
   <div class="paycard-container">
     <img :src="srcUrl" class="paycard-container__pic">
     <div class="paycard-container__name">
@@ -9,9 +8,7 @@
       ￥{{price}}
       <van-button size="small">添加</van-button>
     </div>
-
   </div>
-
   <!--免费配件购物车展示-->
 </template>
 

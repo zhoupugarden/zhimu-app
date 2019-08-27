@@ -11,7 +11,6 @@
       >
       </cart-card>
     </div>
-
     <div v-if="showTip" class="cart-container__tip">
       请在下方选择需要的配件
     </div>
@@ -76,23 +75,15 @@
         <van-button size="large" type="primary">下一步</van-button>
       </div>
     </div>
-
-
-
   </div>
-
-
 </template>
 
 <script>
-
   import cartCard from '@/components/cartCard';
   import FreeCard from '@/components/FreeCard';
   import PayCard from '@/components/PayCard';
-
   import { mapState, mapMutations } from 'vuex';
   import { SET_OPEN_ID } from '@/store/mutation-types';
-
 
 export default {
 
