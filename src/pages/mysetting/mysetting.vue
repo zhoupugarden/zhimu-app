@@ -1,7 +1,9 @@
 <template>
   <div class="mysetting-container">
     <div class="mysetting-header">
-      <img :src="basicInfo.avatar" class="circleImg">
+      <div>
+        <img :src="basicInfo.avatar" class="circleImg">
+      </div>
       <div>{{basicInfo.name}}</div>
     </div>
 
@@ -48,6 +50,7 @@
           clearable
           @focus="chooseBirthDay"
           label="生日"
+          placeholder="请输入生日信息，保存后不可修改"
         />
       </van-cell-group>
     </div>
@@ -66,6 +69,12 @@
         <!--:formatter="formatter"-->
         <!--/>-->
       </van-popup>
+    </div>
+
+    <div style="padding-top: 100px;display: flex;justify-content: center">
+      <van-button round
+                  custom-class="custom-button"
+                  type="primary">保存</van-button>
     </div>
   </div>
 
@@ -126,7 +135,13 @@ export default {
 <style lang="scss" scoped>
 
   .mysetting-header {
-    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: white;
+    height: 100px;
+  }
+  .mysetting-detail {
     margin-top: 10px;
   }
 
@@ -160,5 +175,9 @@ export default {
 <style lang="scss">
   .small-radio-icon {
 
+  }
+  .custom-button {
+    /*width: 90%;*/
+    padding:0 120px !important;
   }
 </style>

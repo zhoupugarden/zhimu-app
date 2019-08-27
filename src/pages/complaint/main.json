@@ -6,7 +6,8 @@
     "van-cell-group": "/static/vant/cell-group/index",
     "van-cell": "/static/vant/cell/index",
     "van-field": "/static/vant/field/index",
-    "van-popup": "/static/vant/popup/index"
+    "van-popup": "/static/vant/popup/index",
+    "van-picker": "/static/vant/picker/index"
   },
   "navigationBarTitleText": "投诉建议",
   "navigationBarTextStyle": "black"
