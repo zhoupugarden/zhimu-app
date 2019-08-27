@@ -2,6 +2,15 @@
   <div class="myaddress-container">
     <zhimu-address v-for="(item, index_) in addressArray"
              :addressInfo="item" :key="index"></zhimu-address>
+
+    <div class="address-add-button">
+      <div class="address-add-button_wrap">
+        <van-button round
+                    custom-class="custom-button"
+                    @click="navigateToNew"
+                    type="primary">新增收货地址</van-button>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -33,15 +42,20 @@
           name:"杨宇",
           phoneNo:"13817409664"
         }
-
       ]
-
     }
 
   },
   methods: {
     onChange(event) {
       console.log(event)
+    },
+    navigateToNew() {
+      var url = "/pages/newaddress/main";
+      console.log("url",url)
+      wx.navigateTo({
+        url
+      });
     }
   }
 
@@ -49,11 +63,24 @@
 </script>
 
 <style lang="scss" scoped>
-
-
+  .address-add-button {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    background-color: white;
+    margin-top: 10px;
+  }
+  .address-add-button_wrap {
+    display: flex;
+    justify-content: center;
+    padding: 10px 10px;
+  }
 </style>
-<style lang="scss">
 
+<style lang="scss">
+  .custom-button {
+    padding:0 120px !important;
+  }
 </style>
 
 <style lang="wxss">
@@ -62,3 +89,5 @@
     background-color:#F4F4F4 !important;
   }
 </style>
+
+

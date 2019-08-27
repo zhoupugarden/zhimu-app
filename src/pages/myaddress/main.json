@@ -3,7 +3,9 @@
     "van-button": "/static/vant/button/index",
     "van-icon": "/static/vant/icon/index"
   },
-  "navigationBarTextStyle": "black"
+  "navigationBarTextStyle": "black",
+  "navigationBarTitleText": "收货地址管理"
+
 }
 
 

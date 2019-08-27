@@ -1,48 +1,59 @@
 <template>
-  <div class="order-container">
+  <div class="newaddress-container">
+    <van-cell-group>
+      <van-field
+        :value="contactName"
+        required
+        clearable
+        label="联系人"
+        placeholder="收货人姓名"
+      />
 
-    <van-tabs :active="active"
-              custom-class="van-tabs__custom"
-              @change="onChange">
-      <van-tab
-        tab-class="van-tabs__custom"
-        title="全部">
+      <van-cell title="地址" is-link :value="address.road" />
 
-        <div class="order-list">
-          <order-card></order-card>
-        </div>
+      <van-field
+        :value="number"
+        required
+        clearable
+        label="门牌号"
+        placeholder="单元楼号,门牌号"
+      />
 
-      </van-tab>
-      <van-tab title="待评价">
+      <van-field
+        :value="phoneNo"
+        required
+        clearable
+        label="手机号"
+        placeholder="手机号码"
+      />
 
-        <div class="order-list">
+    </van-cell-group>
 
-        </div>
+    <div class="address-add-button">
+      <div class="address-add-button_wrap">
+        <van-button round
+                    custom-class="custom-button"
+                    @click="navigateToNew"
+                    type="primary">下一步</van-button>
+      </div>
+    </div>
 
-      </van-tab>
-      <van-tab title="待付款">
-
-        <div class="order-list">
-
-        </div>
-
-      </van-tab>
-    </van-tabs>
   </div>
 
 </template>
 
 <script>
-  import OrderCard from '@/components/OrderCard';
   export default {
-
-  components: {
-    OrderCard
-  },
 
   data() {
     return {
-      active:0
+      active:0,
+      address: {
+        contactName:"",
+        road:"请选择",
+        number:"",
+        phoneNo:""
+      }
 
     }
 
@@ -57,23 +68,24 @@
 }
 </script>
 
-<style scoped>
-  page {
-    height: 100%;
-  }
-
-  .order-container {
-    position: relative;
+<style lang="scss" scoped>
+  .address-add-button {
+    position: fixed;
+    bottom: 0px;
     width: 100%;
-    height:100%;
+    background-color: white;
+    margin-top: 10px;
   }
-  .order-list {
+  .address-add-button_wrap {
+    display: flex;
+    justify-content: center;
+    padding: 10px 10px;
   }
 </style>
+
 <style lang="scss">
-  .van-tabs__custom {
-    width: 100%;
-    height: 100%;
+  .custom-button {
+    padding:0 120px !important;
   }
 </style>
 

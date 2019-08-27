@@ -19,13 +19,6 @@
         <van-icon name="delete" />
       </div>
     </div>
-    <div class="address-add-button">
-      <div class="address-add-button_wrap">
-        <van-button round
-                    custom-class="custom-button"
-                    type="primary">提交申请</van-button>
-      </div>
-    </div>
   </div>
 </template>
 
