@@ -1,12 +1,32 @@
 <template>
   <div class="point-container">
 
-    <div class="balance-summary">
+    <div class="point-summary">
+      <div class="point-summary__title">
+        <div style="color: #999999">
+          当前积分
+        </div>
+        <div style="color: green">
+          <van-cell
+            title="积分说明"
+            title-class="cell-point-class"
+            link-type="navigateTo"
+            url="/pages/pointhelp/main"
+          />
+        </div>
 
+      </div>
+      <div class="point-summary__total">
+        {{pointRecords.total}}
+        <div style="font-size: 12px">分</div>
+      </div>
     </div>
 
-    <div class="balance-detail">
-
+    <div style="font-size: 14px; padding-top: 10px;padding-bottom: 10px">
+      积分记录
+    </div>
+    <div class="point-detail">
+      <point-item></point-item>
     </div>
 
   </div>
@@ -14,14 +34,17 @@
 </template>
 
 <script>
+  import PointItem from '@/components/PointItem';
   export default {
-
+    components: {
+      PointItem
+    },
   data() {
     return {
-
-
+      pointRecords: {
+        total: 798
+      }
     }
-
   },
   methods: {
 
@@ -31,24 +54,29 @@
 </script>
 
 <style lang="scss" scoped>
-  .address-add-button {
-    position: fixed;
-    bottom: 0px;
-    width: 100%;
+
+  .point-summary__title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: white;
-    margin-top: 10px;
+    font-size: 12px;
   }
-  .address-add-button_wrap {
+  .point-summary__total {
+    background-color: white;
+    font-size: 30px;
+    color: green;
     display: flex;
     justify-content: center;
-    padding: 10px 10px;
   }
 </style>
 
 <style lang="scss">
-  .custom-button {
-    padding:0 120px !important;
+  .cell-point-class {
+    font-size: 12px;
+    color: green;
   }
+
 </style>
 
 <style lang="wxss">

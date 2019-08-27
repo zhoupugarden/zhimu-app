@@ -30,13 +30,10 @@
 
         </div>
 
-        <div class="my-wallet-info__style">
+        <div class="my-wallet-info__style" @click="navigateToPoint">
           <div style="font-weight: 600;font-size: 15px;"> {{walletInfo.point}} 分</div>
           <div style="font-weight: lighter;font-size: 10px;padding: 5px;">积分</div>
         </div>
-
-
-
       </div>
     </div>
 
@@ -67,7 +64,6 @@ export default {
 
   components: {
   },
-
   data() {
     return {
       basicInfo: {
@@ -92,10 +88,16 @@ export default {
       wx.navigateTo({
         url
       });
+    },
+
+    navigateToPoint() {
+      let url = "../point/main" ;
+      console.log("url",url)
+      wx.navigateTo({
+        url
+      });
     }
   }
-
-
 
 }
 </script>

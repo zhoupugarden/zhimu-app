@@ -13,7 +13,9 @@
     "pages/balancequestion/main",
     "pages/couponquestion/main",
     "pages/memberquestion/main",
-    "pages/complaint/main"
+    "pages/complaint/main",
+    "pages/point/main",
+    "pages/balance/main"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",
