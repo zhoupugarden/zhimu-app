@@ -2,14 +2,16 @@
   <div class="coupon-container">
     <coupon-item></coupon-item>
     <coupon-item></coupon-item>
+    <coupon-outitem></coupon-outitem>
   </div>
 </template>
 
 <script>
   import CouponItem from '@/components/CouponItem';
+  import CouponOutitem from '@/components/CouponOutitem';
   export default {
     components: {
-      CouponItem
+      CouponItem,CouponOutitem
     },
     data() {
       return {

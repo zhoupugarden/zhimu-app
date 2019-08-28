@@ -10,6 +10,9 @@
         <p class="coupon-type">抵用券</p>
         <p class="coupon-desc">减免运费8元</p>
       </div>
+      <div class="outdate-coupon">
+        <img style="width: 100px; height: 80px;" src="../asset/outdate.png">
+      </div>
       <i></i>
     </div>
   </div>
@@ -27,7 +30,7 @@
 
     computed: {
 
-      //可以根据优惠券的类型，计算属性，显示不同的颜色区别，#F39B00 根据该值显示背景颜色
+      //可以根据优惠券的类型，计算属性，显示不同的颜色区别，#CFD4DA 根据该值显示背景颜色
       coupon() {
         return 'coupon';
       },
@@ -53,8 +56,8 @@
     position: relative;
     display: flex;
     overflow: hidden;
-    background-color: #F39B00;
-    background: radial-gradient(rgba(0, 0, 0, 0) 0, rgba(255, 0, 0, 0) 5px, #F39B00 5px);
+    background-color: #CFD4DA;
+    background: radial-gradient(rgba(0, 0, 0, 0) 0, rgba(255, 0, 0, 0) 5px, #CFD4DA 5px);
     background-size: 15px 15px;
     background-position: 9px 3px;
     height: 90px;
@@ -69,7 +72,7 @@
     left:10px;
     right:10px;
     z-index: -1;
-    background-color:#F39B00;
+    background-color:#CFD4DA;
   }
 
   .coupon i{

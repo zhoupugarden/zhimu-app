@@ -5,10 +5,11 @@
     "van-button": "/static/vant/button/index",
     "van-tabs": "/static/vant/tabs/index",
     "van-tab": "/static/vant/tab/index",
-    "van-cell": "/static/vant/cell/index"
+    "van-cell": "/static/vant/cell/index",
+    "van-icon": "/static/vant/icon/index"
   },
   "navigationBarTextStyle": "black",
-  "navigationBarTitleText": "配送至"
+  "navigationBarTitleText": "优惠券"
 
 }
 
