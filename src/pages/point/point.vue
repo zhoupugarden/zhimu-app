@@ -25,6 +25,7 @@
     <div style="font-size: 14px; padding-top: 10px;padding-bottom: 10px">
       积分记录
     </div>
+
     <div class="point-detail">
       <point-item></point-item>
     </div>

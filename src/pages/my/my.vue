@@ -19,12 +19,12 @@
       </div>
       <div class="my-wallet-info">
 
-        <div class="my-wallet-info__style">
+        <div class="my-wallet-info__style" @click="navigateToBalance">
           <div style="font-weight: 600;font-size: 15px;"> {{walletInfo.balance}} 元</div>
           <div style="font-weight: lighter;font-size: 10px;padding: 5px;">余额</div>
         </div>
 
-        <div class="my-wallet-info__style">
+        <div class="my-wallet-info__style" @click="navigateToCoupon">
           <div style="font-weight: 600;font-size: 15px;"> {{walletInfo.coupon}} 个</div>
           <div style="font-weight: lighter;font-size: 10px;padding: 5px;">优惠券</div>
 
@@ -92,6 +92,20 @@ export default {
 
     navigateToPoint() {
       let url = "../point/main" ;
+      console.log("url",url)
+      wx.navigateTo({
+        url
+      });
+    },
+    navigateToBalance() {
+      let url = "../balance/main" ;
+      console.log("url",url)
+      wx.navigateTo({
+        url
+      });
+    },
+    navigateToCoupon() {
+      let url = "../coupon/main" ;
       console.log("url",url)
       wx.navigateTo({
         url

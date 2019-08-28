@@ -16,7 +16,6 @@
                   size = 20px class="zm-detail__icon"/>
       </div>
     </div>
-
   </div>
 </template>
 

@@ -15,7 +15,8 @@
     "pages/memberquestion/main",
     "pages/complaint/main",
     "pages/point/main",
-    "pages/balance/main"
+    "pages/balance/main",
+    "pages/coupon/main"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",

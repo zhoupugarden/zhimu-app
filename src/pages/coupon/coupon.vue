@@ -1,33 +1,15 @@
 <template>
-  <div class="balance-container">
-
-    <div class="balance-summary">
-      <div class="balance-summary__title">
-        <div style="color: #999999">
-          当前余额
-        </div>
-      </div>
-      <div class="balance-summary__total">
-        {{balanceRecords.total}}
-        <div style="font-size: 12px">元</div>
-      </div>
-    </div>
-
-    <div style="font-size: 14px; padding-top: 10px;padding-bottom: 10px">
-      交易明细
-    </div>
-    <div class="balance-detail">
-      <balance-item></balance-item>
-    </div>
+  <div class="coupon-container">
+    <coupon-item></coupon-item>
+    <coupon-item></coupon-item>
   </div>
 </template>
 
 <script>
-  import BalanceItem from '@/components/BalanceItem';
-  import PointItem from '@/components/PointItem';
+  import CouponItem from '@/components/CouponItem';
   export default {
     components: {
-      PointItem,BalanceItem
+      CouponItem
     },
     data() {
       return {
