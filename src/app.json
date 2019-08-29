@@ -16,7 +16,8 @@
     "pages/complaint/main",
     "pages/point/main",
     "pages/balance/main",
-    "pages/coupon/main"
+    "pages/coupon/main",
+    "pages/myvip/main"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",
