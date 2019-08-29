@@ -17,7 +17,8 @@
     "pages/point/main",
     "pages/balance/main",
     "pages/coupon/main",
-    "pages/myvip/main"
+    "pages/myvip/main",
+    "pages/buyvip/main"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",
