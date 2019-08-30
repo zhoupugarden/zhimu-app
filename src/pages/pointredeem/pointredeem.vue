@@ -11,38 +11,75 @@
         </div>
       </div>
       <div class="redeem-header-operation">
-        <div class="redeem-header-operation_left">积分明细</div>
+        <div class="redeem-header-operation_left" @click="navigateToPoint">积分明细</div>
         <div class="redeem-header-operation_split"></div>
-        <div class="redeem-header-operation_right">兑换记录</div>
+        <div class="redeem-header-operation_right" @click="navigateToCoupon">兑换记录</div>
       </div>
 
     </div>
-
+    <div style="font-size: 14px; font-weight:bolder; padding-top: 10px;padding-left: 10px;color: #CDA65B; background-color: white">
+      优惠券专区
+    </div>
     <div class="redeem-detail">
-
-      <redeem-container></redeem-container>
-
+      <div class="redeem-detail-item" v-for="(item, index) in redeemItems" :key="index">
+        <redeem-item :redeemItem="item"></redeem-item>
+      </div>
     </div>
 
   </div>
 </template>
 
 <script>
-  import RedeemContainer from '@/components/RedeemContainer';
+  import RedeemItem from '@/components/RedeemItem';
 
   export default {
     components: {
-      RedeemContainer
+      RedeemItem
     },
     data() {
       return {
         balanceRecords: {
           total: 798
-        }
+        },
+        redeemItems:[
+          {
+            imgUrl:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
+            itemName:"积分商品测试",
+            itemPoint:"200"
+          },
+          {
+            imgUrl:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
+            itemName:"积分商品测试",
+            itemPoint:"200"
+          },
+          {
+            imgUrl:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
+            itemName:"积分商品测试",
+            itemPoint:"200"
+          },
+          {
+            imgUrl:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
+            itemName:"积分商品测试",
+            itemPoint:"200"
+          }
+        ]
+
+
       }
     },
     methods: {
-
+      navigateToPoint() {
+        var url = "/pages/point/main";
+        wx.navigateTo({
+          url
+        });
+      },
+      navigateToCoupon() {
+        var url = "/pages/coupon/main";
+        wx.navigateTo({
+          url
+        });
+      }
     }
 
   }
@@ -55,7 +92,7 @@
     flex-direction: column;
     align-items: center;
     background-color: white;
-    padding: 10px 0px;
+    padding: 5px 0px;
 
   }
 
@@ -81,8 +118,17 @@
     height: 20px;
     background: #e6ebf3;
   }
-
-
+  .redeem-detail {
+    background-color: white;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    padding-top: 10px;
+  }
+  .redeem-detail-item {
+    flex: 0 0 33%;
+    padding: 10px 10px;
+  }
 
 
 </style>
