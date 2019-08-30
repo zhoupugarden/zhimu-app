@@ -21,7 +21,7 @@
       优惠券专区
     </div>
     <div class="redeem-detail">
-      <div class="redeem-detail-item" v-for="(item, index) in redeemItems" :key="index">
+      <div class="redeem-detail-item" v-for="(item, index) in redeemItems" :key="index" @click="navigateToDetail">
         <redeem-item :redeemItem="item"></redeem-item>
       </div>
     </div>
@@ -76,6 +76,12 @@
       },
       navigateToCoupon() {
         var url = "/pages/coupon/main";
+        wx.navigateTo({
+          url
+        });
+      },
+      navigateToDetail() {
+        var url = "/pages/redeemdetail/main";
         wx.navigateTo({
           url
         });

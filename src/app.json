@@ -19,7 +19,8 @@
     "pages/coupon/main",
     "pages/myvip/main",
     "pages/buyvip/main",
-    "pages/pointredeem/main"
+    "pages/pointredeem/main",
+    "pages/redeemdetail/main"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",
