@@ -28,7 +28,7 @@
     </div>
 
     <!--<van-popup :show="popShow" @close="onClose">-->
-      <!--内容-->
+      <!--确认框， 成功兑换，积分不足等-->
     <!--</van-popup>-->
 
     <!---->

@@ -3,7 +3,8 @@
     "van-button": "/static/vant/button/index",
     "van-tag": "/static/vant/tag/index",
     "van-cell-group": "/static/vant/cell-group/index",
-    "van-cell": "/static/vant/cell/index"
+    "van-cell": "/static/vant/cell/index",
+    "van-icon": "/static/vant/icon/index"
   },
   "navigationBarTitleText": "ZHI MU"
 }

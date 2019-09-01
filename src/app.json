@@ -20,7 +20,13 @@
     "pages/myvip/main",
     "pages/buyvip/main",
     "pages/pointredeem/main",
-    "pages/redeemdetail/main"
+    "pages/redeemdetail/main",
+    "pages/pointhelp/main",
+    "pages/ordersubmit/main",
+    "pages/orderdetail/main",
+    "pages/mission/main",
+    "pages/login/main",
+    "pages/phonelogin/main"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",

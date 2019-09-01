@@ -10,10 +10,14 @@
         <div class="my-basic-info__content">
           <div>{{basicInfo.name}}</div>
           <van-tag color="black">{{basicInfo.level}}</van-tag>
+          <div @click="navigateToMission">
+            <van-tag color="green">签到有奖</van-tag>
+          </div>
         </div>
         <div class="my-basic-info__go">
           <van-button round color="grey"
                       custom-class="mini-button"
+                      @click="navigateToLogin"
                       size="mini">开通星球会员></van-button>
         </div>
       </div>
@@ -108,6 +112,20 @@ export default {
     },
     navigateToCoupon() {
       let url = "../coupon/main" ;
+      console.log("url",url)
+      wx.navigateTo({
+        url
+      });
+    },
+    navigateToMission() {
+      let url = "../mission/main" ;
+      console.log("url",url)
+      wx.navigateTo({
+        url
+      });
+    },
+    navigateToLogin() {
+      let url = "/pages/login/main" ;
       console.log("url",url)
       wx.navigateTo({
         url

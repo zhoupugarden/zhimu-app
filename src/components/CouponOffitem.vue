@@ -7,15 +7,14 @@
         <p class="coupon-valid-date">有效期至 2019-08-31</p>
       </div>
       <div class="vice-coupon">
-        <p class="coupon-type">抵用券</p>
-        <p class="coupon-desc">减免运费8元</p>
-      </div>
+        <div style="font-size: 14px;">线下券</div>
+        <div style="padding: 5px 0px">
+          <van-button type="primary" size="mini">二维码</van-button>
+        </div>
+        <div>
+          <van-button type="info" size="mini">使用方式</van-button>
 
-      <!--<div  class="used-coupon">-->
-        <!--<img style="width: 100px; height: 80px;" src="../asset/used.png">-->
-      <!--</div>-->
-      <div  class="outdate-coupon">
-        <img style="width: 100px; height: 80px;" src="../asset/outdate.png">
+        </div>
       </div>
       <i></i>
     </div>
@@ -34,7 +33,7 @@
 
     computed: {
 
-      //可以根据优惠券的类型，计算属性，显示不同的颜色区别，#CFD4DA 根据该值显示背景颜色
+      //可以根据优惠券的类型，计算属性，显示不同的颜色区别，#F39B00 根据该值显示背景颜色
       coupon() {
         return 'coupon';
       },
@@ -60,8 +59,8 @@
     position: relative;
     display: flex;
     overflow: hidden;
-    background-color: #CFD4DA;
-    background: radial-gradient(rgba(0, 0, 0, 0) 0, rgba(255, 0, 0, 0) 5px, #CFD4DA 5px);
+    background-color: #F39B00;
+    background: radial-gradient(rgba(0, 0, 0, 0) 0, rgba(255, 0, 0, 0) 5px, #F39B00 5px);
     background-size: 15px 15px;
     background-position: 9px 3px;
     height: 90px;
@@ -76,7 +75,7 @@
     left:10px;
     right:10px;
     z-index: -1;
-    background-color:#CFD4DA;
+    background-color:#F39B00;
   }
 
   .coupon i{
@@ -99,11 +98,7 @@
 
   .vice-coupon {
     padding: 15px;
-    display: inline-block;
     text-align: center;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
   }
 
   .coupon-subtype {
@@ -126,10 +121,6 @@
     margin-left: 10px;
   }
   .outdate-coupon {
-    position: absolute;
-    right: 10px;
-  }
-  .used-coupon {
     position: absolute;
     right: 10px;
   }

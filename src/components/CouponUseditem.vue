@@ -11,12 +11,12 @@
         <p class="coupon-desc">减免运费8元</p>
       </div>
 
-      <!--<div  class="used-coupon">-->
-        <!--<img style="width: 100px; height: 80px;" src="../asset/used.png">-->
-      <!--</div>-->
-      <div  class="outdate-coupon">
-        <img style="width: 100px; height: 80px;" src="../asset/outdate.png">
+      <div  class="used-coupon">
+        <img style="width: 100px; height: 80px;" src="../asset/used.png">
       </div>
+      <!--<div  class="outdate-coupon">-->
+        <!--<img style="width: 100px; height: 80px;" src="../asset/outdate.png">-->
+      <!--</div>-->
       <i></i>
     </div>
   </div>

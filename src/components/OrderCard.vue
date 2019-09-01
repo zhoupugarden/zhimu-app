@@ -8,7 +8,7 @@
         {{orderInfo.orderStatus}}
       </div>
     </div>
-    <div class="order-card__detail">
+    <div class="order-card__detail" @click="navigateToOrderDetail">
       <div class="order-card__detail-image">
         <img :src="orderInfo.orderUrl" style="width: 80px;height: 80px;">
       </div>
@@ -51,6 +51,15 @@
           orderTime:"2019-10-10 10:10:10",
           orderListName:"杨宇测试|测试|依依 毒贩夫妇付 杨宇测试|测试|依依 毒贩夫妇付 "
         }
+      }
+    },
+    methods: {
+      navigateToOrderDetail() {
+        var url = "/pages/orderdetail/main";
+        console.log("url",url)
+        wx.navigateTo({
+          url
+        });
       }
     }
 

@@ -72,7 +72,7 @@
       </div>
 
       <div class="cart-container__bottom--button">
-        <van-button size="large" type="primary">下一步</van-button>
+        <van-button size="large" type="primary" @click="navigateToSubmit">下一步</van-button>
       </div>
     </div>
   </div>
@@ -125,6 +125,13 @@ export default {
     },
     popUpShow() {
       this.popShow = true;
+    },
+    navigateToSubmit() {
+      var url = "/pages/ordersubmit/main";
+      console.log("url",url)
+      wx.navigateTo({
+        url
+      });
     }
 
   }
