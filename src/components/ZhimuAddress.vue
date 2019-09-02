@@ -1,6 +1,6 @@
 <template>
   <div class="address-container">
-    <div class="address-info">
+    <div class="address-info" @click="backToOrderSubmit">
       <div class="address-info_road">
         {{addressInfo.road}}
       </div>
@@ -25,12 +25,32 @@
 <script>
   export default {
     props: {
-      addressInfo:Object
+      addressInfo:Object,
+      jump:Boolean
     },
     data () {
       return {
 
       }
+    },
+    methods: {
+      backToOrderSubmit() {
+        if (this.jump != null) {
+          var url = "/pages/ordersubmit/main?addressInfo=" + "12333";
+          console.log("url",url)
+          wx.navigateTo({
+            url
+          });
+        } else {
+          console.log("不用跳转", this.jump)
+        }
+
+      }
+    },
+
+    mounted() {
+      console.log(this.addressInfo)
+      console.log("this.jump", this.jump)
     }
   }
 </script>

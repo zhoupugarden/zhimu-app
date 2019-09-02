@@ -6,7 +6,11 @@
     "van-tabs": "/static/vant/tabs/index",
     "van-tab": "/static/vant/tab/index",
     "van-cell": "/static/vant/cell/index",
-    "van-switch": "/static/vant/switch/index"
+    "van-switch": "/static/vant/switch/index",
+    "van-datetime-picker": "/static/vant/datetime-picker/index",
+    "van-panel": "/static/vant/panel/index",
+    "van-popup": "/static/vant/popup/index",
+    "van-picker": "/static/vant/picker/index"
   },
   "navigationBarTextStyle": "black",
   "navigationBarTitleText": "余额明细"

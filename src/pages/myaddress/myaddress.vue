@@ -1,7 +1,7 @@
 <template>
   <div class="myaddress-container">
     <zhimu-address v-for="(item, index_) in addressArray"
-             :addressInfo="item" :key="index"></zhimu-address>
+             :addressInfo="item" :jump="jump" :key="index"></zhimu-address>
 
     <div class="address-add-button">
       <div class="address-add-button_wrap">
@@ -23,6 +23,7 @@
   data() {
     return {
       active:"123",
+      jump:false,
       addressE: {
         road:"上海市浦东新区周浦镇印象春城",
         number:"75号701",
@@ -57,7 +58,17 @@
         url
       });
     }
-  }
+  },
+    mounted() {
+    if (null != this.$root.$mp.query) {
+      console.log(this.$root.$mp.query);
+      this.jump = this.$root.$mp.query.jump;
+    }
+
+
+    }
+
+
 
 }
 </script>
