@@ -271,12 +271,12 @@
 <style lang="scss" scoped>
 
   .order-submit-switch {
-    width: 80px;
+    width: 100px;
     height: 30px;
     border-radius: 20px;
-    border-color: black;
     display: flex;
-    border: solid;
+    border:1px solid black;
+    align-items: center;
   }
   .switch-style {
     font-family: "Microsoft YaHei";
@@ -287,11 +287,18 @@
     background-color: black;
     color: white;
     border: solid;
-    padding-left: 5px;
+    text-align: center;
+    line-height: 25px;
+    padding: 0px 5px;
   }
   .un-switch-style {
     font-size: 14px;
+    width: 40px;
+    text-align: center;
+    padding: 0px 5px;
     font-family: "Microsoft YaHei";
+    line-height: 25px;
+
   }
   .order-submit-address__deliver {
     display: flex;
@@ -311,6 +318,8 @@
   }
   .order-submit-button {
     position: fixed;
+    display: flex;
+    justify-content: center;
     width: 100%;
     z-index: 100;
     bottom: 10px;
@@ -324,7 +333,7 @@
     background-color: #F4F4F4 !important;
   }
   .custom-button {
-    width: 100%;
+    width: 300px;
   }
   .product-title-class {
    font-weight: bolder;
