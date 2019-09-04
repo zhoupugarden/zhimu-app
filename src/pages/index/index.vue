@@ -251,8 +251,6 @@
     transition:width .4s ease-in-out;
   }
 
-
-
   .active_img_class {
     width: 100%;
     height: 100px;

@@ -1,23 +1,52 @@
 <template>
   <div class="zm-goods__container">
     <div class="zm-goods__head">
-      <img :src="good.headPicUrl" mode="aspectFill">
-      <van-cell-group>
-        <van-cell>
-          <div class="zm-goods__name">{{good.name}}</div>
-          <div class="zm-goods__price">{{'￥' + good.linePrice}}</div>
-        </van-cell>
+      <img :src="good.headPicUrl" mode="scaleToFill" style="width: 100%; height: 300px">
+      <div style="position: relative">
+        <div class="zm-goods__name">{{good.name}}</div>
+        <div class="zm-goods__price">
+          <span class="zm-goods__price-value">{{good.salePrice}}</span>
+          <span class="zm-goods__price-lineprice">{{good.linePrice}}</span>
+          <span class="zm-goods__price-tag">
+            <van-tag type="success">限时折扣</van-tag>
+          </span>
+        </div>
+        <div class="zm-goods__share">
+          <div>
+            <van-icon custom-style="{color:#CFD4DA}"	name="share"></van-icon>
+          </div>
+          <div style="font-size: 12px; color: #CFD4DA">
+            分享
+          </div>
+        </div>
+      </div>
         <van-cell custom-class="demo"
-                  title="会员5张9折券，本次至少可省￥13.80"  is-link value="立即开通" />
-      </van-cell-group>
+                  title="会员5张9折券，本次至少可省￥13.80" link-type="navigateTo"
+                  url="/pages/myvip/index" is-link value="立即开通" />
     </div>
     <div class="zm-goods__extroInfo">
-      <van-cell-group>
-        <van-cell :title="attribute" is-link @click="chooseAttributes" />
-        <van-cell>
-          <div class="zm-goods__skuExtroInfo">
-          </div>
-        </van-cell>
+      <div class="choose-attribute">
+        <van-cell :title="attribute" custom-class="cell-custom-class" is-link @click="chooseAttributes" />
+      </div>
+      <div class="attribute-extro-info">
+        <div class="extro-info__item">
+          <van-icon name="fire-o"/>
+          <span>{{chooseSKU.cakeSize}}</span>
+        </div>
+        <div class="extro-info__item">
+          <van-icon name="fire-o"/>
+          <span>{{chooseSKU.capacity}}</span>
+        </div>
+        <div class="extro-info__item">
+          <van-icon name="fire-o"/>
+          <span>{{chooseSKU.copies}}</span>
+        </div>
+        <div class="extro-info__item">
+          <van-icon name="fire-o"/>
+          <span>{{chooseSKU.cutlery}}</span>
+        </div>
+      </div>
+      <div class="product-extro-info">
         <van-cell>
           <div class="zm-goods__sweet">
             <span style="float: left">参考甜度：</span>
@@ -38,50 +67,7 @@
             <span style="float: left">{{good.freshCondition}}</span>
           </div>
         </van-cell>
-      </van-cell-group>
-      <van-popup position="bottom"
-                 :show="popShow"
-                 z-index="200"
-                 custom-style=" top:60%;"
-                 @close="popUpClose"
-                 :overlay="true">
-        <div class="van-popup__panel">
-          <div class="van-popup__panel_price">
-              {{chooseSKU.salePrice}}
-          </div>
-          <div class="van-popup__panel_line">
-          </div>
-          <div class="van-popup__panel_extro">
-            <van-icon name="fire-o"/>
-            <span>{{chooseSKU.cakeSize}}</span>
-            <van-icon name="fire-o"/>
-            <span>{{chooseSKU.capacity}}</span>
-            <van-icon name="fire-o"/>
-            <span>{{chooseSKU.copies}}</span>
-            <van-icon name="fire-o"/>
-            <span>{{chooseSKU.cutlery}}</span>
-          </div>
-          <div class="van-popup__panel_attribute">
-            <div>规格：</div>
-            <span v-for="(item, index) in productSKUs" :key="index">
-              <van-button :id="item.id"
-                          :type="item.id === chooseSKU.id ? 'primary' : 'default'"
-                          size="mini" @click="selectedSKU">{{item.attributeName}}</van-button>
-            </span>
-
-          </div>
-          <div class="van-popup__panel_shopcart">
-            <van-goods-action>
-              <van-goods-action-button
-                :text="popupText"
-                type="warning"
-                bind:click="onClickButton"
-              />
-            </van-goods-action>
-          </div>
-        </div>
-
-      </van-popup>
+      </div>
     </div>
     <div class="zm-goods__review">
       <van-cell :title="reviewTitle" is-link value="查看全部"
@@ -134,6 +120,50 @@
         />
       </van-goods-action>
     </div>
+    <van-popup position="bottom"
+               :show="popShow"
+               z-index="200"
+               custom-style=" top:60%;"
+               @close="popUpClose"
+               :overlay="true">
+      <div class="van-popup__panel">
+        <div class="van-popup__panel_price">
+          {{chooseSKU.salePrice}}
+        </div>
+        <div class="van-popup__panel_line">
+        </div>
+        <div class="van-popup__panel_extro">
+          <van-icon name="fire-o"/>
+          <span>{{chooseSKU.cakeSize}}</span>
+          <van-icon name="fire-o"/>
+          <span>{{chooseSKU.capacity}}</span>
+          <van-icon name="fire-o"/>
+          <span>{{chooseSKU.copies}}</span>
+          <van-icon name="fire-o"/>
+          <span>{{chooseSKU.cutlery}}</span>
+        </div>
+        <div class="van-popup__panel_attribute">
+          <div>规格：</div>
+          <span v-for="(item, index) in productSKUs" :key="index">
+              <van-button :id="item.id"
+                          :type="item.id === chooseSKU.id ? 'primary' : 'default'"
+                          size="mini" @click="selectedSKU">{{item.attributeName}}</van-button>
+            </span>
+
+        </div>
+        <div class="van-popup__panel_shopcart">
+          <van-goods-action>
+            <van-goods-action-button
+              :text="popupText"
+              type="warning"
+              bind:click="onClickButton"
+            />
+          </van-goods-action>
+        </div>
+      </div>
+
+    </van-popup>
+
   </div>
 </template>
 
@@ -186,7 +216,22 @@
           "attributeOrderNum": 1
         }
       ],
-      chooseSKU :{},
+      chooseSKU :{
+        "id": 10,
+        "productId": 3,
+        "productAttributeId": 6,
+        "salePrice": 111.0,
+        "linePrice": 132.0,
+        "isPrime": true,
+        "cakeSize": "7* 12cm",
+        "capacity": "1000ml",
+        "copies": "5人份",
+        "cutlery": "18人餐具",
+        "createTime": null,
+        "updateTime": null,
+        "attributeName": "1磅",
+        "attributeOrderNum": 1
+      },
       popupText: "加入购物车"
     }
   },
@@ -286,22 +331,74 @@
 
 
 <style lang="scss"  scoped>
+
+  .attribute-extro-info {
+    display: flex;
+    flex-flow: row wrap;
+    align-content: flex-start;
+    background-color:white;
+  .extro-info__item {
+    box-sizing: border-box;
+    flex: 0 0 50%;
+    padding: 5px 5px;
+    font-size: 16px;
+    font-family: "Microsoft YaHei";
+  }
+  }
+  .attribute-extro-info:after {
+    content:" ";
+    display:block;
+    margin:5px auto 0;
+    width:90%;
+    border-bottom:2px solid #F39B00;
+    transition:width .4s ease-in-out;
+  }
+
+
+
+  .zm-goods__extroInfo {
+    margin: 5px 10px;
+  }
+  .zm-goods__price-value {
+    font-size: 18px;
+    font-family: "Microsoft YaHei";
+    padding-right: 5px;
+  }
+  .zm-goods__price-value:before {
+    content:'￥';
+    font-size: small;
+  }
+  .zm-goods__price-lineprice {
+    font-family: "Microsoft YaHei";
+    padding-right: 5px;
+    font-size: 10px;
+    color: #CFD4DA;
+    text-decoration:line-through;
+  }
+  .zm-goods__price-lineprice:before {
+    content:'原价 ￥';
+    text-decoration:line-through;
+    font-size: 10px;
+  }
+
   .zm-goods__container {
     position: relative;
-    background-color: #E8EDF5;
-    margin-top: 10px;
     overflow: hidden;
   .zm-goods__head {
     position: relative;
   .zm-goods__name {
     font-size: 16px;
-    margin: 15px 0;
+    margin: 5px 0;
     text-align: left;
   }
+  .zm-goods__share {
+    position: absolute;
+    right: 10px;
+    top: 0px;
+  }
   .zm-goods__price {
-    margin: 15px 0;
+    margin: 5px 0;
     text-align: left;
-    color: red;
   }
   .zm-goods__link  {
     background-color: red;
@@ -362,6 +459,16 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   }
 
-
+</style>
+<style lang="wxss">
+  page{
+    height: 100%;
+    background-color:#F4F4F4 !important;
+  }
 </style>
 
+<style lang="scss">
+  .cell-custom-class {
+    background-color: #E8EDF5 !important;
+  }
+</style>
