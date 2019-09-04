@@ -9,11 +9,19 @@
         <div class="zm-card__detail__name">
           <span>{{cardInfo.name}}</span>
         </div>
-        <div class="zm-card__detail__ename">
-          <span>{{cardInfo.englishName}}</span>
+        <div class="zm-card__detail__price">
+          <span :style="{color:cardInfo.linePrice?'red':'black'}">￥{{cardInfo.price}}</span>
+          <span v-if="cardInfo.linePrice" class="zm-card__detail__line_price">￥{{cardInfo.linePrice}}</span>
         </div>
-        <van-icon name="shopping-cart-o" @click="popCart"
-                  size = 20px class="zm-detail__icon"/>
+
+        <div @click="popCart" class="zm-detail__icon">
+          <div v-if="cardInfo.attributeCount" class="choose_attribute">
+            选规格
+          </div>
+          <div v-else class="add_attribute">
+            +
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -27,7 +35,8 @@
     data () {
       return {
         data: {
-          productId: '123'
+          productId: '123',
+          activeColor:"red"
         }
       }
     },
@@ -111,17 +120,38 @@
         .zm-card__detail__name {
           margin-left: 10px;
         }
-        .zm-card__detail__ename {
-          margin-top: 2px;
-          margin-left: 10px;
-          margin-bottom: 10px;
-          font-size: 10px;
-          font-weight: 100;
+        .zm-card__detail__price {
+
+        }
+        .zm-card__detail__line_price {
+          font-family: "Microsoft YaHei";
+          font-size: 12px;
+          color: #CFD4DA;
+          text-decoration:line-through
         }
         .zm-detail__icon {
           position: absolute;
           top:10px;
           left: 200px;
+          .choose_attribute {
+            width: 50px;
+            height: 20px;
+            border-radius: 10px;
+            background-color: #CDA65B;
+            color: white;
+            font-size: 12px;
+            text-align: center;
+          }
+          .add_attribute {
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            background-color: #CDA65B;
+            color: white;
+            font-size: 12px;
+            text-align: center;
+          }
+
         }
       }
     }

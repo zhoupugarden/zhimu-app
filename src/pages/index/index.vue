@@ -1,35 +1,43 @@
 <template>
-  <div class="van-tree-select" :style="setMainHeight">
-    <scroll-view scroll-y class="van-tree-select__nav">
-      <view v-for="(item, index) in items"
-            :key="index"
-            :data-index="index"
-            @click="onClickNav"
-            class="van-ellipsis van-tree-select__nitem "
-            :class=" index === mainActiveIndex ? 'van-tree-select__nitem--active' : ''"
+  <div class="index-container">
+    <div class="index-header" @click="navigateToActivity">
+      <image style="width: 100%; height: 100px; " mode="scaleToFill" :src="activityUrl"></image>
+    </div>
+    <div class="van-tree-select" :style="setMainHeight">
+      <scroll-view scroll-y class="van-tree-select__nav">
+        <view v-for="(item, index) in items"
+              :key="index"
+              :data-index="index"
+              @click="onClickNav"
+              class="van-ellipsis van-tree-select__nitem "
+              :class=" index === mainActiveIndex ? 'van-tree-select__nitem--active' : ''"
+        >
+          {{item.categoryName}}
+        </view>
+      </scroll-view>
+
+      <scroll-view
+        scroll-y
+        class="van-tree-select__content"
+        :style="setItemHeight"
       >
-        {{item.categoryName}}
-      </view>
-    </scroll-view>
-
-    <scroll-view
-      scroll-y
-      class="van-tree-select__content"
-      :style="setItemHeight"
-    >
-      <view v-for="(subItem, index) in subItems"
-            :key="index"
-            @click="onSelectItem"
-            class="van-ellipsis van-hairline--bottom van-tree-select__item">
-        <card :cardInfo="subItem"
-          @popCart="onPopCart"
-        ></card>
-      </view>
-    </scroll-view>
-
-    <cart-pop :popShow="popCartActive" :productSKUs="productSKUs"
-              @popUpClose="closeActive" @setStorage="fff"></cart-pop>
+        <div class="category_name_class">{{items[mainActiveIndex].categoryName}}</div>
+        <view v-for="(subItem, index) in subItems"
+              :key="index"
+              @click="onSelectItem"
+              class="van-ellipsis van-hairline--bottom van-tree-select__item">
+          <card :cardInfo="subItem"
+                @popCart="onPopCart"
+          ></card>
+        </view>
+      </scroll-view>
+    </div>
+    <div>
+      <cart-pop :popShow="popCartActive" :productSKUs="productSKUs"
+                @popUpClose="closeActive" @setStorage="fff"></cart-pop>
+    </div>
   </div>
+
 </template>
 <script>
   import {GET_PRODUCT_CATEGORY_URL,GET_CATEGORY_AND_PRODUCT_BRIEF,GET_PRODUCT_SKU_DETAIL_BY_ID,
@@ -46,7 +54,54 @@
     },
     data() {
       return {
-        items:[],
+        activityUrl:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567573168282&di=6593706f56d777fddbb3f5dbe1110887&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20140526%2FImg400050880.jpg",
+        items:[
+          {
+            "categoryId": 38,
+            "categoryName": "现烤蛋糕",
+            "briefResultList": [
+              {
+                "productId": 1,
+                "categoryId": null,
+                "name": "小米蛋糕",
+                "englishName": "xiaomi cake",
+                "sort": null,
+                "onlineStatus": null,
+                "price":10.00,
+                "linePrice":12.00,
+                "attributeCount":3,
+                "headUrl": "http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/2020851887机器猫.jpg"
+              },
+              {
+                "productId": 3,
+                "categoryId": null,
+                "name": "测试蛋糕哈哈哈",
+                "englishName": "fff",
+                "sort": null,
+                "onlineStatus": null,
+                "price":10.00,
+                "linePrice":12.00,
+                "headUrl": "http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/2020851887机器猫.jpg"
+              }
+            ]
+          },
+          {
+            "categoryId": 61,
+            "categoryName": "最好吃面包",
+            "briefResultList": [
+              {
+                "productId": 2,
+                "categoryId": null,
+                "name": "小米面包",
+                "englishName": "bread",
+                "sort": null,
+                "onlineStatus": null,
+                "price":10.00,
+                "headUrl": "http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/2020851887机器猫.jpg"
+              }
+            ]
+          }
+        ],
         activeId: '',
         maxHeight: 1000,
         cardInfo: {
@@ -57,7 +112,24 @@
         isActive:true,
         mainActiveIndex:0,
         popCartActive: false,
-        productSKUs:{}
+        productSKUs:[
+          {
+            "id": 9,
+            "productId": 2,
+            "productAttributeId": 6,
+            "salePrice": 111.0,
+            "linePrice": 132.0,
+            "isPrime": true,
+            "cakeSize": "7* 12cm",
+            "capacity": "1000ml",
+            "copies": "5人份",
+            "cutlery": "18人餐具",
+            "createTime": null,
+            "updateTime": null,
+            "attributeName": "1磅",
+            "attributeOrderNum": 1
+          }
+        ]
       }
     },
     computed: {
@@ -137,9 +209,9 @@
          this.itemHeight = itemHeight;
       },
       onPopCart(data) {
-        this.popCartActive = true;
         console.log("data",data);
-        this.getProductSkuDetail(data);
+        // this.getProductSkuDetail(data);
+        this.popCartActive = true;
       },
       closeActive() {
         console.log("closeActive")
@@ -150,14 +222,42 @@
       }
     },
     created() {
-      this.getCategoryAndProductBrief();
+      // this.getCategoryAndProductBrief();
       console.log("this.items{}", this.items)
     }
     }
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  .index-container {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    height: 100px;
+  }
+  .category_name_class {
+    width: 100px;
+    font-size: 16px;
+    font-family: "Microsoft YaHei";
+    font-weight: bold;
+  }
+  .category_name_class:after {
+    content:" ";
+    display:block;
+    margin:5px auto 0;
+    width:100px;
+    border-bottom:2px solid #F39B00;
+    transition:width .4s ease-in-out;
+  }
+
+
+
+  .active_img_class {
+    width: 100%;
+    height: 100px;
+  }
+
   .van-tree-select {
     position: relative;
     font-size: 14px;

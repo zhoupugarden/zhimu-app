@@ -5,37 +5,43 @@
                z-index="200"
                custom-style="left:20%"
                @close="popUpClose"
-               :overlay="true">
+               >
       <div class="van-popup__panel">
-        <div class="van-popup__panel_price">
-          {{chooseSKU.salePrice}}
-        </div>
-        <div class="van-popup__panel_line">
-        </div>
-        <div class="van-popup__panel_extro">
-          <van-icon name="fire-o"/>
-          <span class="van-popup__panel_extro__item">{{chooseSKU.cakeSize}}</span>
-          <van-icon name="fire-o"/>
-          <span class="van-popup__panel_extro__item">{{chooseSKU.capacity}}</span>
-          <div></div>
-          <van-icon name="fire-o"/>
-          <span class="van-popup__panel_extro__item">{{chooseSKU.copies}}</span>
-          <van-icon name="fire-o"/>
-          <span class="van-popup__panel_extro__item">{{chooseSKU.cutlery}}</span>
-        </div>
-        <div class="van-popup__panel_attribute">
-          <div>规格：</div>
+        <div style="padding-left: 10%">
+          <div class="van-popup__panel_price">
+            {{chooseSKU.salePrice}}
+          </div>
+          <div class="van-popup__panel_extro">
+            <div class="van-popup__panel_extro__item">
+              <van-icon name="fire-o"/>
+              <span>{{chooseSKU.cakeSize}}</span>
+            </div>
+            <div class="van-popup__panel_extro__item">
+              <van-icon name="fire-o"/>
+              <span>{{chooseSKU.capacity}}</span>
+            </div>
+            <div class="van-popup__panel_extro__item">
+              <van-icon name="fire-o"/>
+              <span>{{chooseSKU.copies}}</span>
+            </div>
+            <div class="van-popup__panel_extro__item">
+              <van-icon name="fire-o"/>
+              <span>{{chooseSKU.cutlery}}</span>
+            </div>
+          </div>
+          <div style="font-family: 'Microsoft YaHei'; font-size: 14px;padding:10px 0px;">规格</div>
+          <div class="van-popup__panel_attribute">
           <span v-for="(item, index) in productSKUs" :key="index">
               <van-button :id="item.id"
                           :type="item.id === chooseSKU.id ? 'primary' : 'default'"
                           size="mini" @click="selectedSKU">{{item.attributeName}}</van-button>
             </span>
+          </div>
         </div>
         <div class="van-popup__panel_shopcart">
-          <van-button type="warning" @click="addToStorage">
+          <van-button custom-class= "button-custom" type="warning" @click="addToStorage">
             {{popupText}}
           </van-button>
-
         </div>
       </div>
     </van-popup>
@@ -58,7 +64,22 @@ export default {
   },
   data() {
     return {
-      chooseSKU: {}
+      chooseSKU: 		{
+        "id": 9,
+        "productId": 2,
+        "productAttributeId": 6,
+        "salePrice": 111.0,
+        "linePrice": 132.0,
+        "isPrime": true,
+        "cakeSize": "7* 12cm",
+        "capacity": "1000ml",
+        "copies": "5人份",
+        "cutlery": "18人餐具",
+        "createTime": null,
+        "updateTime": null,
+        "attributeName": "1磅",
+        "attributeOrderNum": 1
+      }
 
     }
   },
@@ -99,9 +120,22 @@ export default {
     height: 240px;
     width: 280px;
   .van-popup__panel_price {
-    padding-left: 10px;
     padding-bottom: 10px;
     padding-top: 10px;
+    font-size: 16px;
+    font-family: "Microsoft YaHei";
+    font-weight: bold;
+  }
+  .van-popup__panel_price:before {
+    content:'￥';
+  }
+  .van-popup__panel_price:after {
+    content:" ";
+    display:block;
+    margin:5px auto 0;
+    width:90%;
+    border-bottom:2px solid #F39B00;
+    transition:width .4s ease-in-out;
   }
 
   .van-popup__panel_line {
@@ -113,9 +147,15 @@ export default {
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   }
   .van-popup__panel_extro {
-    padding: 10px 10px;
+    display: flex;
+    flex-flow: row wrap;
+    align-content: flex-start;
     .van-popup__panel_extro__item {
-      padding: 10px 10px;
+      box-sizing: border-box;
+      flex: 0 0 50%;
+      padding: 5px 5px;
+      font-size: 16px;
+      font-family: "Microsoft YaHei";
     }
   }
   .van-popup__panel_shopcart {
@@ -126,4 +166,10 @@ export default {
   }
   }
 
+</style>
+
+<style lang="scss">
+  .button-custom {
+    width: 100%;
+  }
 </style>

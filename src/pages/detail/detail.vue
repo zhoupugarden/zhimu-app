@@ -146,10 +146,46 @@
   data() {
     return {
       active: 0,
-      good: {},
+      good: {
+        "id": 1,
+        "categoryId": 38,
+        "productAttributeGroupId": 1,
+        "name": "小米蛋糕",
+        "englishName": "xiaomi cake",
+        "sort": 1,
+        "stock": 100,
+        "onlineStatus": 1001,
+        "salePrice": 150.0,
+        "linePrice": 160.0,
+        "headPicUrl": "http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/2020851887机器猫.jpg",
+        "detailPicUrl": "{\"firstUrl\":\"http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/机器猫.jpg\"}",
+        "deliverTime": "当日配送",
+        "freshCondition": "常温保存",
+        "sweetLevel": 1,
+        "ingredients": "测试商品配料，花生",
+        "createTime": "2019-08-16T05:37:53.000+0000",
+        "updateTime": null
+      },
       popShow:false,
-      urls: {},
-      productSKUs: [],
+      urls: {"firstUrl":"http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/机器猫.jpg"},
+      productSKUs: [
+        {
+          "id": 10,
+          "productId": 3,
+          "productAttributeId": 6,
+          "salePrice": 111.0,
+          "linePrice": 132.0,
+          "isPrime": true,
+          "cakeSize": "7* 12cm",
+          "capacity": "1000ml",
+          "copies": "5人份",
+          "cutlery": "18人餐具",
+          "createTime": null,
+          "updateTime": null,
+          "attributeName": "1磅",
+          "attributeOrderNum": 1
+        }
+      ],
       chooseSKU :{},
       popupText: "加入购物车"
     }
@@ -232,8 +268,8 @@
         let params = {};
           params.productId = this.$root.$mp.query.productId;
           //后续可以将这两个请求合并成一个
-          this.getProductDetail(params);
-          this.getProductSkuDetail(params);
+          // this.getProductDetail(params);
+          // this.getProductSkuDetail(params);
 
       },
     computed: {

@@ -77,7 +77,7 @@
     },
     created() {
       console.log("index 页面初始化");
-      this.getProductCategory();
+      // this.getProductCategory();
     },
 
     onLoad(options) {
