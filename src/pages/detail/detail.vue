@@ -70,8 +70,11 @@
       </div>
     </div>
     <div class="zm-goods__review">
-      <van-cell :title="reviewTitle" is-link value="查看全部"
-                value-class="zm-goods__review_value" @click="navigateToReviewDetail"/>
+      <van-cell :title="reviewTitle" is-link
+                link-type="navigateTo"
+                url="/pages/comments/main"
+                value="查看全部"
+                value-class="zm-goods__review_value" />
       <div class="zm-goods__review_detail">
         这个商品棒极了
       </div>
@@ -276,10 +279,6 @@
       )
     },
 
-    navigateToReviewDetail() {
-       console.log("navigateToReviewDetail")
-    },
-
     getProductSkuDetail(data) {
       request(
         GET_PRODUCT_SKU_DETAIL_BY_ID,
@@ -353,8 +352,6 @@
     border-bottom:2px solid #F39B00;
     transition:width .4s ease-in-out;
   }
-
-
 
   .zm-goods__extroInfo {
     margin: 5px 10px;

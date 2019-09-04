@@ -26,7 +26,8 @@
     "pages/orderdetail/main",
     "pages/mission/main",
     "pages/login/main",
-    "pages/phonelogin/main"
+    "pages/phonelogin/main",
+    "pages/comments/main"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",
