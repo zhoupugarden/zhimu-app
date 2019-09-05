@@ -54,10 +54,12 @@
       </van-cell-group>
     </div>
 
-    <div class="my-customer-phone">
+    <div class="my-customer-phone" @click="navigateToGetUserInfo">
       <van-cell title="客服电话 138-1740-9664" label="服务时间：9:00-21:00" icon="phone-o" />
     </div>
 
+    <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">获取用户信息</button>
+    <button open-type="getPhoneNumber" lang="zh_CN" @getphonenumber="getPhoneNumber">获取手机号</button>
   </div>
 
 </template>
@@ -95,7 +97,6 @@ export default {
         url
       });
     },
-
     navigateToPoint() {
       let url = "../point/main" ;
       console.log("url",url)
@@ -130,6 +131,38 @@ export default {
       wx.navigateTo({
         url
       });
+    },
+    navigateToGetUserInfo() {
+      wx.getSetting({
+        success(res) {
+          if (!res.authSetting['scope.userInfo']) {
+            wx.authorize({
+              scope: 'scope.userInfo',
+              success () {
+                console.log("用户已同意授权")
+              }
+            })
+          }
+        }
+      })
+
+    },
+    onGotUserInfo(res) {
+      console.log(res)
+
+      wx.login({
+        success (resss) {
+          if (resss) {
+            //发起网络请求
+            console.log("resss", resss)
+          } else {
+            console.log('登录失败！' + res.errMsg)
+          }
+        }
+      })
+    },
+    getPhoneNumber(e) {
+      console.log("获取手机号",e)
     }
   }
 

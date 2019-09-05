@@ -59,13 +59,7 @@
       }
     },
     methods: {
-      navigateToUserphonelogin() {
-        let url = "/pages/phonephonelogin/main" ;
-        console.log("url",url)
-        wx.navigateTo({
-          url
-        });
-      }
+
 
     }
 
@@ -97,7 +91,7 @@
     position: fixed;
     bottom: 10px;
     font-size: 12px;
-    color: #CFD4DA;
+    color: #999999;
     font-weight: lighter;
   }
 

@@ -29,22 +29,6 @@
         ></free-card>
       </div>
     </div>
-    <van-popup position="bottom"
-               :show="popShow"
-               custom-class="van-popup__custom--cart"
-               @close="popUpClose"
-               >
-      <div class="van-popup__custom--container">
-        <pay-card
-          :srcUrl="good.url"
-          :name="good.name"
-          :price="good.price"
-        ></pay-card>
-      </div>
-
-
-    </van-popup>
-
   <!--<div class="van-popup__custom&#45;&#45;cart">-->
     <!--<div class="cart-container__popup&#45;&#45;nav">-->
       <!--<van-button size="small">蜡烛</van-button>-->
@@ -75,6 +59,22 @@
         <van-button size="large" type="primary" @click="navigateToSubmit">下一步</van-button>
       </div>
     </div>
+    <van-popup position="bottom"
+               :show="popShow"
+               custom-class="van-popup__custom--cart"
+               @close="popUpClose"
+    >
+      <div class="van-popup__custom--container">
+        <pay-card
+          :srcUrl="good.url"
+          :name="good.name"
+          :price="good.price"
+        ></pay-card>
+      </div>
+
+
+    </van-popup>
+
   </div>
 </template>
 
@@ -135,9 +135,6 @@ export default {
     }
 
   }
-
-
-
 }
 </script>
 

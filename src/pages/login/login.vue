@@ -8,7 +8,7 @@
     </div>
 
     <div class="login-weixin">
-      <van-button type="primary" custom-class	= "login-button-custom" round >
+      <van-button type="primary" custom-class	= "login-button-custom" round @click="navigateToWxLogin">
         <van-icon name="chat-o"/>
         按钮微信授权登录
       </van-button>
@@ -38,6 +38,38 @@
       }
     },
     methods: {
+      navigateToWxLogin() {
+        wx.getSetting({
+          success(res) {
+            if (!res.authSetting['scope.userLocation']) {
+              wx.authorize({
+                scope: 'scope.userLocation',
+                success () {
+                  console.log("用户已同意授权")
+                  wx.getLocation({
+                    type: 'wgs84',
+                    success (res) {
+                      console.log(res)
+                      const latitude = res.latitude
+                      const longitude = res.longitude
+                      const speed = res.speed
+                      const accuracy = res.accuracy
+                      wx.chooseLocation({
+                        success(ress) {
+                          console.log(ress)
+                        }
+                      })
+
+
+                    }
+                  })
+                }
+              })
+            }
+          }
+        })
+
+      },
       navigateToUserLogin() {
         let url = "/pages/phonelogin/main" ;
         console.log("url",url)
@@ -76,7 +108,7 @@
     position: fixed;
     bottom: 10px;
     font-size: 12px;
-    color: #CFD4DA;
+    color: #999999;
     font-weight: lighter;
   }
 
