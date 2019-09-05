@@ -22,7 +22,7 @@
       </div>
         <van-cell custom-class="demo"
                   title="会员5张9折券，本次至少可省￥13.80" link-type="navigateTo"
-                  url="/pages/myvip/index" is-link value="立即开通" />
+                  url="/pages/myvip/main" is-link value="立即开通" />
     </div>
     <div class="zm-goods__extroInfo">
       <div class="choose-attribute">
@@ -69,26 +69,26 @@
         </van-cell>
       </div>
     </div>
-    <div class="zm-goods__review">
-      <van-cell :title="reviewTitle" is-link
-                link-type="navigateTo"
-                url="/pages/comments/main"
-                value="查看全部"
-                value-class="zm-goods__review_value" />
-      <div class="zm-goods__review_detail">
-        这个商品棒极了
-      </div>
-    </div>
-
     <div class="zm-goods__content">
       <van-tabs :active= "active" animated swipeable sticky @change="onChange">
         <van-tab title="详情">
           <div class="zm-goods__detail">
             <!--如何消除图片与图片间的空隙-->
-           <img :src="urls.firstUrl" mode="aspectFill"><img :src="urls.secondUrl" mode="aspectFill">
-            <img :src="urls.thirdUrl" mode="aspectFill">
-           <img :src="urls.fourUrl" mode="aspectFill">
-           <img :src="urls.fiveUrl" mode="aspectFill">
+            <div>
+              <image :src="urls.firstUrl" mode="widthFix" class="zm-goods__detail-img"></image>
+            </div>
+            <div v-if="urls.secondUrl">
+              <image :src="urls.secondUrl" mode="widthFix" class="zm-goods__detail-img"></image>
+            </div>
+            <div>
+              <image :src="urls.firstUrl" mode="widthFix" class="zm-goods__detail-img"></image>
+            </div>
+            <div>
+              <image :src="urls.firstUrl" mode="widthFix" class="zm-goods__detail-img"></image>
+            </div>
+            <div>
+              <image :src="urls.firstUrl" mode="widthFix" class="zm-goods__detail-img"></image>
+            </div>
           </div>
         </van-tab>
         <van-tab title="原料">
@@ -103,6 +103,21 @@
           </div>
         </van-tab>
       </van-tabs>
+    </div>
+    <div class="zm-goods__review">
+      <van-cell :title="reviewTitle" is-link
+                link-type="navigateTo"
+                url="/pages/comments/main"
+                value="查看全部"
+                value-class="zm-goods__review_value" />
+      <div class="zm-goods__review_detail">
+        <img :src="comment.url" class="avatar-img">
+        <div style="width: 60%;">
+          <div style="background-color: #CFD4DA">
+            {{comment.content}}
+          </div>
+        </div>
+      </div>
     </div>
     <div class="zm-goods__actions">
 
@@ -235,7 +250,11 @@
         "attributeName": "1磅",
         "attributeOrderNum": 1
       },
-      popupText: "加入购物车"
+      popupText: "加入购物车",
+      comment: {
+        url:"http://pic4.zhimg.com/50/v2-8fdee93e812b539c2b88cacce3007a94_hd.jpg",
+        content:"必吃榜来拔草啦~嘉善必吃榜来拔草啦~嘉善必吃榜来拔草啦~嘉善必吃榜来拔草啦~嘉善"
+      }
     }
   },
   //如何支持pathVariable 的请求？？
@@ -331,6 +350,27 @@
 
 <style lang="scss"  scoped>
 
+  .zm-goods__detail {
+    font-size: 0;
+    margin:0;
+    padding:0;
+  }
+  .zm-goods__detail-img {
+    width: 100%;
+  }
+
+  .zm-goods__review_detail {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .avatar-img {
+    display: block;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+  }
+
   .attribute-extro-info {
     display: flex;
     flex-flow: row wrap;
@@ -381,6 +421,7 @@
   .zm-goods__container {
     position: relative;
     overflow: hidden;
+    padding-bottom:60px;
   .zm-goods__head {
     position: relative;
   .zm-goods__name {
