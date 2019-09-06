@@ -1,11 +1,11 @@
 <template>
   <div class="paycard-container">
-    <img :src="srcUrl" class="paycard-container__pic">
+    <img :src="item.srcUrl" class="paycard-container__pic">
     <div class="paycard-container__name">
-      {{name}}
+      {{item.name}}
     </div>
     <div class="paycard-container_price">
-      ￥{{price}}
+      ￥{{item.price}}
       <van-button size="small">添加</van-button>
     </div>
   </div>
@@ -15,15 +15,7 @@
 <script>
   export default {
     props: {
-      srcUrl: {
-        type: String
-      },
-      name: {
-        type: String
-      },
-      price: {
-        type: String
-      }
+      item:Object
 
     },
     data() {

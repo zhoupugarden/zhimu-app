@@ -174,7 +174,7 @@
             <van-goods-action-button
               :text="popupText"
               type="warning"
-              bind:click="onClickButton"
+              @click="addCart"
             />
           </van-goods-action>
         </div>
@@ -190,6 +190,9 @@
   import {GET_PRODUCT_DETAIL_BY_ID, GET_PRODUCT_SKU_DETAIL_BY_ID } from '@/utils/api';
   import {request} from "@/utils/request";
 
+  import { mapState, mapMutations, mapActions } from 'vuex';
+  import { ADD_PRODUCT_TO_CART } from '@/store/mutation-types';
+
   export default {
   data() {
     return {
@@ -201,6 +204,8 @@
         "name": "小米蛋糕",
         "englishName": "xiaomi cake",
         "sort": 1,
+        //type(1 cake、2 free 3 other)
+        "type":1,
         "stock": 100,
         "onlineStatus": 1001,
         "salePrice": 150.0,
@@ -259,6 +264,14 @@
   },
   //如何支持pathVariable 的请求？？
   methods: {
+
+    ...mapActions(
+      [
+        'addProductToCart'
+      ]
+
+    ),
+
     selectedSKU(item) {
       console.log("selectedSKU: ", item);
       let id = parseInt(item.mp.currentTarget.id);
@@ -276,6 +289,22 @@
     onClickButton() {
       this.popShow = true;
     },
+    addCart() {
+      let cartProduct = {
+        skuId : this.chooseSKU.id,
+        url : this.good.headPicUrl,
+        productId : this.chooseSKU.productId,
+        attributeName : this.chooseSKU.attributeName,
+        productName: this.good.name,
+        type : this.good.type,
+        salePrice: this.chooseSKU.salePrice,
+        linePrice: this.chooseSKU.linePrice
+      }
+
+      this.addProductToCart(cartProduct);
+      console.log(cartProduct)
+    },
+
     onBuyClickButton() {
       this.popupText = "立即购买";
       this.popShow = true;

@@ -1,15 +1,12 @@
 <template>
   <div class="cart-container">
     <div class="cart-container__detail">
-      <cart-card
-        :thumbUrl="good.url"
-        :tag="good.tag"
-        :price="good.price"
-        :originPrice="good.originPrice"
-        :title="good.title"
-        :attribute="good.attribute"
-      >
-      </cart-card>
+      <div v-for="(item, index) in productCartList" :key="index">
+        <cart-card
+          @increItem="increItem"
+          @removeItem="removeItem"
+          :cardItem="item"></cart-card>
+      </div>
     </div>
     <div v-if="showTip" class="cart-container__tip">
       请在下方选择需要的配件
@@ -23,33 +20,19 @@
         <van-button size="small" @click="popUpShow">配件饰品</van-button>
       </div>
       <div class="cart-container__fitting--detail">
-        <free-card
-          :srcUrl="good.url"
-          :name="good.name"
-        ></free-card>
+        <div v-for="(item, index) in freeCartList" :key="index">
+          <free-card :item="item"
+          ></free-card>
+        </div>
+
       </div>
     </div>
-  <!--<div class="van-popup__custom&#45;&#45;cart">-->
-    <!--<div class="cart-container__popup&#45;&#45;nav">-->
-      <!--<van-button size="small">蜡烛</van-button>-->
-      <!--<van-button size="small">帽子</van-button>-->
-      <!--<van-button size="small">付费饰品</van-button>-->
-      <!--<van-button size="small">配件饰品</van-button>-->
-    <!--</div>-->
-    <!--<div class="cart-container__popup&#45;&#45;detail">-->
-      <!--<free-card-->
-        <!--:srcUrl="good.url"-->
-        <!--:name="good.name"-->
-      <!--&gt;</free-card>-->
-    <!--</div>-->
-  <!--</div>-->
-
 
     <div class="cart-container__bottom">
       <div class="cart-container__bottom--line">
       </div>
       <div class="cart-container__bottom--total">
-        总计：{{totalAmount}}
+        总计：{{cartTotalPrice}}
         <div class="cart-container__bottom--fee">
           另需配送费5元
         </div>
@@ -65,14 +48,11 @@
                @close="popUpClose"
     >
       <div class="van-popup__custom--container">
-        <pay-card
-          :srcUrl="good.url"
-          :name="good.name"
-          :price="good.price"
-        ></pay-card>
+        <div v-for="(item, index) in payGood" :key="index">
+          <pay-card :item="item"
+          ></pay-card>
+        </div>
       </div>
-
-
     </van-popup>
 
   </div>
@@ -82,7 +62,7 @@
   import cartCard from '@/components/cartCard';
   import FreeCard from '@/components/FreeCard';
   import PayCard from '@/components/PayCard';
-  import { mapState, mapMutations } from 'vuex';
+  import { mapState, mapMutations,mapGetters, mapActions } from 'vuex';
   import { SET_OPEN_ID } from '@/store/mutation-types';
 
 export default {
@@ -104,18 +84,51 @@ export default {
       },
       totalAmount: 1000,
       showTip:true,
-      popShow:false
+      popShow:false,
+      payGood: [
+        {
+          url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
+          name:"yangyu测试",
+          tag:"热销",
+          price:"10.12",
+          originPrice:"100",
+          title:"杨宇测试",
+          attribute:"1个"
+        },
+        {
+          url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
+          name:"yangyu测试",
+          tag:"热销",
+          price:"10.12",
+          originPrice:"100",
+          title:"杨宇测试",
+          attribute:"1个"
+        }
+      ]
+
+
     }
   },
   computed: {
-    ...mapState([
-      'openId'
-    ])
+    ...mapGetters(
+      [
+        'cartList',
+        'cartTotalPrice',
+        'productCartList',
+        'freeCartList',
+        'isExistCake'
+      ]
+    )
+
   },
   methods: {
-    ...mapMutations({
-      setOpenId: 'SET_OPEN_ID'
-    }),
+
+    ...mapActions(
+      [
+        'decrementInventory',
+        'incrementInventory'
+      ]
+    ),
     storeButton() {
       this.setOpenId("123456")
     },
@@ -128,12 +141,25 @@ export default {
     },
     navigateToSubmit() {
       var url = "/pages/ordersubmit/main";
+
+      console.log(this.productCartList)
       console.log("url",url)
       wx.navigateTo({
         url
       });
+    },
+    removeItem(data) {
+      console.log(data)
+      this.decrementInventory(data);
+    },
+    increItem(data) {
+      console.log(data)
+      this.incrementInventory(data)
     }
 
+  },
+  mounted() {
+    console.log("需要检查库存")
   }
 }
 </script>

@@ -1,8 +1,8 @@
 <template>
   <div class="freecard-container">
-    <img :src="srcUrl" class="freecard-container__pic">
+    <img :src="item.cartItem.url" class="freecard-container__pic">
     <div class="freecard-container__name">
-      {{name}} / ￥ 0.00
+      {{item.cartItem.productName}} / ￥ 0.00
     </div>
 
     <div class="freecard-container__stepper">
@@ -22,12 +22,7 @@
   export default {
 
     props: {
-      srcUrl: {
-        type: String
-      },
-      name: {
-        type: String
-      },
+      item:Object
     },
     data() {
       return {

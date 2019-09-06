@@ -2,7 +2,7 @@
   <div class="zm-card" >
       <div class="zm-card__thumb" >
         <image
-          :src="thumbUrl"
+          :src="cardItem.cartItem.url"
           mode="aspectFit"
           lazy-load="true"
           class="zm-card__img thumb-class"
@@ -18,18 +18,21 @@
         </van-tag>
         </div>
       <div class="zm-card__content">
-        <div class="zm-card__title"> {{title}}</div>
-        <div class="zm-card__attr">{{attribute}}</div>
+        <div class="zm-card__title"> {{cardItem.cartItem.productName}}</div>
+        <div class="zm-card__attr">{{cardItem.cartItem.attributeName}}</div>
         <slot name="tags"></slot>
         <div class="zm-card__close">
-          <van-icon name="close" @click="onClickIcon"/>
+          <van-icon name="close" @click="removeProduct"/>
         </div>
         <div class="zm-card__bottom">
-          <view  class="zm-card__price price-class">￥{{ price }}</view>
-          <view  class="zm-card__origin-price origin-price-class">￥ {{ originPrice }}</view>
+          <view  class="zm-card__price price-class">￥{{ cardItem.cartItem.salePrice }}</view>
+          <view  class="zm-card__origin-price origin-price-class">￥ {{ cardItem.cartItem.linePrice }}</view>
           <slot name="bottom" />
           <div class="zm-card__stepper">
-            <van-stepper :value="count"></van-stepper>
+            <van-stepper
+              disable-input="true"
+              @plus="increInventory"
+              :value="cardItem.inventory"></van-stepper>
           </div>
         </div>
       </div>
@@ -39,19 +42,17 @@
 
 <script>
   export default {
-
     props: {
-      thumbUrl: String,
-      tag: String,
-      title: String,
-      attribute: String,
-      price: String,
-      originPrice: String,
-      count: String
+      cardItem: Object
     },
     methods: {
-      onClickIcon() {
-
+      removeProduct() {
+        console.log(this.cardItem.cartItem)
+        this.$emit('removeItem', this.cardItem.cartItem)
+      },
+      increInventory() {
+        console.log(this.cardItem.cartItem)
+        this.$emit('increItem', this.cardItem.cartItem)
       }
     }
 

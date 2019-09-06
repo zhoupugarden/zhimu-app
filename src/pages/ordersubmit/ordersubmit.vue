@@ -259,6 +259,9 @@
     },
     mounted() {
       console.log(this.$root.$mp.query);
+
+      //有两种路径，1 从购物车页面进来，2 点击直接购买，需要做不同的判断
+
       if (null != this.$root.$mp.query.addressInfo) {
         this.chooseId = 1;
 
