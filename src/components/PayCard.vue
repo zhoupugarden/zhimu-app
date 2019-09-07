@@ -1,12 +1,12 @@
 <template>
   <div class="paycard-container">
-    <img :src="item.srcUrl" class="paycard-container__pic">
+    <img :src="item.url" class="paycard-container__pic">
     <div class="paycard-container__name">
-      {{item.name}}
+      {{item.productName}}
     </div>
     <div class="paycard-container_price">
-      ￥{{item.price}}
-      <van-button size="small">添加</van-button>
+      ￥{{item.salePrice}}
+      <van-button size="small" @click="addToCart">添加</van-button>
     </div>
   </div>
   <!--免费配件购物车展示-->
@@ -21,6 +21,11 @@
     data() {
       return {
 
+      }
+    },
+    methods: {
+      addToCart() {
+        this.$emit('addToCart', this.item)
       }
     }
 

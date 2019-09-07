@@ -125,12 +125,13 @@
         <van-goods-action-icon
           icon="cart-o"
           text="购物车"
-          bind:click="onClickIcon"
+          :info="cartTotalCount"
+          @click="onClickCartIcon"
         />
         <van-goods-action-button
           text="加入购物车"
           type="warning"
-          @click="onClickButton"
+          @click="onAddCartButton"
         />
         <van-goods-action-button
           text="立即购买"
@@ -181,7 +182,7 @@
       </div>
 
     </van-popup>
-
+    <van-toast  id="van-toast"/>
   </div>
 </template>
 
@@ -190,9 +191,9 @@
   import {GET_PRODUCT_DETAIL_BY_ID, GET_PRODUCT_SKU_DETAIL_BY_ID } from '@/utils/api';
   import {request} from "@/utils/request";
 
-  import { mapState, mapMutations, mapActions } from 'vuex';
+  import { mapGetters, mapActions } from 'vuex';
   import { ADD_PRODUCT_TO_CART } from '@/store/mutation-types';
-
+  import {toast} from '../../utils/toast';
   export default {
   data() {
     return {
@@ -264,14 +265,12 @@
   },
   //如何支持pathVariable 的请求？？
   methods: {
-
     ...mapActions(
       [
         'addProductToCart'
       ]
 
     ),
-
     selectedSKU(item) {
       console.log("selectedSKU: ", item);
       let id = parseInt(item.mp.currentTarget.id);
@@ -283,7 +282,6 @@
         }
       );
       console.log("this.chooseSKU :", this.chooseSKU);
-
     },
 
     onClickButton() {
@@ -300,16 +298,28 @@
         salePrice: this.chooseSKU.salePrice,
         linePrice: this.chooseSKU.linePrice
       }
-
       this.addProductToCart(cartProduct);
-      console.log(cartProduct)
+      this.popShow = false;
+      toast("成功添加购物车")
     },
-
-    onBuyClickButton() {
-      this.popupText = "立即购买";
+    onClickCartIcon() {
+      //调不到bar关联的菜单
+      var url = "../cart/main";
+      wx.switchTab({
+        url
+      });
+    },
+    onAddCartButton() {
+      this.popupText = "加入购物车";
       this.popShow = true;
     },
 
+    onBuyClickButton() {
+      var url = "../ordersubmit/main";
+      wx.navigateTo({
+        url
+      });
+    },
      getProductDetail(data) {
       request(
         GET_PRODUCT_DETAIL_BY_ID,
@@ -370,7 +380,12 @@
       },
       reviewTitle() {
         return "评价" + "(" + this.active + ")";
-      }
+      },
+      ...mapGetters(
+        [
+          'cartTotalCount'
+        ]
+      )
 
     }
 }

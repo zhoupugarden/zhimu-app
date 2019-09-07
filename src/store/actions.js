@@ -21,7 +21,6 @@ export default {
       }else {
         commit(types.INCREMENT_INVENTORY, data)
       }
-
     },
     decrementInventory: ({commit}, {skuId}) => {
       console.log(skuId);
@@ -32,6 +31,10 @@ export default {
       console.log(skuId);
       commit(types.INCREMENT_INVENTORY, {skuId})
     },
+
+    delProductFromCart:({commit}, {skuId}) => {
+      commit(types.DEL_PRODUCT_FROM_CART, {skuId})
+    }
 
 
 }

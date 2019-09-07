@@ -10,7 +10,7 @@
     </div>
 
     <div class="freecard-container_close">
-      <van-icon name="cross"></van-icon>
+      <van-icon name="cross" @click=""></van-icon>
     </div>
   </div>
 

@@ -31,11 +31,12 @@
           ></card>
         </view>
       </scroll-view>
+
+        <cart-pop :popShow="popCartActive"
+                  :productSKUs="productSKUs"
+                  @popUpClose="closeActive" @addProductToCart="addToCart"></cart-pop>
     </div>
-    <div>
-      <cart-pop :popShow="popCartActive" :productSKUs="productSKUs"
-                @popUpClose="closeActive" @setStorage="fff"></cart-pop>
-    </div>
+
   </div>
 
 </template>
@@ -45,6 +46,9 @@
   import {request} from "@/utils/request";
   import card from '@/components/card';
   import cartPop from '@/components/cartPop';
+
+  import {  mapActions } from 'vuex';
+
   const ITEM_HEIGHT = 260;
   const defaultCategoryAndProductBriefInfo = {
   };
@@ -127,7 +131,12 @@
             "createTime": null,
             "updateTime": null,
             "attributeName": "1磅",
-            "attributeOrderNum": 1
+            "attributeOrderNum": 1,
+            "productId":2,
+            "skuId":3,
+            "headUrl":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567573168282&di=6593706f56d777fddbb3f5dbe1110887&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20140526%2FImg400050880.jpg",
+            "salePrice":10.89,
+            "linePrice":19.97
           }
         ]
       }
@@ -154,6 +163,13 @@
       mainActiveIndex: 'updateSubItems'
     },
     methods: {
+
+      ...mapActions(
+        [
+          'addProductToCart'
+        ]
+
+      ),
       async getCategoryAndProductBrief() {
         request(
           GET_CATEGORY_AND_PRODUCT_BRIEF,
@@ -217,8 +233,10 @@
         console.log("closeActive")
         this.popCartActive = false;
       },
-      fff(data) {
-        console.log("waaaaaa",data)
+      addToCart(data) {
+        this.addProductToCart(data);
+        //加些过渡动画
+        this.popCartActive = false;
       }
     },
     created() {

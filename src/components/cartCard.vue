@@ -30,8 +30,8 @@
           <slot name="bottom" />
           <div class="zm-card__stepper">
             <van-stepper
-              disable-input="true"
               @plus="increInventory"
+              @minus="decreInventory"
               :value="cardItem.inventory"></van-stepper>
           </div>
         </div>
@@ -53,6 +53,9 @@
       increInventory() {
         console.log(this.cardItem.cartItem)
         this.$emit('increItem', this.cardItem.cartItem)
+      },
+      decreInventory() {
+        this.$emit('decreItem', this.cardItem.cartItem)
       }
     }
 

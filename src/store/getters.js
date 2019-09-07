@@ -7,6 +7,13 @@
 export default {
     openId: state => state.openId,
     cartList: state => state.cartList,
+    cartTotalCount: state => {
+      return state.cartList.reduce(
+        (count, item) => {
+          return count + item.inventory
+        }, 0
+      )
+    },
     cartTotalPrice: state => {
       return state.cartList.reduce(
         (total, cartListItem) => {
@@ -16,10 +23,10 @@ export default {
 
     },
     productCartList: state => state.cartList.filter(
-      item => item.cartItem.type != 3
+      item => item.cartItem.type != 2
     ),
     freeCartList: state => state.cartList.filter(
-      item => item.cartItem.type === 3
+      item => item.cartItem.type === 2
     ),
     isExistCake: state => {
       let cakeList = state.cartList.find(

@@ -39,7 +39,7 @@
           </div>
         </div>
         <div class="van-popup__panel_shopcart">
-          <van-button custom-class= "button-custom" type="warning" @click="addToStorage">
+          <van-button custom-class= "button-custom" type="warning" @click="addToCart">
             {{popupText}}
           </van-button>
         </div>
@@ -54,6 +54,7 @@ export default {
   props: {
     popShow: Boolean,
     productSKUs: Array,
+    productInfo: Object,
     position: {
       type: String
     },
@@ -64,11 +65,11 @@ export default {
   },
   data() {
     return {
-      chooseSKU: 		{
+      chooseSKU: {
         "id": 9,
         "productId": 2,
         "productAttributeId": 6,
-        "salePrice": 111.0,
+        "salePrice": 111.36,
         "linePrice": 132.0,
         "isPrime": true,
         "cakeSize": "7* 12cm",
@@ -78,7 +79,11 @@ export default {
         "createTime": null,
         "updateTime": null,
         "attributeName": "1磅",
-        "attributeOrderNum": 1
+        "attributeOrderNum": 1,
+        "url":"http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/2020851887机器猫.jpg",
+        "skuId":345,
+        "productName":"华为蛋糕",
+        "type":1
       }
 
     }
@@ -100,14 +105,8 @@ export default {
       this.popShow = false;
       this.$emit('popUpClose');
     },
-    addToStorage() {
-      wx.setStorage(
-        {
-         key:"chooseSKU",
-         data:this.chooseSKU
-        }
-      ),
-      this.$emit('setStorage', this.chooseSKU);
+    addToCart() {
+      this.$emit('addProductToCart', this.chooseSKU);
     }
   }
 }

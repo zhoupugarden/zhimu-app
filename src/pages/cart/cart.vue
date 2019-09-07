@@ -4,6 +4,7 @@
       <div v-for="(item, index) in productCartList" :key="index">
         <cart-card
           @increItem="increItem"
+          @decreItem="decreItem"
           @removeItem="removeItem"
           :cardItem="item"></cart-card>
       </div>
@@ -14,9 +15,9 @@
 
     <div class="cart-container__fitting">
       <div class="cart-container__fitting--nav">
-        <van-button size="small">蜡烛</van-button>
-        <van-button size="small">帽子</van-button>
-        <van-button size="small">付费饰品</van-button>
+        <van-button size="small" @click="addFire">蜡烛</van-button>
+        <van-button size="small" @click="addHat">帽子</van-button>
+        <van-button size="small" @click="addPeachFire">桃心蜡烛</van-button>
         <van-button size="small" @click="popUpShow">配件饰品</van-button>
       </div>
       <div class="cart-container__fitting--detail">
@@ -49,12 +50,14 @@
     >
       <div class="van-popup__custom--container">
         <div v-for="(item, index) in payGood" :key="index">
-          <pay-card :item="item"
+          <pay-card
+            @addToCart="addPayGoodToCart"
+            :item="item"
           ></pay-card>
         </div>
       </div>
     </van-popup>
-
+    <van-dialog id="van-dialog" />
   </div>
 </template>
 
@@ -64,8 +67,10 @@
   import PayCard from '@/components/PayCard';
   import { mapState, mapMutations,mapGetters, mapActions } from 'vuex';
   import { SET_OPEN_ID } from '@/store/mutation-types';
+  import Dialog from '../../../static/vant/dialog/dialog';
 
-export default {
+
+  export default {
 
   components: {
     cartCard, FreeCard, PayCard
@@ -80,20 +85,47 @@ export default {
         price:"10.12",
         originPrice:"100",
         title:"杨宇测试",
-        attribute:"1个"
+        attribute:"1个",
       },
       totalAmount: 1000,
       showTip:true,
       popShow:false,
+      freeGood:[
+        {
+          skuId:31,
+          url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
+          name:"yangyu测试",
+          attribute:"1个",
+          type:2
+        },
+        {
+          skuId:32,
+          url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
+          name:"yangyu测试",
+          attribute:"1个",
+          type:2
+        },
+        {
+          skuId:33,
+          url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
+          name:"yangyu测试",
+          attribute:"1个",
+          type:2
+        }
+      ],
       payGood: [
         {
           url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
           name:"yangyu测试",
           tag:"热销",
-          price:"10.12",
+          salePrice:"10.12",
           originPrice:"100",
           title:"杨宇测试",
-          attribute:"1个"
+          attributeName:"1个",
+          productId:456,
+          skuId:58,
+          productName:"付费商品",
+          type:1
         },
         {
           url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
@@ -102,11 +134,13 @@ export default {
           price:"10.12",
           originPrice:"100",
           title:"杨宇测试",
-          attribute:"1个"
+          attributeName:"1个",
+          productId:456,
+          skuId:59,
+          productName:"付费商品",
+          type:1
         }
       ]
-
-
     }
   },
   computed: {
@@ -125,8 +159,10 @@ export default {
 
     ...mapActions(
       [
+        'delProductFromCart',
+        'incrementInventory',
         'decrementInventory',
-        'incrementInventory'
+        'addProductToCart'
       ]
     ),
     storeButton() {
@@ -150,11 +186,38 @@ export default {
     },
     removeItem(data) {
       console.log(data)
-      this.decrementInventory(data);
+
+      Dialog.confirm({
+        title: '删除确认'
+      }).then(() => {
+        this.delProductFromCart(data);
+      }).catch(() => {
+        // on cancel
+      });
     },
     increItem(data) {
       console.log(data)
       this.incrementInventory(data)
+    },
+    decreItem(data) {
+      console.log(data)
+      this.decrementInventory(data)
+    },
+    addFire() {
+      let fire = this.freeGood[0];
+      this.addProductToCart(fire);
+    },
+    addHat() {
+      let hat = this.freeGood[1];
+      this.addProductToCart(hat);
+    },
+    addPeachFire() {
+      let peach = this.freeGood[2];
+      this.addProductToCart(peach);
+    },
+    addPayGoodToCart(data) {
+      console.log("payCard good",data)
+      this.addProductToCart(data);
     }
 
   },

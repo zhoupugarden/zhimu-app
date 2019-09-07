@@ -15,11 +15,8 @@ const mutations = {
     },
 
     [types.DECREMENT_INVENTORY](state, {skuId}) {
-      let index = state.cartList.findIndex( item => item.cartItem.skuId = skuId)
-      console.log("index", index);
-      state.cartList.splice(index, 1);
-
-
+      let cartItem = state.cartList.find(item => item.cartItem.skuId === skuId)
+      cartItem.inventory--
     },
     [types.INCREMENT_INVENTORY](state, {skuId}) {
       let cartItem = state.cartList.find(item => item.cartItem.skuId === skuId)
@@ -27,7 +24,9 @@ const mutations = {
 
     },
     [types.DEL_PRODUCT_FROM_CART](state, {skuId}) {
-
+      let index = state.cartList.findIndex( item => item.cartItem.skuId = skuId)
+      console.log("index", index);
+      state.cartList.splice(index, 1);
     },
     [types.CHECK_OUT_CART](state) {
 
