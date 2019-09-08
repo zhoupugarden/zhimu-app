@@ -10,7 +10,7 @@
     </div>
 
     <div class="freecard-container_close">
-      <van-icon name="cross" @click=""></van-icon>
+      <van-icon name="cross" @click="delFromCart"></van-icon>
     </div>
   </div>
 
@@ -27,6 +27,11 @@
     data() {
       return {
         count: 0
+      }
+    },
+    methods: {
+      delFromCart() {
+        this.$emit("delFromCart" , this.item)
       }
     }
 

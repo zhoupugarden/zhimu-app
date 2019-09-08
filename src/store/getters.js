@@ -15,12 +15,15 @@ export default {
       )
     },
     cartTotalPrice: state => {
-      return state.cartList.reduce(
-        (total, cartListItem) => {
-          return total + cartListItem.cartItem.salePrice * cartListItem.inventory
-        }, 0
-      )
-
+      if (state.cartList.length === 0) {
+        return 0
+      } else {
+        return state.cartList.reduce(
+          (total, cartListItem) => {
+            return total + cartListItem.cartItem.salePrice * cartListItem.inventory
+          }, 0
+        )
+      }
     },
     productCartList: state => state.cartList.filter(
       item => item.cartItem.type != 2
