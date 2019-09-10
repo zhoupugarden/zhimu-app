@@ -10,7 +10,8 @@
     "van-datetime-picker": "/static/vant/datetime-picker/index",
     "van-panel": "/static/vant/panel/index",
     "van-popup": "/static/vant/popup/index",
-    "van-picker": "/static/vant/picker/index"
+    "van-picker": "/static/vant/picker/index",
+    "van-icon": "/static/vant/icon/index"
   },
   "navigationBarTextStyle": "black",
   "navigationBarTitleText": "余额明细"

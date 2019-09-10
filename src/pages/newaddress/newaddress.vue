@@ -9,7 +9,7 @@
         placeholder="收货人姓名"
       />
 
-      <van-cell title="地址" is-link :value="address.road" />
+      <van-cell title="地址" is-link :value="address.road" @click="clickChooseLocation"/>
 
       <van-field
         :value="number"
@@ -61,6 +61,46 @@
   methods: {
     onChange(event) {
       console.log(event)
+
+    },
+    clickChooseLocation() {
+      let that = this;
+      console.log("clickChooseLocation")
+      wx.getSetting({
+        success(res) {
+          console.log(res)
+          if (!res.authSetting['scope.userLocation']) {
+            console.log(!res.authSetting['scope.userLocation'])
+            wx.authorize({
+              scope: 'scope.userLocation',
+              success () {
+                console.log("用户已同意授权")
+                wx.chooseLocation({
+                  success(resChoose) {
+                    console.log(res)
+                    that.address.road = resChoose.name
+
+                  }
+                })
+              },
+              fail(e) {
+                console.log("为什么失败", e)
+              }
+            })
+          }else {
+            wx.chooseLocation({
+              success: resChoose => {
+
+                console.log(resChoose)
+                let addressName = resChoose.name
+                console.log(addressName)
+                that.address.road = addressName
+              }
+            })
+          }
+        }
+      })
+
 
     }
   }

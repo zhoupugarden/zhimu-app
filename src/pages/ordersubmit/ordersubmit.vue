@@ -108,7 +108,9 @@
                custom-style="height:80%"
                @close="closeProductPopup"
                position="bottom">
-      <product-item :productItemInfo="productItemInfo"></product-item>
+      <div v-for="item in cartList" :key="index">
+        <product-item :productItemInfo="item"></product-item>
+      </div>
     </van-popup>
 
   </div>
@@ -117,6 +119,9 @@
 <script>
   import CouponItem from '@/components/CouponItem';
   import ProductItem from '@/components/ProductItem';
+
+  import { mapGetters } from 'vuex';
+
 
   export default {
     components: {
@@ -236,6 +241,11 @@
 
     },
     computed: {
+      ...mapGetters(
+        [
+          'cartList'
+        ]
+      ),
       orderSubmitSwitchDeliver() {
         if (this.switchValue === 1) {
           console.log("switch:", this.switchValue)
@@ -257,14 +267,14 @@
         return this.chooseCoupon + this.validCouponCount;
       }
     },
-    mounted() {
+    onLoad() {
+      //要把原有已选的值清空
+      this.chooseDate = "日期";
+      this.chooseTime = "时间";
       console.log(this.$root.$mp.query);
-
       //有两种路径，1 从购物车页面进来，2 点击直接购买，需要做不同的判断
-
       if (null != this.$root.$mp.query.addressInfo) {
         this.chooseId = 1;
-
       }
     }
 
