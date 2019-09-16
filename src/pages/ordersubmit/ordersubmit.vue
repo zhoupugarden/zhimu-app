@@ -15,11 +15,11 @@
         <div class="order-submit-address__deliver-info">
           <div>
             <van-icon name="phone-o"></van-icon>
-            {{contactInfo[chooseId]}}
+            {{contactInfo[addressId].name}} {{contactInfo[addressId].phoneNo}}
           </div>
           <div>
             <van-icon name="location-o"></van-icon>
-            {{contactAddress}}
+            {{contactInfo[addressId].road}} {{contactInfo[addressId].number}}
           </div>
         </div>
         <div>
@@ -108,9 +108,9 @@
                custom-style="height:80%"
                @close="closeProductPopup"
                position="bottom">
-      <div v-for="item in cartList" :key="index">
-        <product-item :productItemInfo="item"></product-item>
-      </div>
+          <div v-for="item in cartList" :key="index">
+            <product-item :productItemInfo="item"></product-item>
+          </div>
     </van-popup>
 
   </div>
@@ -130,7 +130,7 @@
     data() {
       return {
         switchValue: 1,
-        chooseId:0,
+        addressId:0,
         chooseDate:"日期",
         chooseTime:"时间",
         chooseCoupon:"未选择：",
@@ -140,10 +140,20 @@
         productPrice:"￥" + 13,
         firstProduct:"测试商品",
         contactInfo: [
-          "地址1",
-          "地址2"
+          {
+            road:"上海市浦东新区周浦镇印象春城",
+            number:"75号701",
+            name:"杨宇",
+            phoneNo:"13817409664"
+          },
+          {
+            road:"河南省洛阳市道北路",
+            number:"1号院",
+            name:"汪洁",
+            phoneNo:"18621666217"
+          }
+
         ],
-        contactAddress:"sdfdsf",
         selfAddress:"年家浜东路129弄",
 
         datePopShow:false,
@@ -154,18 +164,10 @@
         currentTime: null,
         minDate: new Date(2018, 0, 1).getTime(),
         timeColumns:['10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00'],
-        productItemInfo: {
-          url:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567423333127&di=89d0c9226b130766a75d8219eb801f4e&imgtype=0&src=http%3A%2F%2Fpic43.nipic.com%2F20140705%2F2531170_165127150000_2.jpg",
-          name:"测试商品",
-          attr:"杯",
-          price:"13.00",
-          count:"12"
-        },
         totalProductPrice:"133.00",
         balanceValue:"-" + "123",
         couponValue:"12",
         deliverValue:"11"
-
       }
     },
     methods: {
@@ -271,10 +273,11 @@
       //要把原有已选的值清空
       this.chooseDate = "日期";
       this.chooseTime = "时间";
+      let params = this.$root.$mp.query;
       console.log(this.$root.$mp.query);
-      //有两种路径，1 从购物车页面进来，2 点击直接购买，需要做不同的判断
-      if (null != this.$root.$mp.query.addressInfo) {
-        this.chooseId = 1;
+      //有两种路径，1 从购物车页面进来，2重新选择地址后返回
+      if (null != params.addressId) {
+        this.addressId = params.addressId;
       }
     }
 

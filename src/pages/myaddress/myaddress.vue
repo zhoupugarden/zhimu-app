@@ -1,8 +1,9 @@
 <template>
   <div class="myaddress-container">
-    <zhimu-address v-for="(item, index_) in addressArray"
-             :addressInfo="item" :jump="jump" :key="index"></zhimu-address>
-
+    <div v-for="(item, index_) in addressArray" :key="index" @click="backToOrderSubmit">
+      <zhimu-address
+        :addressInfo="item"></zhimu-address>
+    </div>
     <div class="address-add-button">
       <div class="address-add-button_wrap">
         <van-button round
@@ -24,12 +25,6 @@
     return {
       active:"123",
       jump:false,
-      addressE: {
-        road:"上海市浦东新区周浦镇印象春城",
-        number:"75号701",
-        name:"杨宇",
-        phoneNo:"13817409664"
-      },
       addressArray:[
         {
           road:"上海市浦东新区周浦镇印象春城",
@@ -38,10 +33,10 @@
           phoneNo:"13817409664"
         },
         {
-          road:"上海市浦东新区周浦镇印象春城",
-          number:"75号701",
-          name:"杨宇",
-          phoneNo:"13817409664"
+          road:"河南省洛阳市道北路",
+          number:"1号院",
+          name:"汪洁",
+          phoneNo:"18621666217"
         }
       ]
     }
@@ -57,6 +52,19 @@
       wx.navigateTo({
         url
       });
+    },
+    backToOrderSubmit(event) {
+      console.log("this.event:", event)
+      if (this.jump === true) {
+        var url = "/pages/ordersubmit/main?addressId=" + "12333";
+        console.log("url",url)
+        wx.navigateTo({
+          url
+        });
+      } else {
+        console.log("不用跳转", this.jump)
+      }
+
     }
   },
     mounted() {

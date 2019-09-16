@@ -170,7 +170,7 @@
             </span>
 
         </div>
-        <div class="van-popup__panel_shopcart">
+        <div v-if= "popupText === '加入购物车' " class="van-popup__panel_shopcart">
           <van-goods-action>
             <van-goods-action-button
               :text="popupText"
@@ -179,8 +179,17 @@
             />
           </van-goods-action>
         </div>
-      </div>
 
+        <div v-else class="van-popup__panel_shopcart">
+          <van-goods-action>
+            <van-goods-action-button
+              :text="popupText"
+              type="warning"
+              @click="addToBuy"
+            />
+          </van-goods-action>
+        </div>
+      </div>
     </van-popup>
     <van-toast  id="van-toast"/>
   </div>
@@ -199,62 +208,14 @@
     return {
       active: 0,
       good: {
-        "id": 1,
-        "categoryId": 38,
-        "productAttributeGroupId": 1,
-        "name": "小米蛋糕",
-        "englishName": "xiaomi cake",
-        "sort": 1,
-        //type(1 cake、2 free 3 other)
-        "type":1,
-        "stock": 100,
-        "onlineStatus": 1001,
-        "salePrice": 150.0,
-        "linePrice": 160.0,
-        "headPicUrl": "http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/2020851887机器猫.jpg",
-        "detailPicUrl": "{\"firstUrl\":\"http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/机器猫.jpg\"}",
-        "deliverTime": "当日配送",
-        "freshCondition": "常温保存",
-        "sweetLevel": 1,
-        "ingredients": "测试商品配料，花生",
-        "createTime": "2019-08-16T05:37:53.000+0000",
-        "updateTime": null
       },
       popShow:false,
+
       urls: {"firstUrl":"http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/机器猫.jpg"},
       productSKUs: [
-        {
-          "id": 10,
-          "productId": 3,
-          "productAttributeId": 6,
-          "salePrice": 111.0,
-          "linePrice": 132.0,
-          "isPrime": true,
-          "cakeSize": "7* 12cm",
-          "capacity": "1000ml",
-          "copies": "5人份",
-          "cutlery": "18人餐具",
-          "createTime": null,
-          "updateTime": null,
-          "attributeName": "1磅",
-          "attributeOrderNum": 1
-        }
       ],
       chooseSKU :{
-        "id": 10,
-        "productId": 3,
-        "productAttributeId": 6,
-        "salePrice": 111.0,
-        "linePrice": 132.0,
-        "isPrime": true,
-        "cakeSize": "7* 12cm",
-        "capacity": "1000ml",
-        "copies": "5人份",
-        "cutlery": "18人餐具",
-        "createTime": null,
-        "updateTime": null,
-        "attributeName": "1磅",
-        "attributeOrderNum": 1
+
       },
       popupText: "加入购物车",
       comment: {
@@ -269,7 +230,6 @@
       [
         'addProductToCart'
       ]
-
     ),
     selectedSKU(item) {
       console.log("selectedSKU: ", item);
@@ -284,9 +244,6 @@
       console.log("this.chooseSKU :", this.chooseSKU);
     },
 
-    onClickButton() {
-      this.popShow = true;
-    },
     addCart() {
       let cartProduct = {
         skuId : this.chooseSKU.id,
@@ -313,12 +270,29 @@
       this.popupText = "加入购物车";
       this.popShow = true;
     },
+    addToBuy() {
+      let cartProduct = {
+        skuId : this.chooseSKU.id,
+        url : this.good.headPicUrl,
+        productId : this.chooseSKU.productId,
+        attributeName : this.chooseSKU.attributeName,
+        productName: this.good.name,
+        type : this.good.type,
+        salePrice: this.chooseSKU.salePrice,
+        linePrice: this.chooseSKU.linePrice
+      };
 
-    onBuyClickButton() {
-      var url = "../ordersubmit/main";
-      wx.navigateTo({
+      this.addProductToCart(cartProduct);
+      this.popShow = false;
+      var url = "../cart/main";
+      wx.switchTab({
         url
       });
+    },
+
+    onBuyClickButton() {
+      this.popupText = "立即购买";
+      this.popShow = true;
     },
      getProductDetail(data) {
       request(
@@ -329,30 +303,17 @@
         (response) => {
           this.good = response;
           console.log("this.good response", this.good);
-          wx.setNavigationBarTitle({
-            title: this.good.name
-          });
-          this.urls = JSON.parse(this.good.detailPicUrl)
-        }
-      )
-    },
-
-    getProductSkuDetail(data) {
-      request(
-        GET_PRODUCT_SKU_DETAIL_BY_ID,
-        'GET',
-        data
-      ).then(
-        (response) => {
-          this.productSKUs = response;
-          console.log("this.good productSKUs response", this.productSKUs);
-
+          this.productSKUs = response.pmsProductSkuList;
           this.chooseSKU = this.productSKUs.find(
             function (sku) {
               return sku.isPrime === true;
             }
           );
           console.log("chooseSKU", this.chooseSKU);
+          wx.setNavigationBarTitle({
+            title: this.good.name
+          });
+          this.urls = JSON.parse(this.good.detailPicUrl)
         }
       )
     },
@@ -370,9 +331,7 @@
         let params = {};
           params.productId = this.$root.$mp.query.productId;
           //后续可以将这两个请求合并成一个
-          // this.getProductDetail(params);
-          // this.getProductSkuDetail(params);
-
+          this.getProductDetail(params);
       },
     computed: {
       attribute() {

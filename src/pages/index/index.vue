@@ -12,7 +12,7 @@
               class="van-ellipsis van-tree-select__nitem "
               :class=" index === mainActiveIndex ? 'van-tree-select__nitem--active' : ''"
         >
-          {{item.categoryName}}
+          {{item.name}}
         </view>
       </scroll-view>
 
@@ -21,7 +21,7 @@
         class="van-tree-select__content"
         :style="setItemHeight"
       >
-        <div class="category_name_class">{{items[mainActiveIndex].categoryName}}</div>
+        <div class="category_name_class">{{items[mainActiveIndex].name}}</div>
         <view v-for="(subItem, index) in subItems"
               :key="index"
               @click="onSelectItem"
@@ -42,7 +42,7 @@
 </template>
 <script>
   import {GET_PRODUCT_CATEGORY_URL,GET_CATEGORY_AND_PRODUCT_BRIEF,GET_PRODUCT_SKU_DETAIL_BY_ID,
-    GET_PRODUCT_BY_CATEGORY_ID} from '@/utils/api';
+    GET_PRODUCT_BY_CATEGORY_ID, INDEX_LIST} from '@/utils/api';
   import {request} from "@/utils/request";
   import card from '@/components/card';
   import cartPop from '@/components/cartPop';
@@ -59,53 +59,7 @@
     data() {
       return {
         activityUrl:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567573168282&di=6593706f56d777fddbb3f5dbe1110887&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20140526%2FImg400050880.jpg",
-        items:[
-          {
-            "categoryId": 38,
-            "categoryName": "现烤蛋糕",
-            "briefResultList": [
-              {
-                "productId": 1,
-                "categoryId": null,
-                "name": "小米蛋糕",
-                "englishName": "xiaomi cake",
-                "sort": null,
-                "onlineStatus": null,
-                "price":10.00,
-                "linePrice":12.00,
-                "attributeCount":3,
-                "headUrl": "http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/2020851887机器猫.jpg"
-              },
-              {
-                "productId": 3,
-                "categoryId": null,
-                "name": "测试蛋糕哈哈哈",
-                "englishName": "fff",
-                "sort": null,
-                "onlineStatus": null,
-                "price":10.00,
-                "linePrice":12.00,
-                "headUrl": "http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/2020851887机器猫.jpg"
-              }
-            ]
-          },
-          {
-            "categoryId": 61,
-            "categoryName": "最好吃面包",
-            "briefResultList": [
-              {
-                "productId": 2,
-                "categoryId": null,
-                "name": "小米面包",
-                "englishName": "bread",
-                "sort": null,
-                "onlineStatus": null,
-                "price":10.00,
-                "headUrl": "http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/2020851887机器猫.jpg"
-              }
-            ]
-          }
-        ],
+        items:[],
         activeId: '',
         maxHeight: 1000,
         cardInfo: {
@@ -117,27 +71,6 @@
         mainActiveIndex:0,
         popCartActive: false,
         productSKUs:[
-          {
-            "id": 9,
-            "productId": 2,
-            "productAttributeId": 6,
-            "salePrice": 111.0,
-            "linePrice": 132.0,
-            "isPrime": true,
-            "cakeSize": "7* 12cm",
-            "capacity": "1000ml",
-            "copies": "5人份",
-            "cutlery": "18人餐具",
-            "createTime": null,
-            "updateTime": null,
-            "attributeName": "1磅",
-            "attributeOrderNum": 1,
-            "productId":2,
-            "skuId":3,
-            "headUrl":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567573168282&di=6593706f56d777fddbb3f5dbe1110887&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20140526%2FImg400050880.jpg",
-            "salePrice":10.89,
-            "linePrice":19.97
-          }
         ]
       }
     },
@@ -170,32 +103,7 @@
         ]
 
       ),
-      async getCategoryAndProductBrief() {
-        request(
-          GET_CATEGORY_AND_PRODUCT_BRIEF,
-          'GET',
-          {}
-        ).then(
-          response => {
-            this.items = response;
-          }
-        );
-        console.log("this.categoryAndProductBriefInfo: ", this.items);
-        this.subItems = this.items[0].briefResultList;
-      },
 
-      getProductSkuDetail(data) {
-        request(
-          GET_PRODUCT_SKU_DETAIL_BY_ID,
-          'GET',
-          data
-        ).then(
-          (response) => {
-            this.productSKUs = response;
-            console.log("this.good productSKUs response", this.productSKUs);
-          }
-        )
-      },
       onSelectItem(event) {
         const { item } = event.currentTarget.dataset;
         this.$emit('click-item', item);
@@ -208,7 +116,7 @@
       // 更新子项列表
       updateSubItems() {
         console.log("this.items[this.mainActiveIndex].briefResultLis", this.items[this.mainActiveIndex])
-        let children  = this.items[this.mainActiveIndex].briefResultList;
+        let children  = this.items[this.mainActiveIndex].pmsProductPlusList;
         console.log("children:", children)
         this.updateItemHeight(children);
         return this.subItems = children;
@@ -227,6 +135,11 @@
       onPopCart(data) {
         console.log("data",data);
         // this.getProductSkuDetail(data);
+        let productId = data.productId;
+        this.productSKUs = this.items[this.mainActiveIndex].pmsProductPlusList.find(
+          item => item.id === productId
+        );
+        console.log("this.productSKUs", this.productSKUs)
         this.popCartActive = true;
       },
       closeActive() {
@@ -237,9 +150,23 @@
         this.addProductToCart(data);
         //加些过渡动画
         this.popCartActive = false;
+      },
+      indexList() {
+        request(
+          INDEX_LIST,
+          'GET'
+        ).then(
+          (response) => {
+            this.items = response;
+            console.log("this response", response);
+          }
+        )
       }
+
+
     },
     created() {
+      this.indexList();
       // this.getCategoryAndProductBrief();
       console.log("this.items{}", this.items)
     }

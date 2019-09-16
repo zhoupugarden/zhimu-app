@@ -30,7 +30,7 @@ const mutations = {
     },
     [types.CHECK_OUT_CART](state) {
 
-    },
+    }
 
 
 }

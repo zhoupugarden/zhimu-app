@@ -9,11 +9,13 @@ export const GET_PRODUCT_BY_CATEGORY_ID = BASE_API_URL + '/product/listBriefProd
 export const GET_CATEGORY_AND_PRODUCT_BRIEF = BASE_API_URL + '/product/listProductAndCategory';
 
 // 根据商品id获得商品详情
-export const GET_PRODUCT_DETAIL_BY_ID = BASE_API_URL + '/product/listDetailById';
+export const GET_PRODUCT_DETAIL_BY_ID = BASE_API_URL + '/productDetail/list';
 
 // 根据商品id获得商品SKU详情
 export const GET_PRODUCT_SKU_DETAIL_BY_ID = BASE_API_URL + '/product/listSKUDetailByProductId';
 // 获取所有热销推荐产品信息
 export const GET_HOT_PRODUCTS_INFO = BASE_API_URL + '/market/hotProduct/list';
+
+export const INDEX_LIST = BASE_API_URL + '/index/list';
 
 

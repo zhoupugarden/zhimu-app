@@ -34,7 +34,6 @@ export default {
 
     delProductFromCart:({commit}, {skuId}) => {
       commit(types.DEL_PRODUCT_FROM_CART, {skuId})
-    }
-
+    },
 
 }

@@ -3,19 +3,19 @@
     <div class="zm-card" >
       <div class="zm-card__thumb" @click="navigateToProduct">
         <img class="zm-card__img" mode="aspectFill"
-             :src="cardInfo.headUrl">
+             :src="cardInfo.headPicUrl">
       </div>
       <div class="zm-card__detail">
         <div class="zm-card__detail__name">
           <span>{{cardInfo.name}}</span>
         </div>
         <div class="zm-card__detail__price">
-          <span :style="{color:cardInfo.linePrice?'red':'black'}">￥{{cardInfo.price}}</span>
+          <span :style="{color:cardInfo.linePrice?'red':'black'}">￥{{cardInfo.salePrice}}</span>
           <span v-if="cardInfo.linePrice" class="zm-card__detail__line_price">￥{{cardInfo.linePrice}}</span>
         </div>
 
         <div @click="popCart" class="zm-detail__icon">
-          <div v-if="cardInfo.attributeCount" class="choose_attribute">
+          <div v-if="cardInfo.pmsProductSkuList.length > 1" class="choose_attribute">
             选规格
           </div>
           <div v-else class="add_attribute">
@@ -35,14 +35,12 @@
     data () {
       return {
         data: {
-          productId: '123',
-          activeColor:"red"
         }
       }
     },
     methods: {
       navigateToProduct() {
-        var url = "../detail/main?productId=" + this.cardInfo.productId;
+        var url = "../detail/main?productId=" + this.cardInfo.id;
         console.log("url",url)
         wx.navigateTo({
           url
@@ -50,7 +48,7 @@
       },
       popCart() {
         console.log("popCart waaaaa");
-        this.$emit('popCart', {"productId":this.cardInfo.productId});
+        this.$emit('popCart', {"productId":this.cardInfo.id});
       }
     },
     created() {

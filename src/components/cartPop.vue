@@ -31,7 +31,7 @@
           </div>
           <div style="font-family: 'Microsoft YaHei'; font-size: 14px;padding:10px 0px;">规格</div>
           <div class="van-popup__panel_attribute">
-          <span v-for="(item, index) in productSKUs" :key="index">
+          <span v-for="(item, index) in productSKUs.pmsProductSkuList" :key="index">
               <van-button :id="item.id"
                           :type="item.id === chooseSKU.id ? 'primary' : 'default'"
                           size="mini" @click="selectedSKU">{{item.attributeName}}</van-button>
@@ -53,7 +53,7 @@ export default {
   name: 'cart-pop',
   props: {
     popShow: Boolean,
-    productSKUs: Array,
+    productSKUs: Object,
     productInfo: Object,
     position: {
       type: String
@@ -66,24 +66,7 @@ export default {
   data() {
     return {
       chooseSKU: {
-        "id": 9,
-        "productId": 2,
-        "productAttributeId": 6,
-        "salePrice": 111.36,
-        "linePrice": 132.0,
-        "isPrime": true,
-        "cakeSize": "7* 12cm",
-        "capacity": "1000ml",
-        "copies": "5人份",
-        "cutlery": "18人餐具",
-        "createTime": null,
-        "updateTime": null,
-        "attributeName": "1磅",
-        "attributeOrderNum": 1,
-        "url":"http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/2020851887机器猫.jpg",
-        "skuId":345,
-        "productName":"华为蛋糕",
-        "type":1
+
       }
 
     }
@@ -91,7 +74,7 @@ export default {
 
   watch: {
     productSKUs() {
-      this.chooseSKU = this.chooseSKU = this.productSKUs.find(
+      this.chooseSKU = this.productSKUs.pmsProductSkuList.find(
         function (sku) {
           return sku.isPrime === true;
         }

@@ -182,7 +182,7 @@
       this.popShow = true;
     },
     navigateToSubmit() {
-      var url = "/pages/ordersubmit/main";
+      var url = "/pages/ordersubmit/main?isCart=" + true;
 
       console.log(this.productCartList)
       console.log("url",url)
