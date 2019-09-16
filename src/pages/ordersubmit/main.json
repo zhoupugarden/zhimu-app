@@ -14,7 +14,7 @@
     "van-icon": "/static/vant/icon/index"
   },
   "navigationBarTextStyle": "black",
-  "navigationBarTitleText": "余额明细"
+  "navigationBarTitleText": "订单提交"
 
 }
 

@@ -254,6 +254,7 @@
     position: fixed;
     bottom: 0;
     z-index: 100;
+    background-color: white;
   }
   .cart-container__popup {
     z-index: -1;
@@ -295,6 +296,7 @@
   }
   .cart-container__fitting {
     padding-top: 10px;
+    padding-bottom: 100px;
 
   }
 

@@ -9,7 +9,7 @@
     "van-icon": "/static/vant/icon/index"
   },
   "navigationBarTextStyle": "black",
-  "navigationBarTitleText": "余额明细"
+  "navigationBarTitleText": "用户登录"
 
 }
 

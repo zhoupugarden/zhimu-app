@@ -9,7 +9,7 @@
     "van-steps": "/static/vant/steps/index"
   },
   "navigationBarTextStyle": "black",
-  "navigationBarTitleText": "余额明细"
+  "navigationBarTitleText": "订单详情"
 
 }
 
