@@ -56,15 +56,15 @@
       <van-cell :title="balanceCount" custom-class="custome-cell"/>
     </div>
     <div class="order-submit-product">
-      <van-cell title="商品" :value= "productPrice" title-class="product-title-class" value-class="product-value-class"/>
-      <van-cell :title="firstProduct" custom-class="custome-cell" is-link arrow-direction="down" @click="productPop"/>
+      <van-cell title="商品" :value= "'￥' + cartTotalPrice" title-class="product-title-class" value-class="product-value-class"/>
+      <van-cell :title="cartProductListName" custom-class="custome-cell" is-link arrow-direction="down" @click="productPop"/>
     </div>
     <div class="order-submit-summary">
         <van-cell-group>
-          <van-cell :title="totalAmountProduct" :value= "totalProductPrice" />
-          <van-cell title="余额" :value= "balanceValue" />
-          <van-cell title="优惠券" :value= "couponValue" />
-          <van-cell title="配送费" :value= "deliverValue" />
+          <van-cell :title="cartTotalCount + '件商品'" :value= "'￥' + cartTotalPrice" />
+          <van-cell title="余额" :value= "flag + balanceValue" />
+          <van-cell title="优惠券" :value= "flag + couponValue" />
+          <van-cell title="配送费" :value= "flag + deliverValue" />
         </van-cell-group>
     </div>
 
@@ -129,15 +129,14 @@
     },
     data() {
       return {
+        flag:'￥',
         switchValue: 1,
         addressId:0,
         chooseDate:"日期",
         chooseTime:"时间",
         chooseCoupon:"未选择：",
         validCouponCount:"0张可用",
-        totalAmountProduct:"2" + "件商品",
         balanceCount:3,
-        productPrice:"￥" + 13,
         firstProduct:"测试商品",
         contactInfo: [
           {
@@ -245,7 +244,7 @@
     computed: {
       ...mapGetters(
         [
-          'cartList'
+          'cartList','cartTotalCount','cartTotalPrice','cartProductListName'
         ]
       ),
       orderSubmitSwitchDeliver() {
@@ -331,6 +330,9 @@
   }
   .order-submit-time {
     display: flex;
+  }
+  .order-submit-summary {
+    padding-bottom: 100px;
   }
   .order-submit-button {
     position: fixed;

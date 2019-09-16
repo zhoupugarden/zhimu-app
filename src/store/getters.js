@@ -14,6 +14,13 @@ export default {
         }, 0
       )
     },
+  cartProductListName: state => {
+      let listName = [];
+   for (let i = 0; i< state.cartList.length; i++) {
+     listName.push(state.cartList[i].cartItem.productName)
+   }
+      return listName.join('、');
+  },
     cartTotalPrice: state => {
       if (state.cartList.length === 0) {
         return 0

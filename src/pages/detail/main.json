@@ -17,7 +17,7 @@
     "van-tag": "/static/vant/tag/index",
     "van-toast": "/static/vant/toast/index"
   },
-  "navigationBarTextStyle": "black",
+  "navigationBarTextStyle": "black"
 }
 
 
