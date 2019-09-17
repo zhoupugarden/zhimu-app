@@ -1,8 +1,5 @@
 <template>
   <div class="phonelogin-container">
-
-
-
     <div class="phonelogin-header">
       <img src="https://t12.baidu.com/it/u=541581695,4055461334&fm=76" class="circleImg">
     </div>
@@ -11,22 +8,30 @@
 
       <van-cell-group>
         <van-field
+          :value="phoneNo"
           center
           clearable
           placeholder="手机号"
+          maxlength="11"
+          :error-message="errorMessage"
+          @input="inputChange"
+          type="number"
           border="false"
         >
         </van-field>
 
         <van-field
-          :value="sms"
+          :value="verifyCode"
           center
-          clearable
+          maxlength="6"
           placeholder="请输入短信验证码"
+          type="number"
+          @input="inputCodeChange"
           border="false"
+          :error-message="errorCodeMessage"
           use-button-slot
         >
-          <van-button slot="button" size="small" plain>发送验证码</van-button>
+          <van-button slot="button" size="small" @click="getCode" plain>{{codeText}}</van-button>
         </van-field>
       </van-cell-group>
     </div>
@@ -36,31 +41,141 @@
       </div>
     </div>
     <div>
-      <van-button custom-class="phone-login-custom" type="primary">登录</van-button>
-
+      <van-button custom-class="phone-login-custom" type="primary" @click="login">登录</van-button>
     </div>
-
 
     <div class="phonelogin-footer">
       zhimu蛋糕|每一口都是快乐
     </div>
 
-
+    <van-toast  id="van-toast"/>
   </div>
 </template>
 
 <script>
 
+  import {SMS_VERIFY_CODE_SEND, SMS_VERIFY_CODE_VERIFY} from '@/utils/api';
+  import {request} from "@/utils/request";
+  import {toast} from '../../utils/toast';
+
   export default {
 
     data() {
       return {
-
+        show:true,
+        phoneNo:'',
+        verifyCode:'',
+        count: '',
+        timer: null,
+        errorMessage:'',
+        errorCodeMessage:'',
       }
     },
     methods: {
+      getCode(){
+        console.log("this.phoneNo", this.phoneNo)
+        if (this.validPhoneNo(this.phoneNo)) {
+          const TIME_COUNT = 60;
+          if (!this.timer) {
+
+            this.sendVerifyCode(this.phoneNo);
+            this.count = TIME_COUNT;
+            this.show = false;
+            this.timer = setInterval(() => {
+              if (this.count > 0 && this.count <= TIME_COUNT) {
+                this.count--;
+              } else {
+                this.show = true;
+                clearInterval(this.timer);
+                this.timer = null;
+              }
+            }, 1000)
+          }
+        }
+      },
+
+      validPhoneNo(num) {
+        let valid = true;
+        if (null === num || '' === num) {
+          this.errorMessage = '手机号码不能为空';
+          valid = false;
+        }
+        if(!(/^1[3456789]\d{9}$/.test(num))){
+          this.errorMessage = '手机号码格式错误';
+          valid = false;
+        }
+        return valid;
+      },
+      //mpvue不支持小程序原生组件的双向绑定。
+      inputChange(event) {
+        this.phoneNo = event.mp.detail;
+        if ('' !== this.errorMessage)  {
+          this.errorMessage = '';
+        }
+      },
+      inputCodeChange(event) {
+        this.verifyCode = event.mp.detail;
+        if ('' !== this.errorCodeMessage)  {
+          this.errorCodeMessage = '';
+        }
+      },
+
+      sendVerifyCode(phoneNo) {
+        let param = {};
+        param.phoneNo = phoneNo;
+        request(
+          SMS_VERIFY_CODE_SEND,
+          'post',
+          param
+        ).then(
+          (response) => {
+            console.log("this response", response);
+          }
+        )
+      },
+      verifySmsCode(data) {
+        request(
+          SMS_VERIFY_CODE_VERIFY,
+          'post',
+          data
+        ).then(
+          response => {
+            console.log("response",response)
+            if (response) {
+              toast("验证码正确");
+            }
+          }
+        )
+      },
+
+      login() {
+        console.log("login", this.verifyCode);
+        if (this.verifyCode === null || this.verifyCode === '') {
+          this.errorCodeMessage = '验证码不能为空';
+        } else {
+          let verifyParam = {};
+          verifyParam.phoneNo = this.phoneNo;
+          verifyParam.code = this.verifyCode;
+
+          this.verifySmsCode(verifyParam);
+            //  注册， 登录，跳转
+            //页面只负责处理data的业务，对code的处理在request当中
+            //request.js中封装了对异常code的统一处理， 使用的是wx.showModal,后续如何进行前后台的异常统一处理和提示
+
+        }
+      }
 
 
+
+    },
+    computed: {
+      codeText() {
+        if (this.show) {
+          return '获取验证码';
+        } else {
+          return this.count + 's重新获取';
+        }
+      }
     }
 
   }

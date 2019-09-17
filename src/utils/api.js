@@ -18,4 +18,6 @@ export const GET_HOT_PRODUCTS_INFO = BASE_API_URL + '/market/hotProduct/list';
 
 export const INDEX_LIST = BASE_API_URL + '/index/list';
 
+export const SMS_VERIFY_CODE_SEND = BASE_API_URL + '/sms/verifyCode/send';
+export const SMS_VERIFY_CODE_VERIFY = BASE_API_URL + '/sms/verifyCode/verify';
 

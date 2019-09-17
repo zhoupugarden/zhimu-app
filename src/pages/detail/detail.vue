@@ -257,7 +257,7 @@
       }
       this.addProductToCart(cartProduct);
       this.popShow = false;
-      toast("成功添加购物车")
+      toast("成功添加购物车");
     },
     onClickCartIcon() {
       //调不到bar关联的菜单
