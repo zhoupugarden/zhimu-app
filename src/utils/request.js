@@ -3,7 +3,8 @@
  */
 export function request(url, method = "GET", data) {
   console.log('url', url, 'method', method, 'data', data);
-  console.log('token', wx.getStorageSync('token'));
+  console.log('token', JSON.parse(wx.getStorageSync('vuex')).token);
+
   return new Promise(function (resolve, reject) {
     wx.request({
       url: url,
@@ -11,7 +12,7 @@ export function request(url, method = "GET", data) {
       method: method,
       header: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + wx.getStorageSync('token').token
+        'Authorization': JSON.parse(wx.getStorageSync('vuex')).token
       },
       success: function (res) {
         console.log('请求结果', res);

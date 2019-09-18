@@ -14,7 +14,7 @@
           placeholder="手机号"
           maxlength="11"
           :error-message="errorMessage"
-          @input="inputChange"
+          @change="inputChange"
           type="number"
           border="false"
         >
@@ -54,9 +54,11 @@
 
 <script>
 
-  import {SMS_VERIFY_CODE_SEND, SMS_VERIFY_CODE_VERIFY} from '@/utils/api';
+  import {SMS_VERIFY_CODE_SEND, SMS_VERIFY_CODE_VERIFY, MY_PHONE_LOGIN} from '@/utils/api';
   import {request} from "@/utils/request";
   import {toast} from '../../utils/toast';
+  import {  mapActions } from 'vuex';
+
 
   export default {
 
@@ -72,6 +74,12 @@
       }
     },
     methods: {
+      ...mapActions(
+        [
+          'storeToken'
+        ]
+      ),
+
       getCode(){
         console.log("this.phoneNo", this.phoneNo)
         if (this.validPhoneNo(this.phoneNo)) {
@@ -135,13 +143,14 @@
       },
       verifySmsCode(data) {
         request(
-          SMS_VERIFY_CODE_VERIFY,
+          MY_PHONE_LOGIN,
           'post',
           data
         ).then(
           response => {
             console.log("response",response)
-            if (response) {
+            if (response.token) {
+              this.storeToken(response.token);
               toast("验证码正确");
             }
           }

@@ -35,5 +35,8 @@ export default {
     delProductFromCart:({commit}, {skuId}) => {
       commit(types.DEL_PRODUCT_FROM_CART, {skuId})
     },
+    storeToken: ({commit}, token) => {
+      commit(types.TOKEN, token)
+    }
 
 }

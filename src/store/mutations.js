@@ -30,6 +30,9 @@ const mutations = {
     },
     [types.CHECK_OUT_CART](state) {
 
+    },
+    [types.TOKEN](state, token) {
+      state.token = token;
     }
 
 

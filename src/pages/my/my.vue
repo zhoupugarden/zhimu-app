@@ -7,13 +7,24 @@
           <img :src="basicInfo.avatar" class="circleImg">
         </div>
 
-        <div class="my-basic-info__content">
+        <div v-if="isLogin" class="my-basic-info__content">
           <div>{{basicInfo.name}}</div>
           <van-tag color="black">{{basicInfo.level}}</van-tag>
           <div @click="navigateToMission">
             <van-tag color="green">签到有奖</van-tag>
           </div>
         </div>
+
+        <div v-else @click="navigateToLogin" class="my-basic-info__content">
+          <div>
+            未登录
+          </div>
+          <div style="font-size: 10px; color: #F39B00">
+            点击登录账号
+          </div>
+        </div>
+
+
         <div class="my-basic-info__go">
           <van-button round color="grey"
                       custom-class="mini-button"
@@ -67,15 +78,21 @@
 <script>
 
 
+  import { mapGetters } from 'vuex';
+  import {MY_USER_INFO} from '@/utils/api';
+  import {request} from "@/utils/request";
 
-export default {
+
+  export default {
 
   components: {
   },
   data() {
     return {
+      isLogin:false,
       basicInfo: {
-        avatar:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
+        avatar:"../../asset/avatar.png",
+        // avatar:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
         name:"宇",
         level:"新朋友"
       },
@@ -84,7 +101,8 @@ export default {
         balance: 100,
         coupon:2,
         point : 100
-      }
+      },
+      userInfo: {}
 
     }
 
@@ -148,7 +166,7 @@ export default {
 
     },
     onGotUserInfo(res) {
-      console.log(res)
+      console.log(res);
 
       wx.login({
         success (resss) {
@@ -163,6 +181,38 @@ export default {
     },
     getPhoneNumber(e) {
       console.log("获取手机号",e)
+    },
+    getUserInfo(token) {
+      let params = {};
+      params.token = token;
+        request(
+          MY_USER_INFO,
+          'GET',
+          params
+        ).then(
+          response => {
+            console.log("response",response)
+
+          }
+        )
+    }
+
+
+
+
+  },
+  computed: {
+    ...mapGetters(
+      [
+        'token'
+      ]
+    )
+
+  },
+
+  onShow() {
+    if (this.token) {
+      this.getUserInfo(this.token)
     }
   }
 
