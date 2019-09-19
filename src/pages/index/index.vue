@@ -156,7 +156,7 @@
           INDEX_LIST,
           'GET'
         ).then(
-          (response) => {
+          response => {
             this.items = response;
             console.log("this response", response);
           }

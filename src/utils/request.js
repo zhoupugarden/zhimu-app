@@ -3,7 +3,10 @@
  */
 export function request(url, method = "GET", data) {
   console.log('url', url, 'method', method, 'data', data);
-  console.log('token', JSON.parse(wx.getStorageSync('vuex')).token);
+  let token = '';
+  if (wx.getStorageSync('vuex')) {
+    token =  JSON.parse(wx.getStorageSync('vuex')).token;
+  }
 
   return new Promise(function (resolve, reject) {
     wx.request({
@@ -12,7 +15,7 @@ export function request(url, method = "GET", data) {
       method: method,
       header: {
         'Content-Type': 'application/json',
-        'Authorization': JSON.parse(wx.getStorageSync('vuex')).token
+        'Authorization': token
       },
       success: function (res) {
         console.log('请求结果', res);
@@ -22,7 +25,14 @@ export function request(url, method = "GET", data) {
             return;
           }
           resolve(res.data.data)
-        } else {
+        } else if (res.statusCode === 401) {
+          wx.navigateTo(
+            {
+              url:'/pages/login/main'
+            }
+          )
+
+        } else  {
           wx.showModal({
             title: '提示',
             content: res.data.message,

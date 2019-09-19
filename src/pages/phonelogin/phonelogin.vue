@@ -158,6 +158,24 @@
       },
 
       login() {
+
+        console.log("redirect:", getCurrentPages())
+        let pages = getCurrentPages();
+        //返回登录前的页面
+        let curPage = pages[pages.length - 3];
+        console.log("curPage",curPage, pages.length );
+
+        let route = curPage.route;
+        console.log("url",route)
+
+        wx.switchTab({
+          url: '/' + route
+          }
+        );
+        console.log("url",route);
+
+        // curPage.onShow();
+
         console.log("login", this.verifyCode);
         if (this.verifyCode === null || this.verifyCode === '') {
           this.errorCodeMessage = '验证码不能为空';
@@ -170,7 +188,6 @@
             //  注册， 登录，跳转
             //页面只负责处理data的业务，对code的处理在request当中
             //request.js中封装了对异常code的统一处理， 使用的是wx.showModal,后续如何进行前后台的异常统一处理和提示
-
         }
       }
 

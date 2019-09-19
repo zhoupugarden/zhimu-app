@@ -33,6 +33,10 @@ const mutations = {
     },
     [types.TOKEN](state, token) {
       state.token = token;
+    },
+    [types.LOG_OUT](state) {
+      state.token = '';
+
     }
 
 

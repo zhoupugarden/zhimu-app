@@ -37,6 +37,9 @@ export default {
     },
     storeToken: ({commit}, token) => {
       commit(types.TOKEN, token)
+    },
+    logout: ({commit}) => {
+      commit(types.LOG_OUT)
     }
 
 }

@@ -1,7 +1,8 @@
 //store为实例化生成的
 const state = {
     cartList:[],
-    token:''
+    token:'',
+    userId:''
 }
 
 export default state;

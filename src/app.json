@@ -26,7 +26,8 @@
     "pages/mission/main",
     "pages/login/main",
     "pages/phonelogin/main",
-    "pages/comments/main"
+    "pages/comments/main",
+    "pages/setting/main"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",

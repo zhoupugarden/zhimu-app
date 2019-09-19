@@ -7,4 +7,5 @@ export const INCREMENT_INVENTORY = 'INCREMENT_INVENTORY';
 export const DEL_PRODUCT_FROM_CART = 'DEL_PRODUCT_FROM_CART';
 export const CHECK_OUT_CART = 'CHECK_OUT_CART';
 export const TOKEN = 'TOKEN';
+export const LOG_OUT = 'LOG_OUT';
 

@@ -91,7 +91,7 @@
     return {
       isLogin:false,
       basicInfo: {
-        avatar:"../../asset/avatar.png",
+        avatar:"/static/avatar.png",
         // avatar:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
         name:"宇",
         level:"新朋友"
@@ -109,7 +109,7 @@
   },
   methods: {
     navToSetting() {
-      let url = "../mysetting/main" ;
+      let url = "../setting/main" ;
       console.log("url",url)
       wx.navigateTo({
         url
@@ -191,8 +191,8 @@
           params
         ).then(
           response => {
+            //将userID放在存储中
             console.log("response",response)
-
           }
         )
     }
@@ -207,12 +207,14 @@
         'token'
       ]
     )
-
   },
 
   onShow() {
     if (this.token) {
-      this.getUserInfo(this.token)
+      this.isLogin = true;
+      this.getUserInfo(this.token);
+    } else {
+      this.isLogin = false;
     }
   }
 

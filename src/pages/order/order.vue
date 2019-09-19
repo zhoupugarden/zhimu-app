@@ -1,28 +1,34 @@
 <template>
   <div class="order-container">
+    <div v-if="!isLogin">
+      <van-button @click="navigateToLogin">登录</van-button>
+    </div>
+    <div v-else>
+      <van-tabs :active="active"
+                custom-class="van-tabs__custom"
+                @change="onChange">
+        <van-tab
+          tab-class="van-tabs__custom"
+          title="全部">
+          <div class="order-list">
+            <order-card></order-card>
+          </div>
+        </van-tab>
+        <van-tab title="待评价">
+          <div class="order-list">
+          </div>
+        </van-tab>
+        <van-tab title="待付款">
 
-    <van-tabs :active="active"
-              custom-class="van-tabs__custom"
-              @change="onChange">
-      <van-tab
-        tab-class="van-tabs__custom"
-        title="全部">
-        <div class="order-list">
-          <order-card></order-card>
-        </div>
-      </van-tab>
-      <van-tab title="待评价">
-        <div class="order-list">
-        </div>
-      </van-tab>
-      <van-tab title="待付款">
+          <div class="order-list">
 
-        <div class="order-list">
+          </div>
 
-        </div>
+        </van-tab>
+      </van-tabs>
 
-      </van-tab>
-    </van-tabs>
+    </div>
+
   </div>
 
 </template>
@@ -37,7 +43,8 @@
 
   data() {
     return {
-      active:0
+      active:0,
+      isLogin:false
 
     }
 
@@ -46,9 +53,18 @@
     onChange(event) {
       console.log(event)
 
+    },
+    navigateToLogin() {
+      var url = "../login/main";
+      console.log("url",url);
+      wx.navigateTo({
+        url
+      });
     }
-  }
-
+  },
+    onShow() {
+    console.log("this.isLogin", this.isLogin)
+    }
 }
 </script>
 
