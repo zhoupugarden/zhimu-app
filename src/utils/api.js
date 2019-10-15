@@ -26,3 +26,21 @@ export const MY_PHONE_LOGIN = BASE_API_URL + '/my/phoneLogin';
 
 export const MY_USER_INFO = BASE_API_URL + '/my/userInfo';
 
+export const GET_COUPON_BY_USER_ID = BASE_API_URL + '/coupon/list';
+
+export const GET_BALANCE_DETAIL = BASE_API_URL + '/balance/list';
+
+export const GET_POINT_DETAIL = BASE_API_URL + '/point/list';
+
+export const ADD_NEW_ADDRESS = BASE_API_URL + '/address/add';
+
+export const GET_USER_ADDRESS = BASE_API_URL + '/address/list';
+
+export const DEL_USER_ADDRESS = BASE_API_URL + '/address/delete';
+
+
+
+
+
+
+

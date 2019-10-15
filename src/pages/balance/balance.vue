@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="balance-summary__total">
-        {{balanceRecords.total}}
+        {{balanceRecords.totalAmount}}
         <div style="font-size: 12px">元</div>
       </div>
     </div>
@@ -16,29 +16,56 @@
     <div style="font-size: 14px; padding-top: 10px;padding-bottom: 10px">
       交易明细
     </div>
-    <div class="balance-detail">
-      <balance-item></balance-item>
+    <div v-for="(item, index) in balanceRecords.items" :key="index" class="balance-detail">
+      <balance-item :balanceDetailItem="item"></balance-item>
     </div>
   </div>
 </template>
 
 <script>
   import BalanceItem from '@/components/BalanceItem';
-  import PointItem from '@/components/PointItem';
+  import {GET_BALANCE_DETAIL} from '@/utils/api';
+  import {request} from "@/utils/request";
+  import { mapGetters} from 'vuex';
   export default {
     components: {
-      PointItem,BalanceItem
+      BalanceItem
     },
     data() {
       return {
-        balanceRecords: {
-          total: 798
-        }
+        balanceRecords: {}
       }
     },
     methods: {
 
+      balanceDetailList() {
+        let params = {};
+        params.userId = this.userId;
+        request(
+          GET_BALANCE_DETAIL,
+          'GET',
+          params
+        ).then(
+          response => {
+            this.balanceRecords = response;
+            console.log("this response", response);
+          }
+        )
+      }
+    },
+    computed: {
+      ...mapGetters(
+        [
+          'userId'
+        ]
+      )
+    },
+
+    onShow() {
+      this.balanceDetailList();
     }
+
+
 
   }
 </script>

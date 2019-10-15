@@ -16,6 +16,7 @@
         </van-tab>
         <van-tab title="待评价">
           <div class="order-list">
+            <order-card></order-card>
           </div>
         </van-tab>
         <van-tab title="待付款">
@@ -44,7 +45,7 @@
   data() {
     return {
       active:0,
-      isLogin:false
+      isLogin:true
 
     }
 

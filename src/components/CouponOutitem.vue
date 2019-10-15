@@ -1,23 +1,21 @@
 <template>
   <div class="basic-style">
     <div :class="coupon">
-      <div :class="mainCoupon">
-        <p class="coupon-shop">zhimu蛋糕</p>
-        <p class="coupon-subtype">免邮</p>
-        <p class="coupon-valid-date">有效期至 2019-08-31</p>
+      <div class="main-coupon">
+        <div class="coupon-shop">{{couponInfo.couponName}}</div>
+        <div class="coupon-subtype">{{couponInfo.couponDesc}}</div>
+        <div class="coupon-valid-date">
+          有效期至 {{couponInfo.endTime}}
+        </div>
       </div>
       <div class="vice-coupon">
-        <p class="coupon-type">抵用券</p>
-        <p class="coupon-desc">减免运费8元</p>
-      </div>
-
-      <!--<div  class="used-coupon">-->
-        <!--<img style="width: 100px; height: 80px;" src="../asset/used.png">-->
-      <!--</div>-->
-      <div  class="outdate-coupon">
-        <img style="width: 100px; height: 80px;" src="../asset/outdate.png">
+        <p class="coupon-type">{{couponValue}}</p>
+        <p class="coupon-desc">{{couponLimit}}</p>
       </div>
       <i></i>
+      <div  class="used-coupon">
+        <img style="width: 100px; height: 80px;" src="../asset/outdate.png">
+      </div>
     </div>
   </div>
 </template>
@@ -25,6 +23,9 @@
 <script>
   export default {
     name: "",
+    props:{
+      couponInfo: Object
+    },
 
     data() {
       return {
@@ -34,13 +35,40 @@
 
     computed: {
 
-      //可以根据优惠券的类型，计算属性，显示不同的颜色区别，#CFD4DA 根据该值显示背景颜色
+      //可以根据优惠券的类型，计算属性，显示不同的颜色区别，#F39B00 根据该值显示背景颜色
       coupon() {
         return 'coupon';
       },
 
       mainCoupon() {
         return 'main-coupon';
+      },
+      couponValue() {
+        if (this.couponInfo.couponType === 1) {
+          return "￥" + this.couponInfo.disAmount;
+        }
+        if (this.couponInfo.couponType === 2) {
+          return this.couponInfo.disCount + "折";
+        }
+        if (this.couponInfo.couponType === 3) {
+          return "免邮";
+        }
+        if (this.couponInfo.couponType === 4) {
+        }
+
+      },
+      couponLimit() {
+        if (this.couponInfo.couponType === 1) {
+          return "订单满" + this.couponInfo.minAmount + "元使用";
+        }
+        if (this.couponInfo.couponType === 2) {
+          return "最高折扣" +this.couponInfo.maxAmount + "元";
+        }
+        if (this.couponInfo.couponType === 3) {
+          return "最高减免运费8元";
+        }
+        if (this.couponInfo.couponType === 4) {
+        }
       }
 
     }
@@ -60,8 +88,8 @@
     position: relative;
     display: flex;
     overflow: hidden;
-    background-color: #CFD4DA;
-    background: radial-gradient(rgba(0, 0, 0, 0) 0, rgba(255, 0, 0, 0) 5px, #CFD4DA 5px);
+    background-color: #F39B00;
+    background: radial-gradient(rgba(0, 0, 0, 0) 0, rgba(255, 0, 0, 0) 5px, #F39B00 5px);
     background-size: 15px 15px;
     background-position: 9px 3px;
     height: 90px;
@@ -76,7 +104,7 @@
     left:10px;
     right:10px;
     z-index: -1;
-    background-color:#CFD4DA;
+    background-color:#F39B00;
   }
 
   .coupon i{
@@ -95,6 +123,8 @@
     height: 100%;
     border-right: 2px dashed rgba(255, 255, 255, 0.3);
     padding: 5px;
+    display: flex;
+    flex-direction:column;
   }
 
   .vice-coupon {
@@ -107,11 +137,9 @@
   }
 
   .coupon-subtype {
-    font-size: 30px;
-    margin-left: 55px;
+    font-size: 10px;
   }
   .coupon-valid-date {
-    margin-top: 10px;
     text-align: center;
   }
   .coupon-type {
@@ -122,12 +150,7 @@
     margin-top: 10px;
   }
   .coupon-shop {
-    font-size: 12px;
-    margin-left: 10px;
-  }
-  .outdate-coupon {
-    position: absolute;
-    right: 10px;
+    font-size: 20px;
   }
   .used-coupon {
     position: absolute;

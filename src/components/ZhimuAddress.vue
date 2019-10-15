@@ -2,20 +2,20 @@
   <div class="address-container">
     <div class="address-info" @click="backToOrderSubmit">
       <div class="address-info_road">
-        {{addressInfo.road}}
+        {{addressInfo.addressName}}
       </div>
       <div class="address-info_number">
-        {{addressInfo.number}}
+        {{addressInfo.roadDetail}}
       </div>
       <div class="address-info_contact">
-        {{addressInfo.name}} | {{addressInfo.phoneNo}}
+        {{addressInfo.receiverName}} | {{addressInfo.receiverPhone}}
       </div>
     </div>
     <div class="address-operation">
       <div class="address-operation_edit">
         <van-icon name="edit" />
       </div>
-      <div class="address-operation_remove">
+      <div class="address-operation_remove" @click="removeAddress">
         <van-icon name="delete" />
       </div>
     </div>
@@ -45,6 +45,10 @@
           console.log("不用跳转", this.jump)
         }
 
+      },
+
+      removeAddress() {
+        this.$emit("removeAddress", this.addressInfo.id);
       }
     },
 

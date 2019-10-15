@@ -2,26 +2,29 @@
   <div class="newaddress-container">
     <van-cell-group>
       <van-field
-        :value="contactName"
+        :value="address.receiverName"
+        @change="receiverNameChange"
         required
         clearable
         label="联系人"
         placeholder="收货人姓名"
       />
 
-      <van-cell title="地址" is-link :value="address.road" @click="clickChooseLocation"/>
+      <van-cell title="地址" is-link :value="address.addressName" @click="clickChooseLocation"/>
 
       <van-field
-        :value="number"
+        :value="address.roadDetail"
         required
+        @change="roadDetailChange"
         clearable
         label="门牌号"
         placeholder="单元楼号,门牌号"
       />
 
       <van-field
-        :value="phoneNo"
+        :value="address.receiverPhone"
         required
+        @change="receiverPhoneChange"
         clearable
         label="手机号"
         placeholder="手机号码"
@@ -33,7 +36,7 @@
       <div class="address-add-button_wrap">
         <van-button round
                     custom-class="custom-button"
-                    @click="navigateToNew"
+                    @click="addNewAddress"
                     type="primary">下一步</van-button>
       </div>
     </div>
@@ -43,22 +46,63 @@
 </template>
 
 <script>
+
+  import {ADD_NEW_ADDRESS} from '@/utils/api';
+  import {request} from "@/utils/request";
+  import { mapGetters} from 'vuex';
   export default {
 
   data() {
     return {
       active:0,
       address: {
-        contactName:"",
-        road:"请选择",
-        number:"",
-        phoneNo:""
+        receiverName:"",
+        addressName:"请选择",
+        roadName:"请选择",
+        roadDetail:"",
+        receiverPhone:"",
+        latitude:null,
+        longitude:null
       }
 
     }
 
   },
   methods: {
+    addNewAddress() {
+      let params = this.address;
+      params.userId = this.userId;
+      request(
+        ADD_NEW_ADDRESS,
+        'POST',
+        params
+      ).then(
+        response => {
+          this.items = response;
+          console.log("this response", response);
+          let url = "/pages/myaddress/main" ;
+          console.log("url",url)
+          wx.navigateTo({
+            url
+          });
+
+        }
+      )
+    },
+
+    receiverNameChange(event) {
+      this.address.receiverName = event.mp.detail;
+    },
+
+    receiverPhoneChange(event) {
+      this.address.receiverPhone = event.mp.detail;
+    },
+
+    roadDetailChange(event) {
+      this.address.roadDetail = event.mp.detail;
+    },
+
+
     onChange(event) {
       console.log(event)
 
@@ -78,8 +122,10 @@
                 wx.chooseLocation({
                   success(resChoose) {
                     console.log(res)
-                    that.address.road = resChoose.name
-
+                    that.address.roadName = resChoose.address
+                    that.address.latitude = resChoose.latitude
+                    that.address.longitude = resChoose.longitude
+                    that.address.name = resChoose.name
                   }
                 })
               },
@@ -94,7 +140,11 @@
                 console.log(resChoose)
                 let addressName = resChoose.name
                 console.log(addressName)
-                that.address.road = addressName
+
+                that.address.roadName = resChoose.address
+                that.address.addressName = resChoose.name
+                that.address.latitude = resChoose.latitude
+                that.address.longitude = resChoose.longitude
               }
             })
           }
@@ -103,9 +153,17 @@
 
 
     }
-  }
+  },
+    computed: {
+      ...mapGetters(
+        [
+          'userId'
+        ]
+      )
+    },
 
-}
+
+  }
 </script>
 
 <style lang="scss" scoped>

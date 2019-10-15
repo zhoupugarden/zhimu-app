@@ -4,15 +4,23 @@
     <div class="my-profile">
       <div class="my-basic-info">
         <div class="my-basic-info__Avatar" @click="navToSetting">
-          <img :src="basicInfo.avatar" class="circleImg">
+          <img :src="basicInfo.avatarUrl" class="circleImg">
         </div>
 
         <div v-if="isLogin" class="my-basic-info__content">
-          <div>{{basicInfo.name}}</div>
-          <van-tag color="black">{{basicInfo.level}}</van-tag>
+          <div>{{basicInfo.nickName}}</div>
+          <van-tag color="black">{{basicInfo.phoneNo}}</van-tag>
           <div @click="navigateToMission">
             <van-tag color="green">签到有奖</van-tag>
           </div>
+          <div v-if="basicInfo.level === 0">
+            <van-tag color="gold">加入会员享受VIP福利</van-tag>
+          </div>
+          <div v-else>
+            <van-tag color="gold">VIP用户</van-tag>
+          </div>
+
+
         </div>
 
         <div v-else @click="navigateToLogin" class="my-basic-info__content">
@@ -78,7 +86,7 @@
 <script>
 
 
-  import { mapGetters } from 'vuex';
+  import { mapGetters , mapActions} from 'vuex';
   import {MY_USER_INFO} from '@/utils/api';
   import {request} from "@/utils/request";
 
@@ -90,12 +98,7 @@
   data() {
     return {
       isLogin:false,
-      basicInfo: {
-        avatar:"/static/avatar.png",
-        // avatar:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-        name:"宇",
-        level:"新朋友"
-      },
+      basicInfo: Object,
 
       walletInfo : {
         balance: 100,
@@ -108,6 +111,11 @@
 
   },
   methods: {
+    ...mapActions(
+      [
+        'storeUserId'
+      ]
+    ),
     navToSetting() {
       let url = "../setting/main" ;
       console.log("url",url)
@@ -193,6 +201,8 @@
           response => {
             //将userID放在存储中
             console.log("response",response)
+            this.storeUserId(response.id);
+            this.basicInfo = response;
           }
         )
     }

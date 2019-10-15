@@ -15,15 +15,10 @@
 </template>
 
 <script>
-
   import {  mapActions } from 'vuex';
 
   export default {
-  ...mapActions(
-    [
-      'logout'
-    ]
-  ),
+
 
   components: {
   },
@@ -36,6 +31,12 @@
   },
 
   methods: {
+    ...mapActions(
+      [
+        'logout'
+      ]
+    ),
+
     logoutApp() {
       this.logout();
     },

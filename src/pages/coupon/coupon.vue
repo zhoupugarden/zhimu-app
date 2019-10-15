@@ -7,9 +7,9 @@
         tab-class="van-tabs__custom"
         title="可使用">
         <div class="coupon-list">
-          <coupon-item></coupon-item>
-          <coupon-item></coupon-item>
-          <coupon-Offitem></coupon-Offitem>
+          <div v-for="(item, index) in couponValidList" :key="index">
+            <coupon-item :couponInfo="item"></coupon-item>
+          </div>
           <div class="coupon-redeem">
             <van-button custom-class="van-button__custom" @click="navgateToPointRedeem">兑换优惠券</van-button>
           </div>
@@ -17,12 +17,16 @@
       </van-tab>
       <van-tab title="已使用">
         <div class="coupon-list">
-          <coupon-useditem></coupon-useditem>
+          <div v-for="(item, index) in couponInValidList" :key="index">
+            <coupon-useditem :couponInfo="item"></coupon-useditem>
+          </div>
         </div>
       </van-tab>
       <van-tab title="已过期">
         <div class="coupon-list">
-          <coupon-outitem></coupon-outitem>
+          <div v-for="(item, index) in couponUsedList" :key="index">
+            <coupon-useditem :couponInfo="item"></coupon-useditem>
+          </div>
         </div>
       </van-tab>
     </van-tabs>
@@ -37,12 +41,17 @@
   import CouponOutitem from '@/components/CouponOutitem';
   import CouponUseditem from '@/components/CouponUseditem';
   import CouponOffitem from '@/components/CouponOffitem';
+
+  import {GET_COUPON_BY_USER_ID} from '@/utils/api';
+  import {request} from "@/utils/request";
+
   export default {
     components: {
       CouponItem,CouponOutitem,CouponOffitem,CouponUseditem
     },
     data() {
       return {
+        couponList:[],
         balanceRecords: {
           total: 798
         }
@@ -55,9 +64,49 @@
         wx.navigateTo({
           url
         });
-      }
+      },
 
+      getCoupon() {
+        let params = {};
+        params.userId = 1;
+        request(
+          GET_COUPON_BY_USER_ID,
+          'GET',
+          params
+
+        ).then(
+          response => {
+            this.couponList = response;
+            console.log("this response", response);
+          }
+        )
+
+      }
+    },
+    computed: {
+      couponValidList() {
+        return this.couponList.filter(item => {
+          return item.status === 1
+        })
+      },
+      couponInValidList() {
+        return this.couponList.filter(item => {
+          return item.status === 2
+        })
+      },
+      couponUsedList() {
+        return this.couponList.filter(item => {
+          return item.status === 3
+        })
+      }
+    },
+
+
+    onShow() {
+      this.getCoupon();
     }
+
+
 
   }
 </script>

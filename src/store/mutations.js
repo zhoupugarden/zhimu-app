@@ -36,9 +36,12 @@ const mutations = {
     },
     [types.LOG_OUT](state) {
       state.token = '';
+      state.userId = '';
+    },
 
+    [types.USER_ID](state, userId) {
+      state.userId = userId;
     }
-
 
 }
 

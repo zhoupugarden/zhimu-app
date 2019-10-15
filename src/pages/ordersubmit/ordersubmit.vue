@@ -98,7 +98,11 @@
                custom-style="height:80%"
                @close="closeCouponPopup"
                position="bottom">
-      <coupon-item></coupon-item>
+      <div v-for="(item , index) in couponCanUseList" :key="index" @click="chooseCouponItem(item)">
+
+          <coupon-item :couponInfo="item"></coupon-item>
+
+      </div>
       <div style="position: fixed; bottom: 5px; width: 100%">
         <van-button type= "primary" @click = "noUseCoupon" custom-class="custom-button">不适用优惠券</van-button>
       </div>
@@ -112,15 +116,19 @@
             <product-item :productItemInfo="item"></product-item>
           </div>
     </van-popup>
-
+    <van-toast  id="van-toast"/>
   </div>
 </template>
 
 <script>
   import CouponItem from '@/components/CouponItem';
   import ProductItem from '@/components/ProductItem';
+  import {toast} from '../../utils/toast';
 
   import { mapGetters } from 'vuex';
+
+  import {GET_COUPON_BY_USER_ID} from '@/utils/api';
+  import {request} from "@/utils/request";
 
 
   export default {
@@ -134,10 +142,10 @@
         addressId:0,
         chooseDate:"日期",
         chooseTime:"时间",
-        chooseCoupon:"未选择：",
-        validCouponCount:"0张可用",
         balanceCount:3,
         firstProduct:"测试商品",
+        couponCanUseList:[],
+        chosedCoupon: null,
         contactInfo: [
           {
             road:"上海市浦东新区周浦镇印象春城",
@@ -165,7 +173,7 @@
         timeColumns:['10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00'],
         totalProductPrice:"133.00",
         balanceValue:"-" + "123",
-        couponValue:"12",
+        couponValue: 0,
         deliverValue:"11"
       }
     },
@@ -218,6 +226,17 @@
       noUseCoupon() {
         this.couponPopShow = false;
       },
+      chooseCouponItem(item) {
+        if (this.cartTotalPrice < item.minAmount) {
+          toast("抱歉，此优惠券满" + item.minAmount + "可用");
+        } else {
+          this.couponPopShow = false;
+          console.log(item);
+          this.couponValue = item.disAmount;
+        }
+
+
+      },
 
       formatter(type, value) {
         if (type === 'year') {
@@ -265,10 +284,67 @@
         }
       },
       chooseCouponTip() {
+        if (this.chosedCoupon != null) {
+          if (this.chosedCoupon.couponType === 1) {
+            return this.chosedCoupon.disAmount + "元优惠券";
+          }
+          if (this.chosedCoupon.couponType === 2) {
+            return this.chosedCoupon.disCount + "折优惠券";
+          }
+        }
+
+        if (this.couponCanUseList.length > 0) {
+          return "未选择：" + this.couponCanUseList.length + "张可用";
+        } else {
+          return "无可用优惠券";
+        }
+
         return this.chooseCoupon + this.validCouponCount;
+      },
+      getCoupon() {
+        let params = {};
+        params.userId = 1;
+        request(
+          GET_COUPON_BY_USER_ID,
+          'GET',
+          params
+
+        ).then(
+          response => {
+            let couponList = response;
+            console.log("this response", response);
+            this.couponCanUseList = couponList.filter(
+              item => {
+                return item.status === 1;
+              }
+            );
+            console.log("validCouponList", validCouponList)
+
+            // this.couponCanUseList = validCouponList.filter(item => {
+            //   if (item.couponType === 1) {
+            //     return this.cartTotalPrice > 100;
+            //   }
+            //
+            //   if (item.couponType === 4) {
+            //     return false;
+            //   }
+            //
+            //   if (item.couponType === 5) {
+            //     //判断满足条件的商品与购物车的商品比较
+            //     // return this.cartList.cartItem.goodTypes === item.goodsvalue;
+            //
+            //   } else {
+            //     return true;
+            //   }
+            // });
+
+            console.log("couponCanUseList", this.couponCanUseList);
+          }
+        )
+
       }
     },
-    onLoad() {
+    onShow() {
       //要把原有已选的值清空
       this.chooseDate = "日期";
       this.chooseTime = "时间";
@@ -278,6 +354,8 @@
       if (null != params.addressId) {
         this.addressId = params.addressId;
       }
+
+      this.getCoupon();
     }
 
   }

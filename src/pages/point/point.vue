@@ -17,7 +17,7 @@
 
       </div>
       <div class="point-summary__total">
-        {{pointRecords.total}}
+        {{pointRecords.totalAmount}}
         <div style="font-size: 12px">分</div>
       </div>
     </div>
@@ -26,8 +26,8 @@
       积分记录
     </div>
 
-    <div class="point-detail">
-      <point-item></point-item>
+    <div v-for="(item, index) in pointRecords.items" :key="index" class="point-detail">
+      <point-item :pointDetailItem="item"></point-item>
     </div>
 
   </div>
@@ -36,6 +36,9 @@
 
 <script>
   import PointItem from '@/components/PointItem';
+  import {GET_POINT_DETAIL} from '@/utils/api';
+  import { mapGetters} from 'vuex';
+  import {request} from "@/utils/request";
   export default {
     components: {
       PointItem
@@ -43,15 +46,40 @@
   data() {
     return {
       pointRecords: {
-        total: 798
       }
     }
   },
   methods: {
+    pointDetailList() {
+      let params = {};
+      params.userId = this.userId;
+      request(
+        GET_POINT_DETAIL,
+        'GET',
+        params
+      ).then(
+        response => {
+          this.pointRecords = response;
+          console.log("this response", response);
+        }
+      )
+    }
+
+  },
+    computed: {
+      ...mapGetters(
+        [
+          'userId'
+        ]
+      )
+    },
+
+    onShow() {
+      this.pointDetailList();
+    }
+
 
   }
-
-}
 </script>
 
 <style lang="scss" scoped>

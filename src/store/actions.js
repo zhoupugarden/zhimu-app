@@ -40,6 +40,9 @@ export default {
     },
     logout: ({commit}) => {
       commit(types.LOG_OUT)
+    },
+    storeUserId: ({commit}, userId) => {
+      commit(types.USER_ID, userId)
     }
 
 }

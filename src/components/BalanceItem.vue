@@ -1,20 +1,19 @@
 <template>
   <div class="balanceitem-container">
 
-
     <div class="balanceitem-left">
       <div class="balanceitem-type">
-        {{balanceItem.type}}
+        {{balanceDetailItem.changeDesc}}
       </div>
       <div class="balanceitem-time">
-        {{balanceItem.time}}
+        {{balanceDetailItem.changeDate}}
       </div>
     </div>
 
     <div
       style="padding-right: 10px;"
       :style="{color : activeColor}">
-      {{balanceItem.count}}
+      {{balanceDetailItem.changeAmount}}
     </div>
 
   </div>
@@ -23,13 +22,11 @@
 <script>
   export default {
     name: "balance-item",
+    props: {
+      balanceDetailItem:Object
+    },
     data() {
       return {
-        balanceItem: {
-          type:"消费",
-          time:"2019-10-10 10:10:10",
-          count:"79"
-        }
       }
     },
     computed: {
@@ -39,7 +36,7 @@
         }
       },
       activeColor() {
-        if (this.balanceItem.count > 0) {
+        if (this.balanceDetailItem.changeType === 1) {
           return 'green';
         }else {
           return 'red';

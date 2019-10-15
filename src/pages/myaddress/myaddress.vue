@@ -2,7 +2,9 @@
   <div class="myaddress-container">
     <div v-for="(item, index_) in addressArray" :key="index" @click="backToOrderSubmit">
       <zhimu-address
-        :addressInfo="item"></zhimu-address>
+        @removeAddress="ondelAddress"
+        :addressInfo="item">
+      </zhimu-address>
     </div>
     <div class="address-add-button">
       <div class="address-add-button_wrap">
@@ -12,11 +14,17 @@
                     type="primary">新增收货地址</van-button>
       </div>
     </div>
+
+
+    <van-dialog id="van-dialog" />
   </div>
 </template>
 <script>
   import ZhimuAddress from '@/components/ZhimuAddress';
-
+  import {GET_USER_ADDRESS,DEL_USER_ADDRESS} from '@/utils/api';
+  import {request} from "@/utils/request";
+  import { mapGetters} from 'vuex';
+  import Dialog from '../../../static/vant/dialog/dialog';
   export default {
   components: {
     ZhimuAddress
@@ -25,20 +33,7 @@
     return {
       active:"123",
       jump:false,
-      addressArray:[
-        {
-          road:"上海市浦东新区周浦镇印象春城",
-          number:"75号701",
-          name:"杨宇",
-          phoneNo:"13817409664"
-        },
-        {
-          road:"河南省洛阳市道北路",
-          number:"1号院",
-          name:"汪洁",
-          phoneNo:"18621666217"
-        }
-      ]
+      addressArray:[]
     }
 
   },
@@ -46,6 +41,54 @@
     onChange(event) {
       console.log(event)
     },
+    ondelAddress(data) {
+      console.log("del address data", data);
+      let params = {};
+      params.addressId = data;
+      params.userId = this.userId;
+      Dialog.confirm({
+        title: '删除'
+      }).then(() => {
+
+        this.delUserAddress(params);
+        // on confirm
+      }).catch(() => {
+        // on cancel
+      });
+    },
+
+    listUserAddress() {
+      let params = {};
+      params.userId = this.userId;
+
+      request(
+        GET_USER_ADDRESS,
+        'GET',
+        params
+      ).then(
+        response => {
+          this.addressArray = response;
+          console.log("this response", response);
+        }
+      )
+
+    },
+
+    delUserAddress(data) {
+      let params = data;
+      request(
+        DEL_USER_ADDRESS,
+        'POST',
+        params
+      ).then(
+        response => {
+          console.log("this response", response);
+          this.listUserAddress();
+        }
+      )
+    },
+
+
     navigateToNew() {
       var url = "/pages/newaddress/main";
       console.log("url",url)
@@ -67,13 +110,22 @@
 
     }
   },
+
+    computed: {
+      ...mapGetters(
+        [
+          'userId'
+        ]
+      )
+    },
     mounted() {
     if (null != this.$root.$mp.query) {
       console.log(this.$root.$mp.query);
       this.jump = this.$root.$mp.query.jump;
     }
-
-
+    },
+    onShow() {
+    this.listUserAddress();
     }
 
 

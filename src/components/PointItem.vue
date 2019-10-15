@@ -3,17 +3,17 @@
 
     <div class="pointitem-left">
       <div class="pointitem-type">
-        {{pointItem.type}}
+        {{pointDetailItem.changeDesc}}
       </div>
       <div class="pointitem-time">
-        {{pointItem.time}}
+        {{pointDetailItem.changeDate}}
       </div>
     </div>
 
     <div
       style="padding-right: 10px;"
       :style="{color : activeColor}">
-      {{pointItem.count}}
+      {{pointDetailItem.changeAmount}}
     </div>
 
   </div>
@@ -22,14 +22,12 @@
 
 <script>
   export default {
-    name: "",
+    name: "point-item",
+    props: {
+      pointDetailItem:Object
+    },
     data() {
       return {
-        pointItem: {
-          type:"消费",
-          time:"2019-10-10 10:10:10",
-          count:"79"
-        }
       }
     },
     computed: {
@@ -39,7 +37,7 @@
         }
       },
       activeColor() {
-        if (this.pointItem.count > 0) {
+        if (this.pointDetailItem.changeType === 1) {
           return 'green';
         }else {
           return 'red';

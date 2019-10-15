@@ -59,6 +59,13 @@
   import {toast} from '../../utils/toast';
   import {  mapActions } from 'vuex';
 
+  const tabUrls = [
+    'pages/my/main',
+    'pages/cart/main',
+    'pages/order/main',
+    'pages/index/main'
+  ];
+
 
   export default {
 
@@ -148,35 +155,47 @@
           data
         ).then(
           response => {
-            console.log("response",response)
             if (response.token) {
               this.storeToken(response.token);
-              toast("验证码正确");
+              this.backToPage();
             }
           }
         )
       },
 
-      login() {
-
-        console.log("redirect:", getCurrentPages())
+      backToPage() {
         let pages = getCurrentPages();
         //返回登录前的页面
         let curPage = pages[pages.length - 3];
         console.log("curPage",curPage, pages.length );
 
         let route = curPage.route;
-        console.log("url",route)
-
-        wx.switchTab({
-          url: '/' + route
-          }
-        );
         console.log("url",route);
+        if (tabUrls.find(
+          item => {
+            return item === route;
+          }
+        )) {
+          console.log("存在");
+          wx.switchTab(
+            {
+              url: '/' + route
+            }
 
-        // curPage.onShow();
+          )
 
-        console.log("login", this.verifyCode);
+        }else {
+          wx.navigateTo(
+            {
+              url: '/' + route
+            }
+          )
+        }
+
+      },
+
+      login() {
+
         if (this.verifyCode === null || this.verifyCode === '') {
           this.errorCodeMessage = '验证码不能为空';
         } else {
@@ -190,8 +209,6 @@
             //request.js中封装了对异常code的统一处理， 使用的是wx.showModal,后续如何进行前后台的异常统一处理和提示
         }
       }
-
-
 
     },
     computed: {

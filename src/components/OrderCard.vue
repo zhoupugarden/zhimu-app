@@ -31,6 +31,9 @@
        <div>
          <van-button size="small" type="primary">马上付款</van-button>
        </div>
+      <div>
+        <van-button size="small" type="primary" @click="navigateToEvaluation">评价得积分</van-button>
+      </div>
     </div>
   </div>
 
@@ -56,7 +59,14 @@
     methods: {
       navigateToOrderDetail() {
         var url = "/pages/orderdetail/main";
-        console.log("url",url)
+        console.log("url",url);
+        wx.navigateTo({
+          url
+        });
+      },
+      navigateToEvaluation() {
+        var url = "/pages/evaluation/main";
+        console.log("url",url);
         wx.navigateTo({
           url
         });
