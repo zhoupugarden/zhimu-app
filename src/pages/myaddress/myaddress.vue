@@ -1,6 +1,6 @@
 <template>
   <div class="myaddress-container">
-    <div v-for="(item, index_) in addressArray" :key="index" @click="backToOrderSubmit">
+    <div v-for="(item, index_) in addressArray" :key="index" @click="backToOrderSubmit(item)">
       <zhimu-address
         @removeAddress="ondelAddress"
         :addressInfo="item">
@@ -101,11 +101,11 @@
         url
       });
     },
-    backToOrderSubmit(event) {
-      console.log("this.event:", event)
-      if (this.jump === true) {
-        var url = "/pages/ordersubmit/main?addressId=" + "12333";
-        console.log("url",url)
+    backToOrderSubmit(item) {
+      console.log("this.event:", item)
+      if (this.jump === "true") {
+        var url = "/pages/ordersubmit/main?addressId=" + item.id;
+        console.log("url",url);
         wx.navigateTo({
           url
         });
@@ -125,7 +125,7 @@
     },
     mounted() {
     if (null != this.$root.$mp.query) {
-      console.log(this.$root.$mp.query);
+      console.log("this.$root.$mp.query", this.$root.$mp.query);
       this.jump = this.$root.$mp.query.jump;
     }
     },

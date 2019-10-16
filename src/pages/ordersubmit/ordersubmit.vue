@@ -13,13 +13,18 @@
     <div class="order-submit-address">
       <div v-if="switchValue === 1" class="order-submit-address__deliver" @click="navigateToChooseAddress">
         <div class="order-submit-address__deliver-info">
-          <div>
-            <van-icon name="phone-o"></van-icon>
-            {{contactInfo[addressId].name}} {{contactInfo[addressId].phoneNo}}
+          <div v-if="addressArray.length === 0">
+            点击添加地址
           </div>
-          <div>
-            <van-icon name="location-o"></van-icon>
-            {{contactInfo[addressId].road}} {{contactInfo[addressId].number}}
+          <div v-else>
+            <div>
+              <van-icon name="phone-o"></van-icon>
+              {{currentAddress.receiverName}} {{currentAddress.receiverPhone}}
+            </div>
+            <div>
+              <van-icon name="location-o"></van-icon>
+              {{currentAddress.addressName}} {{currentAddress.roadDetail}}
+            </div>
           </div>
         </div>
         <div>
@@ -53,7 +58,7 @@
       余额
     </div>
     <div class="order-submit-balance">
-      <van-cell :title="balanceCount" custom-class="custome-cell"/>
+      <van-cell :title="userBalanceAmount" custom-class="custome-cell"/>
     </div>
     <div class="order-submit-product">
       <van-cell title="商品" :value= "'￥' + cartTotalPrice" title-class="product-title-class" value-class="product-value-class"/>
@@ -127,7 +132,7 @@
 
   import { mapGetters } from 'vuex';
 
-  import {GET_COUPON_BY_USER_ID} from '@/utils/api';
+  import {GET_COUPON_BY_USER_ID, GET_USER_ADDRESS, MY_USER_INFO} from '@/utils/api';
   import {request} from "@/utils/request";
 
 
@@ -146,23 +151,8 @@
         firstProduct:"测试商品",
         couponCanUseList:[],
         chosedCoupon: null,
-        contactInfo: [
-          {
-            road:"上海市浦东新区周浦镇印象春城",
-            number:"75号701",
-            name:"杨宇",
-            phoneNo:"13817409664"
-          },
-          {
-            road:"河南省洛阳市道北路",
-            number:"1号院",
-            name:"汪洁",
-            phoneNo:"18621666217"
-          }
-
-        ],
+        addressArray: [],
         selfAddress:"年家浜东路129弄",
-
         datePopShow:false,
         timePopShow:false,
         couponPopShow:false,
@@ -174,7 +164,8 @@
         totalProductPrice:"133.00",
         balanceValue:"-" + "123",
         couponValue: 0,
-        deliverValue:"11"
+        deliverValue:"11",
+        userInfo:{}
       }
     },
     methods: {
@@ -183,7 +174,7 @@
         console.log("this.switchValue:", this.switchValue)
       },
       navigateToChooseAddress() {
-        var url = "../myaddress/main?jump=true";
+        var url = "../myaddress/main?jump=" + "true";
         console.log("url",url)
         wx.navigateTo({
           url
@@ -234,8 +225,6 @@
           console.log(item);
           this.couponValue = item.disAmount;
         }
-
-
       },
 
       formatter(type, value) {
@@ -257,49 +246,34 @@
         console.log("currentTime", this.currentTime);
         this.chooseTime = "时间" + this.currentTime;
         this.timePopShow = false;
-      }
-
-    },
-    computed: {
-      ...mapGetters(
-        [
-          'cartList','cartTotalCount','cartTotalPrice','cartProductListName'
-        ]
-      ),
-      orderSubmitSwitchDeliver() {
-        if (this.switchValue === 1) {
-          console.log("switch:", this.switchValue)
-          return 'switch-style'
-        }else {
-          return 'un-switch-style'
-        }
       },
-      orderSubmitSwitchSelf() {
-        if (this.switchValue === -1) {
-          console.log("switch:", this.switchValue)
-          return 'switch-style'
-        }else {
-          return 'un-switch-style'
-
-        }
+      listUserAddress() {
+        let params = {};
+        params.userId = this.userId;
+        request(
+          GET_USER_ADDRESS,
+          'GET',
+          params
+        ).then(
+          response => {
+            this.addressArray = response;
+            console.log("this response", response);
+          }
+        )
       },
-      chooseCouponTip() {
-        if (this.chosedCoupon != null) {
-          if (this.chosedCoupon.couponType === 1) {
-            return this.chosedCoupon.disAmount + "元优惠券";
+      getUserInfo() {
+        let params = {};
+        params.token = this.token;
+        request(
+          MY_USER_INFO,
+          'GET',
+          params
+        ).then(
+          response => {
+            this.userInfo = response;
+            console.log("this response", response);
           }
-          if (this.chosedCoupon.couponType === 2) {
-            return this.chosedCoupon.disCount + "折优惠券";
-          }
-        }
-
-        if (this.couponCanUseList.length > 0) {
-          return "未选择：" + this.couponCanUseList.length + "张可用";
-        } else {
-          return "无可用优惠券";
-        }
-
-        return this.chooseCoupon + this.validCouponCount;
+        )
       },
       getCoupon() {
         let params = {};
@@ -343,6 +317,70 @@
         )
 
       }
+
+
+    },
+    computed: {
+      ...mapGetters(
+        [
+          'cartList','cartTotalCount','cartTotalPrice','cartProductListName','token','userId'
+        ]
+      ),
+
+      currentAddress() {
+        if(this.addressId === 0) {
+          return this.addressArray[0];
+        }else {
+          console.log("this.addressId:", this.addressArray.filter(item => item.id === Number(this.addressId)))
+          return this.addressArray.find(item => item.id === Number(this.addressId))
+        }
+      },
+
+      userBalanceAmount() {
+        if (this.userInfo.balanceAmount > this.cartTotalPrice) {
+          return this.cartTotalPrice;
+        } else {
+          return this.userInfo.balanceAmount;
+        }
+
+      },
+
+      orderSubmitSwitchDeliver() {
+        if (this.switchValue === 1) {
+          console.log("switch:", this.switchValue)
+          return 'switch-style'
+        }else {
+          return 'un-switch-style'
+        }
+      },
+      orderSubmitSwitchSelf() {
+        if (this.switchValue === -1) {
+          console.log("switch:", this.switchValue)
+          return 'switch-style'
+        }else {
+          return 'un-switch-style'
+
+        }
+      },
+      chooseCouponTip() {
+        if (this.chosedCoupon != null) {
+          if (this.chosedCoupon.couponType === 1) {
+            return this.chosedCoupon.disAmount + "元优惠券";
+          }
+          if (this.chosedCoupon.couponType === 2) {
+            return this.chosedCoupon.disCount + "折优惠券";
+          }
+        }
+
+        if (this.couponCanUseList.length > 0) {
+          return "未选择：" + this.couponCanUseList.length + "张可用";
+        } else {
+          return "无可用优惠券";
+        }
+
+        return this.chooseCoupon + this.validCouponCount;
+      }
+
     },
     onShow() {
       //要把原有已选的值清空
@@ -354,8 +392,9 @@
       if (null != params.addressId) {
         this.addressId = params.addressId;
       }
-
+      this.listUserAddress();
       this.getCoupon();
+      this.getUserInfo();
     }
 
   }

@@ -116,6 +116,7 @@
         'storeUserId'
       ]
     ),
+
     navToSetting() {
       let url = "../setting/main" ;
       console.log("url",url)
@@ -138,7 +139,7 @@
       });
     },
     navigateToCoupon() {
-      let url = "../coupon/main" ;
+      let url = "../coupon/main?userId=" + this.userId ;
       console.log("url",url)
       wx.navigateTo({
         url
@@ -214,7 +215,7 @@
   computed: {
     ...mapGetters(
       [
-        'token'
+        'token', 'userId'
       ]
     )
   },

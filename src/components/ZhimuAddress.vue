@@ -34,18 +34,18 @@
       }
     },
     methods: {
-      backToOrderSubmit() {
-        if (this.jump != null) {
-          var url = "/pages/ordersubmit/main?addressInfo=" + "12333";
-          console.log("url",url)
-          wx.navigateTo({
-            url
-          });
-        } else {
-          console.log("不用跳转", this.jump)
-        }
-
-      },
+      // backToOrderSubmit() {
+      //   if (this.jump != null) {
+      //     var url = "/pages/ordersubmit/main?addressInfo=" + "12333";
+      //     console.log("url",url)
+      //     wx.navigateTo({
+      //       url
+      //     });
+      //   } else {
+      //     console.log("不用跳转", this.jump)
+      //   }
+      //
+      // },
 
       removeAddress() {
         this.$emit("removeAddress", this.addressInfo.id);
