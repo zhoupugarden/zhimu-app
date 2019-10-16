@@ -15,7 +15,6 @@
       </div>
     </div>
 
-
     <van-dialog id="van-dialog" />
   </div>
 </template>
@@ -42,19 +41,25 @@
       console.log(event)
     },
     ondelAddress(data) {
+      let that = this;
       console.log("del address data", data);
       let params = {};
       params.addressId = data;
       params.userId = this.userId;
-      Dialog.confirm({
-        title: '删除'
-      }).then(() => {
 
-        this.delUserAddress(params);
-        // on confirm
-      }).catch(() => {
-        // on cancel
-      });
+      wx.showActionSheet(
+        {
+          itemList:["删除"],
+          success: function(res) {
+            if(res.tapIndex === 0){
+              that.delUserAddress(params);
+            } else {
+
+            }
+          }
+
+        }
+      );
     },
 
     listUserAddress() {

@@ -38,6 +38,8 @@ export const GET_USER_ADDRESS = BASE_API_URL + '/address/list';
 
 export const DEL_USER_ADDRESS = BASE_API_URL + '/address/delete';
 
+export const GET_OSS_CONFIG = BASE_API_URL + '/aliyun/oss/policy';
+
 
 
 

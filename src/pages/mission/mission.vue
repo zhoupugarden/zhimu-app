@@ -1,12 +1,18 @@
 <template>
-  <div class="balance-container">
+  <div class="mission-container">
+    <upload></upload>
 
   </div>
 </template>
 
 <script>
 
+  import Upload from '@/components/Upload';
+
   export default {
+    components: {
+      Upload
+    },
 
     data() {
       return {

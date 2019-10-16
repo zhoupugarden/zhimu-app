@@ -19,12 +19,17 @@
     <div class="merchant-feed-back">
       {{commentItems.feedBackContent}}
     </div>
+
+    <div class="feedback-pics" v-for="(src,index) in commentItems.urls" :key="index">
+      <img  :src="src" :style="{'width':width || '120rpx','height':height || '120rpx'}" class="img" >
+    </div>
   </div>
   
 </template>
 
 <script>
   export default {
+
     name: "",
     props: {
       // commentItems:Object
@@ -33,6 +38,7 @@
       return {
         commentItems: {
           avatarUrl:"http://pic4.zhimg.com/50/v2-8fdee93e812b539c2b88cacce3007a94_hd.jpg",
+          urls:["http://pic4.zhimg.com/50/v2-8fdee93e812b539c2b88cacce3007a94_hd.jpg"],
           userName:"测试用户",
           star:5,
           commentDate:"2019-09-04",
@@ -76,6 +82,9 @@
   }
   .merchant-feed-back {
     background-color: #CFD4DA;
+  }
+  .img{
+    margin:10rpx 20rpx 10rpx 0;
   }
 
 </style>

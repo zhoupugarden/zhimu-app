@@ -33,13 +33,15 @@
            />
          </div>
           <div>
-            <van-radio-group :value="basicInfo.sex" @click="onChangeSex">
+            <van-radio-group :value="basicInfo.sex"
+                             data-key="basicInfo.sex"
+                             @change="onChangeSex">
               <div class="radio-flex">
                 <div>
-                  <van-radio icon-class="small-radio-icon" checked-color="black" name="男">男</van-radio>
+                  <van-radio icon-class="small-radio-icon" checked-color="black" name="1">男</van-radio>
                 </div>
                 <div>
-                  <van-radio icon-class="small-radio-icon" checked-color="black" name="女">女</van-radio>
+                  <van-radio icon-class="small-radio-icon" checked-color="black" name="2">女</van-radio>
                 </div>
               </div>
             </van-radio-group>
@@ -51,23 +53,23 @@
           @focus="chooseBirthDay"
           label="生日"
           placeholder="请输入生日信息，保存后不可修改"
+          :value="currentDate"
+          @change="inputChange"
         />
       </van-cell-group>
     </div>
 
     <div>
-      <van-popup
-        :show="popupShow"
-        z-index="200"
-        position="bottom">
-        毒贩夫妇付付
-        <!--<van-datetime-picker-->
-        <!--type="date"-->
-        <!--:value="currentDate"-->
-        <!--@input="onInput"-->
-        <!--:min-date="minDate"-->
-        <!--:formatter="formatter"-->
-        <!--/>-->
+      <van-popup :show="datePopShow" position="bottom">
+        <van-datetime-picker
+          type="date"
+          date-type="date"
+          :value="currentDate"
+          @input="onInput"
+          @cancel="cancelPopup"
+          @confirm="confirmPopup"
+          :min-date="minDate"
+        />
       </van-popup>
     </div>
 
@@ -94,7 +96,7 @@ export default {
         name:"宇",
         level:"新朋友",
         phoneno:13817409664,
-        sex:"男"
+        sex:"1"
       },
 
       walletInfo : {
@@ -112,21 +114,43 @@ export default {
         }
         return value;
       },
-      popupShow:false
+      popupShow:false,
+      datePopShow:false,
+      currentDate:''
     }
 
   },
 
   methods: {
+
+    inputChange(event) {
+      console.log("event", event);
+    },
+
     onInput(event) {
       this.currentDate = event.detail
     },
     onChangeSex(event) {
-      this.sex = event.detail;
+      this.basicInfo.sex = event.detail;
     },
     chooseBirthDay() {
-      console.log("chooseBirthDay", this.popShow)
-      this.popShow=true;
+      console.log("chooseBirthDay", this.datePopShow)
+      this.datePopShow=true;
+    },
+    confirmPopup(event) {
+      console.log("val", event)
+      const {detail, currentTarget} = event.mp;
+      if (!isNaN(detail)) {
+        const date = new Date(detail);
+        this.currentDate = date.toLocaleDateString();
+        this.datePopShow = false;
+      }else {
+        this.datePopShow = false;
+
+      }
+    },
+    cancelPopup() {
+      this.datePopShow = false;
     }
   }
 }

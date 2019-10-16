@@ -36,7 +36,6 @@
                   :productSKUs="productSKUs"
                   @popUpClose="closeActive" @addProductToCart="addToCart"></cart-pop>
     </div>
-
   </div>
 
 </template>
