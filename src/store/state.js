@@ -2,7 +2,8 @@
 const state = {
     cartList:[],
     token:'',
-    userId:''
+    userId:'',
+    isVip:0
 }
 
 export default state;

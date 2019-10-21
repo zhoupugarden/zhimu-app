@@ -41,7 +41,7 @@
       </div>
     </div>
     <div>
-      <van-button custom-class="phone-login-custom" type="primary" @click="login">登录</van-button>
+      <button open-type="getUserInfo" lang="zh_CN" type="primary" @getuserinfo="verifyAndLogin">登录</button>
     </div>
 
     <div class="phonelogin-footer">
@@ -54,7 +54,7 @@
 
 <script>
 
-  import {SMS_VERIFY_CODE_SEND, SMS_VERIFY_CODE_VERIFY, MY_PHONE_LOGIN} from '@/utils/api';
+  import {SMS_VERIFY_CODE_SEND, SMS_VERIFY_CODE_VERIFY, MY_PHONE_LOGIN, UPDATE_USER_WX_INFO} from '@/utils/api';
   import {request} from "@/utils/request";
   import {toast} from '../../utils/toast';
   import {  mapActions } from 'vuex';
@@ -77,7 +77,7 @@
         count: '',
         timer: null,
         errorMessage:'',
-        errorCodeMessage:'',
+        errorCodeMessage:''
       }
     },
     methods: {
@@ -148,20 +148,122 @@
           }
         )
       },
-      verifySmsCode(data) {
+      // verifySmsCode(data) {
+      //   request(
+      //     MY_PHONE_LOGIN,
+      //     'post',
+      //     data
+      //   ).then(
+      //     response => {
+      //       if (response.token) {
+      //         this.storeToken(response.token);
+      //         this.backToPage();
+      //       }
+      //     }
+      //   )
+      // },
+
+      verifyLoginCode(data) {
+        let that = this;
+        request(
+          SMS_VERIFY_CODE_VERIFY,
+          'post',
+          data
+        ).then(
+          response => {
+            if (response === "成功") {
+              that.login();
+
+            }
+          }
+        )
+      },
+
+      verifyAndLogin() {
+        if (this.phoneNo === '' || this.verifyCode === '') {
+          this.errorMessage = "不能为空";
+        } else {
+          let verifySmsCodeBo = {};
+          verifySmsCodeBo.phoneNo = this.phoneNo;
+          verifySmsCodeBo.code = this.verifyCode;
+          this.verifyLoginCode(verifySmsCodeBo);
+        }
+      },
+
+      myPhoneLogin(data) {
+        let that = this;
         request(
           MY_PHONE_LOGIN,
           'post',
           data
         ).then(
           response => {
-            if (response.token) {
-              this.storeToken(response.token);
-              this.backToPage();
+            that.storeToken(response.token);
+            if (response.avatarUrl === null) {
+              wx.getSetting({
+                success(res) {
+                  console.log("resssss==", res)
+                  if (!res.authSetting['scope.userInfo']) {
+                    wx.authorize({
+                      scope: 'scope.userInfo',
+                      success () {
+                        console.log("用户已同意授权");
+                        wx.getUserInfo({
+                          success: res => {
+                            console.log('app.js执行 getUserInfo');
+                            // 可以将 res 发送给后台解码出 unionId
+                            console.log(res);
+                            let userUpdateWxBo = {};
+                            console.log("out response", response);
+                            userUpdateWxBo.userId = response.id;
+                            userUpdateWxBo.avatarUrl = res.userInfo.avatarUrl;
+                            userUpdateWxBo.nickName = res.userInfo.nickName;
+                            userUpdateWxBo.gender = res.userInfo.gender;
+                            that.updateUserWxInfo(userUpdateWxBo);
+                            that.backToPage();
+                            // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+                            // 所以此处加入 callback 以防止这种情况
+                          }
+                        })
+                      }
+                    })
+                  } else {
+                    wx.getUserInfo({
+                      success: res => {
+                        console.log('app.js执行 getUserInfo');
+                        // 可以将 res 发送给后台解码出 unionId
+                        console.log(res)
+                        // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+                        // 所以此处加入 callback 以防止这种情况
+                        //如何获取openId
+                        // this.verifySmsCodeBo.openId = res.userInfo;
+                        // this.verifySmsCodeBo.sessionKey = res.userInfo;
+                        let userUpdateWxBo = {};
+                        console.log("out response", response);
+                        userUpdateWxBo.userId = response.id;
+                        userUpdateWxBo.avatarUrl = res.userInfo.avatarUrl;
+                        userUpdateWxBo.nickName = res.userInfo.nickName;
+                        userUpdateWxBo.gender = res.userInfo.gender;
+                        that.updateUserWxInfo(userUpdateWxBo);
+                        that.backToPage();
+                      }
+                    })
+                  }
+                },
+                fail(res) {
+                  console.log("fail res", res);
+                }
+
+              });
+
+            }else {
+              that.backToPage();
             }
           }
-        )
+        );
       },
+
+
 
       backToPage() {
         let pages = getCurrentPages();
@@ -194,20 +296,40 @@
 
       },
 
+      updateUserWxInfo(data) {
+        request(
+          UPDATE_USER_WX_INFO,
+          'post',
+          data
+        ).then(
+          response => {
+            console.log("update user wx info", response)
+          }
+        )
+      },
+
       login() {
+        let that = this;
+        wx.login({
+          success (resss) {
+            if (resss) {
+              //发起网络请求
+              console.log("resss", resss);
+              let userLoginBo = {};
+              userLoginBo.wxCode = resss.code;
+              userLoginBo.phoneNo = that.phoneNo;
+              that.myPhoneLogin(userLoginBo);
+            } else {
+              console.log('登录失败！' + resss.errMsg)
+            }
+          }
+        })
 
-        if (this.verifyCode === null || this.verifyCode === '') {
-          this.errorCodeMessage = '验证码不能为空';
-        } else {
-          let verifyParam = {};
-          verifyParam.phoneNo = this.phoneNo;
-          verifyParam.code = this.verifyCode;
 
-          this.verifySmsCode(verifyParam);
             //  注册， 登录，跳转
             //页面只负责处理data的业务，对code的处理在request当中
             //request.js中封装了对异常code的统一处理， 使用的是wx.showModal,后续如何进行前后台的异常统一处理和提示
-        }
+
       }
 
     },

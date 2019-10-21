@@ -4,13 +4,14 @@
       <div class="deliver-info_user">
         骑手：{{orderInfo.deliverName}}
       </div>
+      <hr style="border: 1px solid darkgray; margin: 2px 0px" />
       <div class="deliver-info_time">
         配送日期：{{orderInfo.deliverDate}}
         配送时间：{{orderInfo.deliverTime}}
       </div>
     </div>
     <div class="total-score">
-      <van-rate :value="rateValue" @click="activeTags"/>
+      <van-rate size="30" :value="rateValue" @click="activeTags"/>
     </div>
     <div v-if="isActive" class="total-tags">
       <div v-for="(item, index) in tagDescs" :key="index" >
@@ -68,6 +69,20 @@
   .total-tags {
     display: flex;
     justify-content:space-around;
+  }
+  .evaluationtotal-container {
+    background-color: white;
+    margin: 5px;
+    padding: 5px;
+  }
+  .deliver-info_time {
+    font-size: 12px;
+  }
+  .deliver-info {
+    font-size: 20px;
+  }
+  .total-score {
+    text-align:center;
   }
 
 </style>

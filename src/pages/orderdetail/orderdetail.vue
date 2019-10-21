@@ -49,6 +49,13 @@
           </van-cell-group>
         </div>
 
+        <div class="order-submit-button">
+          <van-button custom-class="custom-button"
+                      @click="orderPay"
+                      type="primary"
+          >立即支付</van-button>
+        </div>
+
 
       </van-tab>
       <van-tab title="订单状态">
@@ -78,7 +85,9 @@
       return {
         active:0,
         stepActive:1,
+        orderInfo: {
 
+        },
         productItemInfo: {
           url:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567423333127&di=89d0c9226b130766a75d8219eb801f4e&imgtype=0&src=http%3A%2F%2Fpic43.nipic.com%2F20140705%2F2531170_165127150000_2.jpg",
           name:"测试商品",
@@ -111,13 +120,33 @@
     methods: {
       onChange(event) {
         console.log("event:", event)
+      },
+      orderPay() {
+
       }
+    },
+
+    onShow() {
+      let params = this.$root.$mp.query;
+      console.log(this.$root.$mp.query);
     }
 
   }
 </script>
 
 <style lang="scss" scoped>
+  .order-submit-button {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    z-index: 100;
+    bottom: 10px;
+    background-color: white;
+  }
+  .order-order-info {
+    padding-bottom: 100px;
+  }
 
 </style>
 
@@ -130,5 +159,8 @@
   page{
     height: 100%;
     background-color:#F4F4F4 !important;
+  }
+  .custom-button {
+    width: 300px;
   }
 </style>

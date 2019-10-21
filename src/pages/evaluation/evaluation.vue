@@ -8,15 +8,15 @@
       <evaluation-item></evaluation-item>
     </div>
     <div class="evaluation-switch">
-      <div style="font-size: 24px;">
+      <div style="font-size: 20px;">
         匿名评价
       </div>
-      <div style="z-index: -1">
-        <van-switch :checked="isAnonymous" @change="onChangeSwitch" size="24px"/>
+      <div>
+        <van-switch :checked="isAnonymous"
+                    active-color="#07c160"
+                    @change="onChangeSwitch" size="20px"/>
       </div>
-
     </div>
-
     <div class="evaluation-add-button">
       <div class="evaluation-add-button_wrap">
         <van-button round
@@ -63,7 +63,6 @@
     bottom: 0px;
     width: 100%;
     background-color: white;
-    margin-top: 10px;
   }
   .evaluation-add-button_wrap {
     display: flex;
@@ -72,7 +71,7 @@
   }
   .evaluation-switch {
     display: flex;
-    z-index: -1;
+    margin: 10px 0px;
   }
 
 </style>

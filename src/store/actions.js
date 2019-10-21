@@ -43,6 +43,13 @@ export default {
     },
     storeUserId: ({commit}, userId) => {
       commit(types.USER_ID, userId)
-    }
+    },
+    storeIsVip: ({commit}, level) => {
+    commit(types.IS_VIP, level)
+  },
+    checkoutCartList: ({commit}) => {
+      commit(types.CHECK_OUT_CART)
+    },
+
 
 }

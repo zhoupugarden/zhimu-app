@@ -39,7 +39,18 @@
 
     logoutApp() {
       this.logout();
+      this.navigateToMyPage();
     },
+
+    navigateToMyPage() {
+      let url = "/pages/my/main";
+      wx.switchTab(
+        {
+          url
+        }
+      )
+    },
+
     navigateToMySetting() {
       let url = "/pages/mysetting/main";
       wx.navigateTo(

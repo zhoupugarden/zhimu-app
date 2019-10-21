@@ -30,6 +30,13 @@
       }
     },
 
+    methods: {
+      preCheckCoupon() {
+        console.log("preCheckCoupon 123333")
+        this.$emit("preCheckCoupon", this.couponInfo);
+      }
+    },
+
     computed: {
       //可以根据优惠券的类型，计算属性，显示不同的颜色区别，#F39B00 根据该值显示背景颜色
       coupon() {

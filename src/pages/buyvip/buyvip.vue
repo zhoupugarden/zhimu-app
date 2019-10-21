@@ -13,7 +13,7 @@
       </van-cell-group>
     </div>
     <div class="buy-vip-button">
-      <van-button type="primary" size="large" @click="navigateToWxBuy">立即支付</van-button>
+      <van-button type="primary" size="large" @click="charge">立即支付</van-button>
     </div>
 
   </div>
@@ -21,21 +21,42 @@
 
 <script>
   import PrivilegeItem from '@/components/PrivilegeItem';
+  import { mapGetters } from 'vuex';
+
+  import {CHARGE} from '@/utils/api';
+  import {request} from "@/utils/request";
 
   export default {
     components: {
       PrivilegeItem
     },
     data() {
-      return {
-
-
-      }
+      return {}
     },
     methods: {
-      navigateToWxBuy() {
-        console.log("navigateToWxBuy")
+      charge() {
+        let params = {};
+        params.userId = this.userId;
+        params.productId = 9;
+        params.chargeAmount = 500;
+        console.log("charge");
+        request(
+          CHARGE,
+          'POST',
+          params
+        ).then(
+          response => {
+            console.log("this response", response);
+          }
+        )
       }
+    },
+    computed: {
+      ...mapGetters(
+        [
+          'userId','isVip'
+        ]
+      ),
     }
   }
 </script>

@@ -130,7 +130,28 @@
                 })
               },
               fail(e) {
-                console.log("为什么失败", e)
+                console.log("为什么失败", e);
+
+
+                wx.showModal({
+                  title: '提示',
+                  content: '请开启定位功能以便确定是否可以免费配送',
+                  success (res) {
+                    if (res.confirm) {
+                      console.log('用户点击确定')
+                      wx.openSetting(
+                        {
+                          success(res) {
+                            console.log(res)
+                          }
+                        }
+                      )
+                    } else if (res.cancel) {
+                      console.log('用户点击取消')
+                    }
+                  }
+                })
+
               }
             })
           }else {

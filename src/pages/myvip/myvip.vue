@@ -11,8 +11,11 @@
       <div style="color: white; font-size: 10px; font-family: 'Microsoft YaHei'">
         (使用会员卡年均节省477元)
       </div>
-      <div>
+      <div v-if="isVip===0">
         <van-button type="primary" size="small" @click="navigateToBuy">开通</van-button>
+      </div>
+      <div v-else>
+        vip
       </div>
 
     </div>
@@ -44,9 +47,12 @@
       </div>
     </div>
 
-    <div class="my-vip-button">
+    <div v-if="isVip === 0" class="my-vip-button">
 
       <van-button type="primary" size="large" @click="navigateToBuy">立即开通</van-button>
+
+    </div>
+    <div v-else>
 
     </div>
 
@@ -70,6 +76,7 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex';
 
   const popContents = [
     {
@@ -123,7 +130,13 @@
           url
         });
       }
-
+    },
+    computed: {
+      ...mapGetters(
+        [
+          'userId','isVip'
+        ]
+      ),
     }
 
   }

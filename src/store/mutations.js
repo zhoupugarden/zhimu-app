@@ -29,7 +29,7 @@ const mutations = {
       state.cartList.splice(index, 1);
     },
     [types.CHECK_OUT_CART](state) {
-
+      state.cartList = []
     },
     [types.TOKEN](state, token) {
       state.token = token;
@@ -41,7 +41,10 @@ const mutations = {
 
     [types.USER_ID](state, userId) {
       state.userId = userId;
-    }
+    },
+  [types.IS_VIP](state, level) {
+    state.isVip = level;
+  },
 
 }
 

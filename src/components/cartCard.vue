@@ -2,7 +2,7 @@
   <div class="zm-card" >
       <div class="zm-card__thumb" >
         <image
-          :src="cardItem.cartItem.url"
+          :src="cardItem.cartItem.picUrl"
           mode="aspectFit"
           lazy-load="true"
           class="zm-card__img thumb-class"

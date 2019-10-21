@@ -40,6 +40,16 @@ export const DEL_USER_ADDRESS = BASE_API_URL + '/address/delete';
 
 export const GET_OSS_CONFIG = BASE_API_URL + '/aliyun/oss/policy';
 
+export const UPDATE_USER_WX_INFO = BASE_API_URL + '/my/userInfo/updateWx';
+
+export const PRE_USE_COUPON = BASE_API_URL + '/coupon/preuse';
+
+export const CHARGE = BASE_API_URL + '/charge/add';
+
+export const ORDER_SUBMIT = BASE_API_URL + '/order/submit';
+
+
+
 
 
 

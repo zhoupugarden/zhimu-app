@@ -9,6 +9,7 @@ export default {
     cartList: state => state.cartList,
     token:state => state.token,
     userId: state => state.userId,
+    isVip: state => state.isVip,
     cartTotalCount: state => {
       return state.cartList.reduce(
         (count, item) => {

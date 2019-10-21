@@ -43,18 +43,18 @@
       <div class="my-wallet-info">
 
         <div class="my-wallet-info__style" @click="navigateToBalance">
-          <div style="font-weight: 600;font-size: 15px;"> {{walletInfo.balance}} 元</div>
+          <div style="font-weight: 600;font-size: 15px;"> {{basicInfo.balanceAmount}} 元</div>
           <div style="font-weight: lighter;font-size: 10px;padding: 5px;">余额</div>
         </div>
 
         <div class="my-wallet-info__style" @click="navigateToCoupon">
-          <div style="font-weight: 600;font-size: 15px;"> {{walletInfo.coupon}} 个</div>
+          <div style="font-weight: 600;font-size: 15px;"> {{basicInfo.couponCount}} 个</div>
           <div style="font-weight: lighter;font-size: 10px;padding: 5px;">优惠券</div>
 
         </div>
 
         <div class="my-wallet-info__style" @click="navigateToPoint">
-          <div style="font-weight: 600;font-size: 15px;"> {{walletInfo.point}} 分</div>
+          <div style="font-weight: 600;font-size: 15px;"> {{basicInfo.pointAmount}} 分</div>
           <div style="font-weight: lighter;font-size: 10px;padding: 5px;">积分</div>
         </div>
       </div>
@@ -90,6 +90,12 @@
   import {MY_USER_INFO} from '@/utils/api';
   import {request} from "@/utils/request";
 
+  const originBasicInfo = {
+    avatarUrl:"/static/images/avatar.png",
+    balanceAmount:0,
+    pointAmount:0,
+    couponCount:0
+  };
 
   export default {
 
@@ -98,7 +104,7 @@
   data() {
     return {
       isLogin:false,
-      basicInfo: Object,
+      basicInfo: {},
 
       walletInfo : {
         balance: 100,
@@ -113,16 +119,20 @@
   methods: {
     ...mapActions(
       [
-        'storeUserId'
+        'storeUserId','storeIsVip'
       ]
     ),
 
     navToSetting() {
-      let url = "../setting/main" ;
-      console.log("url",url)
-      wx.navigateTo({
-        url
-      });
+      if (!this.isLogin) {
+        console.log("当前用户没有登录")
+      } else {
+        let url = "../setting/main" ;
+        console.log("url",url);
+        wx.navigateTo({
+          url
+        });
+      }
     },
     navigateToPoint() {
       let url = "../point/main" ;
@@ -160,8 +170,10 @@
       });
     },
     navigateToGetUserInfo() {
+      console.log("hhhhh====")
       wx.getSetting({
         success(res) {
+          console.log("resssss==", res)
           if (!res.authSetting['scope.userInfo']) {
             wx.authorize({
               scope: 'scope.userInfo',
@@ -176,7 +188,6 @@
     },
     onGotUserInfo(res) {
       console.log(res);
-
       wx.login({
         success (resss) {
           if (resss) {
@@ -187,6 +198,31 @@
           }
         }
       })
+
+      wx.getUserInfo({
+        success: res => {
+          console.log('app.js执行 getUserInfo');
+          // 可以将 res 发送给后台解码出 unionId
+          console.log(res)
+
+          // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+          // 所以此处加入 callback 以防止这种情况
+        }
+      })
+
+
+
+
+      // wx.login({
+      //   success (resss) {
+      //     if (resss) {
+      //       //发起网络请求
+      //       console.log("resss", resss)
+      //     } else {
+      //       console.log('登录失败！' + res.errMsg)
+      //     }
+      //   }
+      // })
     },
     getPhoneNumber(e) {
       console.log("获取手机号",e)
@@ -203,13 +239,11 @@
             //将userID放在存储中
             console.log("response",response)
             this.storeUserId(response.id);
+            this.storeIsVip(response.level);
             this.basicInfo = response;
           }
         )
     }
-
-
-
 
   },
   computed: {
@@ -221,11 +255,13 @@
   },
 
   onShow() {
+
     if (this.token) {
       this.isLogin = true;
       this.getUserInfo(this.token);
     } else {
       this.isLogin = false;
+      this.basicInfo = Object.assign({}, originBasicInfo);
     }
   }
 

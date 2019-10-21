@@ -67,7 +67,6 @@
       },
 
       getCoupon(data) {
-
         request(
           GET_COUPON_BY_USER_ID,
           'GET',
@@ -101,7 +100,6 @@
 
 
     onShow() {
-
       let params = this.$root.$mp.query;
       console.log(this.$root.$mp.query);
       let data = {};

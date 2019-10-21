@@ -67,7 +67,7 @@
     <div class="order-submit-summary">
         <van-cell-group>
           <van-cell :title="cartTotalCount + '件商品'" :value= "'￥' + cartTotalPrice" />
-          <van-cell title="余额" :value= "flag + balanceValue" />
+          <van-cell title="余额" :value= "flag + userBalanceAmount" />
           <van-cell title="优惠券" :value= "flag + couponValue" />
           <van-cell title="配送费" :value= "flag + deliverValue" />
         </van-cell-group>
@@ -75,9 +75,9 @@
 
     <div class="order-submit-button">
       <van-button custom-class="custom-button"
+                  @click="orderSubmit"
                   type="primary"
-      >微信付款{{totalProductPrice}}</van-button>
-
+      >微信付款{{restWxPayAmount}}</van-button>
     </div>
 
     <van-popup :show="datePopShow" position="bottom">
@@ -105,7 +105,7 @@
                position="bottom">
       <div v-for="(item , index) in couponCanUseList" :key="index" @click="chooseCouponItem(item)">
 
-          <coupon-item :couponInfo="item"></coupon-item>
+          <coupon-item :couponInfo="item" @preCheckCoupon="preCheckCoupon"></coupon-item>
 
       </div>
       <div style="position: fixed; bottom: 5px; width: 100%">
@@ -129,10 +129,10 @@
   import CouponItem from '@/components/CouponItem';
   import ProductItem from '@/components/ProductItem';
   import {toast} from '../../utils/toast';
-
+  import {  mapActions } from 'vuex';
   import { mapGetters } from 'vuex';
 
-  import {GET_COUPON_BY_USER_ID, GET_USER_ADDRESS, MY_USER_INFO} from '@/utils/api';
+  import {GET_COUPON_BY_USER_ID, GET_USER_ADDRESS, MY_USER_INFO,ORDER_SUBMIT, PRE_USE_COUPON} from '@/utils/api';
   import {request} from "@/utils/request";
 
 
@@ -162,13 +162,18 @@
         minDate: new Date(2018, 0, 1).getTime(),
         timeColumns:['10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00'],
         totalProductPrice:"133.00",
-        balanceValue:"-" + "123",
+        balanceValue:"0",
         couponValue: 0,
-        deliverValue:"11",
         userInfo:{}
       }
     },
     methods: {
+
+      ...mapActions(
+        [
+          'checkoutCartList'
+        ]
+      ),
       switchOther() {
         this.switchValue = this.switchValue * -1;
         console.log("this.switchValue:", this.switchValue)
@@ -180,6 +185,14 @@
           url
         });
       },
+      navigateToOrderDetail(orderNo) {
+        var url = "../orderdetail/main?orderNo=" + orderNo;
+        console.log("url",url)
+        wx.navigateTo({
+          url
+        });
+      },
+      
       datePop() {
         this.datePopShow = true;
       },
@@ -218,13 +231,13 @@
         this.couponPopShow = false;
       },
       chooseCouponItem(item) {
-        if (this.cartTotalPrice < item.minAmount) {
-          toast("抱歉，此优惠券满" + item.minAmount + "可用");
-        } else {
-          this.couponPopShow = false;
-          console.log(item);
-          this.couponValue = item.disAmount;
-        }
+        console.log("couponItem: ", item);
+        let params = {};
+        params.userId = this.userId;
+        params.couponCode = item.couponCode;
+        params.totalAmount = this.cartTotalPrice;
+        params.productItems = this.convertCartList(this.cartList);
+        this.preCheckCoupon(params);
       },
 
       formatter(type, value) {
@@ -275,9 +288,46 @@
           }
         )
       },
+
+      convertCartList(data) {
+        let productItems = [];
+        let productItem = {};
+
+        for(let item of data) {
+          productItem.categoryId = item.cartItem.categoryId;
+          productItem.productId = item.cartItem.productId;
+          productItem.skuId = item.cartItem.id;
+          productItem.quantity = item.inventory;
+          productItems.push(productItem)
+        }
+      return productItems;
+      },
+
+      preCheckCoupon(data) {
+        let that = this;
+        console.log("preCheckCoupon ======");
+        request(
+          PRE_USE_COUPON,
+          'POST',
+          data
+        ).then(
+          response => {
+            this.items = response;
+            console.log("this response", response);
+            if (!response.isApply) {
+              toast(response.failReason);
+            } else {
+              that.couponPopShow = false;
+              that.couponValue = response.couponAmount;
+              that.chosedCoupon = that.couponCanUseList.find(item => item.couponCode === response.couponCode);
+            }
+          }
+        )
+      },
+
       getCoupon() {
         let params = {};
-        params.userId = 1;
+        params.userId = this.userId;
         request(
           GET_COUPON_BY_USER_ID,
           'GET',
@@ -292,57 +342,103 @@
                 return item.status === 1;
               }
             );
-            console.log("validCouponList", validCouponList)
-
-            // this.couponCanUseList = validCouponList.filter(item => {
-            //   if (item.couponType === 1) {
-            //     return this.cartTotalPrice > 100;
-            //   }
-            //
-            //   if (item.couponType === 4) {
-            //     return false;
-            //   }
-            //
-            //   if (item.couponType === 5) {
-            //     //判断满足条件的商品与购物车的商品比较
-            //     // return this.cartList.cartItem.goodTypes === item.goodsvalue;
-            //
-            //   } else {
-            //     return true;
-            //   }
-            // });
+            console.log("validCouponList", validCouponList);
 
             console.log("couponCanUseList", this.couponCanUseList);
           }
         )
+      },
+
+      orderSubmit() {
+        let params = {};
+        params.userId = this.userId;
+        params.addressId = this.addressId;
+        params.deliverDate = this.currentDate;
+        params.deliverTime = this.currentTime;
+
+        if (this.restWxPayAmount === 0) {
+          params.payType = 2;
+        }else if (this.userBalanceAmount === 0) {
+          params.payType = 1;
+        }else {
+          params.payType = 3;
+        }
+        if (this.switchValue === 1) {
+          params.deliverType = 1;
+        }else {
+          params.deliverType = 99;
+        }
+        params.orderType = 1;
+        if (this.chosedCoupon != null) {
+          params.couponCode = this.chosedCoupon.couponCode;
+        }
+        params.productItems = this.convertCartList(this.cartList);
+        params.remark = "留言待补充";
+
+        request(
+          ORDER_SUBMIT,
+          'POST',
+          params
+        ).then(
+          response => {
+            this.checkoutCartList();
+            console.log("this response", response);
+            let orderNo = response.orderNo;
+            if (response.orderStatus === 2) {
+              toast("订单支付成功", 2000);
+              this.navigateToOrderDetail(orderNo);
+            } else {
+              this.navigateToOrderDetail(orderNo);
+            }
+          }
+        )
 
       }
-
-
     },
     computed: {
       ...mapGetters(
         [
-          'cartList','cartTotalCount','cartTotalPrice','cartProductListName','token','userId'
+           'cartList','cartTotalCount','cartTotalPrice','cartProductListName','token','userId'
         ]
       ),
 
+      deliverValue() {
+
+        if(this.cartTotalPrice < 30) {
+          return 8;
+        }
+        if (this.cartTotalPrice >=30 && this.cartTotalPrice < 30) {
+          return 5;
+        }
+        if (this.cartTotalPrice >= 100) {
+          return 0;
+        }
+
+      },
+
       currentAddress() {
-        if(this.addressId === 0) {
-          return this.addressArray[0];
+        if(this.addressId === 0 && this.addressArray.length > 0) {
+          let addressItem =  this.addressArray.find(item => item.isDefault === 1);
+          this.addressId = addressItem.id;
+          return addressItem;
         }else {
           console.log("this.addressId:", this.addressArray.filter(item => item.id === Number(this.addressId)))
-          return this.addressArray.find(item => item.id === Number(this.addressId))
+          return this.addressArray.find(item => item.id === Number(this.addressId));
         }
       },
 
       userBalanceAmount() {
-        if (this.userInfo.balanceAmount > this.cartTotalPrice) {
-          return this.cartTotalPrice;
+        console.log("balanceMount, cartTotalPrice", this.userInfo.balanceAmount , this.cartTotalPrice)
+
+        if (this.userInfo.balanceAmount >= this.cartTotalPrice) {
+          return this.cartTotalPrice - this.couponValue ;
         } else {
           return this.userInfo.balanceAmount;
         }
+      },
 
+      restWxPayAmount() {
+        return this.cartTotalPrice + this.deliverValue - this.couponValue - this.userBalanceAmount;
       },
 
       orderSubmitSwitchDeliver() {
@@ -371,14 +467,11 @@
             return this.chosedCoupon.disCount + "折优惠券";
           }
         }
-
         if (this.couponCanUseList.length > 0) {
           return "未选择：" + this.couponCanUseList.length + "张可用";
         } else {
           return "无可用优惠券";
         }
-
-        return this.chooseCoupon + this.validCouponCount;
       }
 
     },

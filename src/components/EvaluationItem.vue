@@ -15,8 +15,10 @@
         </div>
       </div>
     </div>
+    <hr style="border: 1px solid darkgray; margin: 2px 0px" />
     <div class="evaluation-score">
-      <van-rate :value="rateValue" />
+      <span style="font-size: 12px;">味道</span>
+      <van-rate size="30" :value="rateValue" />
     </div>
     <div class="evaluation-comment">
       <van-field
@@ -24,6 +26,8 @@
         type="textarea"
         placeholder="请输入留言"
         border="true"
+        autosize
+        custom-style="height: 100px;backgroud-color: darkgray;border: 1px solid darkgray;"
       />
     </div>
 
@@ -111,6 +115,11 @@
     width: 100px;
     height: 100px;
   }
+  .evaluationitem-container {
+    background-color: white;
+    margin: 5px;
+    padding: 5px;
+  }
   .evaluation-product-item {
     display: flex;
   }
@@ -122,6 +131,9 @@
   .product-info_item {
     display: flex;
     justify-content:space-around;
+  }
+  .evaluation-score {
+    text-align: center;
   }
 
 </style>
