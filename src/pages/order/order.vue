@@ -10,21 +10,19 @@
         <van-tab
           tab-class="van-tabs__custom"
           title="全部">
-          <div class="order-list">
-            <order-card></order-card>
+          <div v-for="(item, index) in orderItems" :key = "index" class="order-list">
+            <order-card :orderInfo="item"></order-card>
           </div>
         </van-tab>
         <van-tab title="待评价">
-          <div class="order-list">
-            <order-card></order-card>
+          <div v-for="(item, index) in waitCommentItems" :key = "index" class="order-list">
+            <order-card :orderInfo="item"></order-card>
           </div>
         </van-tab>
         <van-tab title="待付款">
-
-          <div class="order-list">
-
+          <div v-for="(item, index) in waitPayItems" :key = "index" class="order-list">
+            <order-card :orderInfo="item"></order-card>
           </div>
-
         </van-tab>
       </van-tabs>
 
@@ -36,6 +34,9 @@
 
 <script>
   import OrderCard from '@/components/OrderCard';
+  import {ADD_NEW_ADDRESS,GET_ORDER_LIST} from '@/utils/api';
+  import {request} from "@/utils/request";
+  import { mapGetters} from 'vuex';
   export default {
 
   components: {
@@ -45,8 +46,10 @@
   data() {
     return {
       active:0,
-      isLogin:true
-
+      isLogin:true,
+      orderItems:{},
+      waitCommentItems:{},
+      waitPayItems:{}
     }
 
   },
@@ -61,10 +64,35 @@
       wx.navigateTo({
         url
       });
+    },
+    getOrderListByUserId() {
+      let params = {};
+      params.userId = this.userId;
+      request(
+        GET_ORDER_LIST,
+        'GET',
+        params
+      ).then(
+        response => {
+          console.log("orderlist", response);
+          this.orderItems = response;
+          this.waitCommentItems = response.filter(item => item.isComment === 0 && item.orderStatus === 2);
+          this.waitPayItems = response.filter(item => item.orderStatus === 1);
+        }
+      )
+
     }
   },
+    computed: {
+      ...mapGetters(
+        [
+          'userId'
+        ]
+      )
+    },
     onShow() {
-    console.log("this.isLogin", this.isLogin)
+    console.log("this.isLogin", this.isLogin);
+    this.getOrderListByUserId();
     }
 }
 </script>

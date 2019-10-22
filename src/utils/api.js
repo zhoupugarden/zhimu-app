@@ -48,6 +48,12 @@ export const CHARGE = BASE_API_URL + '/charge/add';
 
 export const ORDER_SUBMIT = BASE_API_URL + '/order/submit';
 
+export const GET_ORDER_LIST = BASE_API_URL + '/order/list';
+
+export const GET_ORDER_DETAIL = BASE_API_URL + '/order/detail';
+
+export const GET_ORDER_LOG = BASE_API_URL + '/order/log/list';
+
 
 
 

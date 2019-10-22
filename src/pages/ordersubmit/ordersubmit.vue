@@ -40,10 +40,10 @@
     <div style="font-weight: bolder">配送时间</div>
     <div class="order-submit-time">
       <div style="width: 50%">
-        <van-cell :title="chooseDate" custom-class="custome-cell" is-link arrow-direction="down" @click="datePop"/>
+        <van-cell title="日期" :value="currentDate" custom-class="custome-cell-time" is-link arrow-direction="down" @click="datePop"/>
       </div>
       <div style="width: 50%">
-        <van-cell :title="chooseTime" custom-class="custome-cell" is-link arrow-direction="down" @click="timePop"/>
+        <van-cell title="时间" :value="currentTime" custom-class="custome-cell-time" is-link arrow-direction="down" @click="timePop"/>
       </div>
     </div>
 
@@ -131,9 +131,9 @@
   import {toast} from '../../utils/toast';
   import {  mapActions } from 'vuex';
   import { mapGetters } from 'vuex';
-
   import {GET_COUPON_BY_USER_ID, GET_USER_ADDRESS, MY_USER_INFO,ORDER_SUBMIT, PRE_USE_COUPON} from '@/utils/api';
   import {request} from "@/utils/request";
+  import dateUtil from "@/utils/dateUtil";
 
 
   export default {
@@ -145,8 +145,6 @@
         flag:'￥',
         switchValue: 1,
         addressId:0,
-        chooseDate:"日期",
-        chooseTime:"时间",
         balanceCount:3,
         firstProduct:"测试商品",
         couponCanUseList:[],
@@ -220,11 +218,9 @@
         if (!isNaN(detail)) {
           const date = new Date(detail);
           this.currentDate = date.toLocaleDateString();
-          this.chooseDate = "日期" + this.currentDate;
           this.datePopShow = false;
         }else {
           this.datePopShow = false;
-
         }
       },
       noUseCoupon() {
@@ -257,7 +253,6 @@
         const {detail, currentTarget} = event.mp;
         this.currentTime = detail.value;
         console.log("currentTime", this.currentTime);
-        this.chooseTime = "时间" + this.currentTime;
         this.timePopShow = false;
       },
       listUserAddress() {
@@ -298,6 +293,7 @@
           productItem.productId = item.cartItem.productId;
           productItem.skuId = item.cartItem.id;
           productItem.quantity = item.inventory;
+          productItem.productName = item.cartItem.productName;
           productItems.push(productItem)
         }
       return productItems;
@@ -433,7 +429,7 @@
         if (this.userInfo.balanceAmount >= this.cartTotalPrice) {
           return this.cartTotalPrice - this.couponValue ;
         } else {
-          return this.userInfo.balanceAmount;
+          return this.userInfo.balanceAmount + "";
         }
       },
 
@@ -477,8 +473,6 @@
     },
     onShow() {
       //要把原有已选的值清空
-      this.chooseDate = "日期";
-      this.chooseTime = "时间";
       let params = this.$root.$mp.query;
       console.log(this.$root.$mp.query);
       //有两种路径，1 从购物车页面进来，2重新选择地址后返回
@@ -488,6 +482,9 @@
       this.listUserAddress();
       this.getCoupon();
       this.getUserInfo();
+      let myDate = new Date();
+      this.currentDate = "2019-10-10";
+      this.currentTime = "10:00-11:00";
     }
 
   }
@@ -559,6 +556,10 @@
 <style lang="scss">
   .custome-cell {
     background-color: #F4F4F4 !important;
+  }
+  .custome-cell-time {
+    background-color: #F4F4F4 !important;
+    font-size: 12px !important;
   }
   .custom-button {
     width: 300px;

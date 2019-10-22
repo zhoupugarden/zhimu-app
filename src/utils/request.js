@@ -9,6 +9,11 @@ export function request(url, method = "GET", data) {
   }
 
   return new Promise(function (resolve, reject) {
+    wx.showLoading({
+      title: '加载中',
+      mask:true
+    });
+
     wx.request({
       url: url,
       data: data,
@@ -48,6 +53,9 @@ export function request(url, method = "GET", data) {
           showCancel: false
         });
         reject(err);
+      },
+      complete(res) {
+        wx.hideLoading();
       }
     })
   });

@@ -4,8 +4,8 @@
 
     <van-tabs :active="active" @change="onChange">
       <van-tab title="订单详情">
-        <div class="order-item-detail">
-          <product-item :productItemInfo="productItemInfo"></product-item>
+        <div v-for="(detail, index) in orderProductDetailList" :key="index" class="order-item-detail">
+          <product-item :productItemInfo="detail"></product-item>
         </div>
         <div class="order-freeitem-detail">
           <van-cell-group>
@@ -16,11 +16,14 @@
 
         </div>
         <div class="order-coupon-detail">
-          <van-cell title="其他优惠" value="-￥5" />
-
+          <van-cell title="其他优惠" :value="orderInfo.couponAmount" />
         </div>
         <div class="order-total-info">
-          <van-cell title="总计￥129" value="需付￥119" />
+          <van-cell title="总计" :value="orderInfo.totalAmount" />
+        </div>
+
+        <div class="order-need-info">
+          <van-cell title="需付" :value="orderInfo.needPayAmount" />
         </div>
 
         <div class="merchant-contact-info">
@@ -32,9 +35,9 @@
         </div>
         <div class="order-deliver-info">
           <van-cell-group>
-            <van-cell title="期望时间" value="2019-08-05 10:00-11:00" />
-            <van-cell title="配送地址" value="杨宇 13817409664 上海市浦东新区周浦镇年家浜东路129弄75号701" />
-            <van-cell title="配送服务" value="由骑手：zhimu 为您配送" />
+            <van-cell title="期望时间" :value="orderInfo.expectDeliverTime" />
+            <van-cell title="配送地址" :value="orderInfo.expectDeliverAddress" />
+            <van-cell title="配送服务" :value="deliverDesc" />
           </van-cell-group>
         </div>
         <div>
@@ -42,10 +45,10 @@
         </div>
         <div class="order-order-info">
           <van-cell-group>
-            <van-cell title="订单号码" value="EX2019072619014718" />
-            <van-cell title="订单时间" value="2019年7月26日 19:01:47" />
-            <van-cell title="支付方式" value="微信支付" />
-            <van-cell title="订单状态" value="已配送" />
+            <van-cell title="订单号码" :value="orderInfo.orderNo" />
+            <van-cell title="订单时间" :value="orderInfo.orderTime" />
+            <van-cell title="支付方式" :value="orderInfo.payTypeDesc" />
+            <van-cell title="订单状态" :value="orderInfo.orderStatusDesc" />
           </van-cell-group>
         </div>
 
@@ -55,7 +58,6 @@
                       type="primary"
           >立即支付</van-button>
         </div>
-
 
       </van-tab>
       <van-tab title="订单状态">
@@ -75,6 +77,8 @@
 <script>
 
   import ProductItem from '@/components/ProductItem';
+  import {GET_ORDER_DETAIL, GET_ORDER_LOG} from '@/utils/api';
+  import {request} from "@/utils/request";
 
   export default {
     components: {
@@ -85,17 +89,8 @@
       return {
         active:0,
         stepActive:1,
-        orderInfo: {
-
-        },
-        productItemInfo: {
-          url:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567423333127&di=89d0c9226b130766a75d8219eb801f4e&imgtype=0&src=http%3A%2F%2Fpic43.nipic.com%2F20140705%2F2531170_165127150000_2.jpg",
-          name:"测试商品",
-          attr:"杯",
-          price:"13.00",
-          count:"12"
-        },
-
+        orderInfo: {},
+        orderProductDetailList: {},
         steps: [
           {
             text: '订单已提交 2019-10-10 10:19:18',
@@ -119,16 +114,50 @@
     },
     methods: {
       onChange(event) {
-        console.log("event:", event)
+        console.log("event:", event);
       },
       orderPay() {
+      },
 
+
+      getOrderLog(params) {
+        request(
+          GET_ORDER_LOG,
+          'GET',
+          params
+        ).then(
+          response => {
+            console.log("this response", response);
+          }
+        )
+      },
+
+      getOrderDetail(params) {
+        request(
+          GET_ORDER_DETAIL,
+          'GET',
+          params
+        ).then(
+          response => {
+            console.log("this response", response);
+            this.orderInfo = response;
+            this.orderProductDetailList = this.orderInfo.orderProductDetailList;
+          }
+        )
       }
     },
+    computed: {
+      deliverDesc() {
+        return this.orderInfo.deliverName + this.orderInfo.deliverPhone;
+      }
+    },
+
 
     onShow() {
       let params = this.$root.$mp.query;
       console.log(this.$root.$mp.query);
+      this.getOrderDetail(params);
+      this.getOrderLog(params);
     }
 
   }

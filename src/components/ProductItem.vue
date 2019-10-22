@@ -1,25 +1,29 @@
 <template>
   <div class="product-item-container">
     <div class="product-item-url">
-      <img :src="productItemInfo.cartItem.url" class="img-class">
+      <img :src="productItemInfo.picUrl" class="img-class">
     </div>
     <div class="product-item-info">
       <div>
-        {{productItemInfo.cartItem.productName}}
+        {{productItemInfo.productName}}
       </div>
       <div>
-        {{productItemInfo.cartItem.attributeName}}
+        {{productItemInfo.attributeName}}
       </div>
     </div>
     <div class="product-item-price">
-      ￥{{productItemInfo.cartItem.salePrice}}
+      ￥{{productItemInfo.salePrice}}
+    </div>
+
+    <div class="product-item-price">
+      ￥{{productItemInfo.linePrice}}
     </div>
 
     <div class="product-item-count">
-      *{{productItemInfo.inventory}}
+      *{{productItemInfo.quantity}}
     </div>
     <div class="product-item-total">
-      {{productItemInfo.inventory * productItemInfo.salePrice}}
+      {{productItemInfo.totalAmount}}
     </div>
 
   </div>

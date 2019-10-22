@@ -5,33 +5,33 @@
         {{orderInfo.orderNo}}
       </div>
       <div style="font-size: small; font-weight: bold">
-        {{orderInfo.orderStatus}}
+        {{orderInfo.orderStatusDesc}}
       </div>
     </div>
     <div class="order-card__detail" @click="navigateToOrderDetail">
       <div class="order-card__detail-image">
-        <img :src="orderInfo.orderUrl" style="width: 80px;height: 80px;">
+        <img :src="orderInfo.showPicUrl" style="width: 80px;height: 80px;">
       </div>
       <div class="order-card__detail-info">
         <div style="color: red; font-size: small">
-          ￥{{orderInfo.price}}
+          ￥{{orderInfo.totalAmount}}
         </div>
         <div style="font-size: small; font-weight: lighter">
-          {{orderInfo.orderTime}}
+          {{orderInfo.orderDateTime}}
         </div>
         <div style="font-size: small;font-weight: lighter;width: 200px;">
-          {{orderInfo.orderListName}}
+          {{orderInfo.productListName}}
         </div>
       </div>
     </div>
     <div class="order-card__operation">
-      <div style="padding: 5px">
+      <div style="padding: 5px" v-show="orderInfo.orderStatus === 1">
         <van-button size="small">取消订单</van-button>
       </div>
-       <div>
+       <div v-show="orderInfo.orderStatus === 1">
          <van-button size="small" type="primary">马上付款</van-button>
        </div>
-      <div>
+      <div v-show="orderInfo.orderStatus === 2">
         <van-button size="small" type="primary" @click="navigateToEvaluation">评价得积分</van-button>
       </div>
     </div>
@@ -41,24 +41,14 @@
 
 <script>
   export default {
-    // props: {
-    //   orderInfo:Object
-    // },
+    props: {
+      orderInfo:Object
+    },
     data() {
-      return {
-        orderInfo : {
-          orderUrl:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-          orderNo:"1233",
-          orderStatus:"待支付",
-          price:"12.22",
-          orderTime:"2019-10-10 10:10:10",
-          orderListName:"杨宇测试|测试|依依 毒贩夫妇付 杨宇测试|测试|依依 毒贩夫妇付 "
-        }
-      }
     },
     methods: {
       navigateToOrderDetail() {
-        var url = "/pages/orderdetail/main";
+        var url = "/pages/orderdetail/main?orderNo=" + this.orderInfo.orderNo;
         console.log("url",url);
         wx.navigateTo({
           url
