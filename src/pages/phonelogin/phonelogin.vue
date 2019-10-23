@@ -268,10 +268,10 @@
       backToPage() {
         let pages = getCurrentPages();
         //返回登录前的页面
-        let curPage = pages[pages.length - 3];
+          let curPage = pages[pages.length - 3];
         console.log("curPage",curPage, pages.length );
 
-        let route = curPage.route;
+          let route = curPage.route;
         console.log("url",route);
         if (tabUrls.find(
           item => {

@@ -9,7 +9,6 @@
         自提
       </div>
     </div>
-
     <div class="order-submit-address">
       <div v-if="switchValue === 1" class="order-submit-address__deliver" @click="navigateToChooseAddress">
         <div class="order-submit-address__deliver-info">
@@ -36,7 +35,6 @@
       </div>
 
     </div>
-
     <div style="font-weight: bolder">配送时间</div>
     <div class="order-submit-time">
       <div style="width: 50%">
@@ -46,7 +44,6 @@
         <van-cell title="时间" :value="currentTime" custom-class="custome-cell-time" is-link arrow-direction="down" @click="timePop"/>
       </div>
     </div>
-
     <div style="font-weight: bolder">
       优惠券
     </div>
@@ -133,7 +130,7 @@
   import { mapGetters } from 'vuex';
   import {GET_COUPON_BY_USER_ID, GET_USER_ADDRESS, MY_USER_INFO,ORDER_SUBMIT, PRE_USE_COUPON} from '@/utils/api';
   import {request} from "@/utils/request";
-  import dateUtil from "@/utils/dateUtil";
+  import {_MyDate} from "@/utils/dateUtil";
 
 
   export default {
@@ -166,7 +163,6 @@
       }
     },
     methods: {
-
       ...mapActions(
         [
           'checkoutCartList'
@@ -472,21 +468,29 @@
 
     },
     onShow() {
-      //要把原有已选的值清空
-      let params = this.$root.$mp.query;
-      console.log(this.$root.$mp.query);
-      //有两种路径，1 从购物车页面进来，2重新选择地址后返回
-      if (null != params.addressId) {
-        this.addressId = params.addressId;
-      }
-      this.listUserAddress();
-      this.getCoupon();
-      this.getUserInfo();
-      let myDate = new Date();
-      this.currentDate = "2019-10-10";
-      this.currentTime = "10:00-11:00";
-    }
 
+      if (!this.token) {
+        console.log("用户没有登录");
+        let url = "../login/main";
+        wx.navigateTo({
+          url: url
+        });
+      } else {
+        //要把原有已选的值清空
+        let params = this.$root.$mp.query;
+        console.log(this.$root.$mp.query);
+        //有两种路径，1 从购物车页面进来，2重新选择地址后返回
+        if (null != params.addressId) {
+          this.addressId = params.addressId;
+        }
+        this.listUserAddress();
+        this.getCoupon();
+        this.getUserInfo();
+        let myDate = new Date();
+        this.currentDate = "2019-10-10";
+        this.currentTime = "10:00-11:00";
+      }
+    }
   }
 </script>
 

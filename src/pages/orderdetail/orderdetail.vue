@@ -1,19 +1,20 @@
 <template>
   <div class="order-detail-container">
 
-
     <van-tabs :active="active" @change="onChange">
       <van-tab title="订单详情">
-        <div v-for="(detail, index) in orderProductDetailList" :key="index" class="order-item-detail">
-          <product-item :productItemInfo="detail"></product-item>
+        <div>
+
+        <div v-for="(detail_, index) in orderInfo.orderProductDetailList" :key="index" class="order-item-detail">
+          <product-item :productItemInfo="detail_"></product-item>
         </div>
+
         <div class="order-freeitem-detail">
           <van-cell-group>
           <van-cell title="数字蜡烛" value="1个" />
           <van-cell title="桃心蜡烛" value="1个" />
           <van-cell title="赠送餐具" value="5份" />
           </van-cell-group>
-
         </div>
         <div class="order-coupon-detail">
           <van-cell title="其他优惠" :value="orderInfo.couponAmount" />
@@ -58,7 +59,7 @@
                       type="primary"
           >立即支付</van-button>
         </div>
-
+        </div>
       </van-tab>
       <van-tab title="订单状态">
         <van-steps
@@ -68,7 +69,6 @@
           active-color="#f44"
         />
       </van-tab>
-
     </van-tabs>
 
   </div>
@@ -158,12 +158,27 @@
       console.log(this.$root.$mp.query);
       this.getOrderDetail(params);
       this.getOrderLog(params);
+    },
+    onUnload() {
+      let pages = getCurrentPages();
+      console.log("pageUrl", pages);
+      let prePage = pages[pages.length - 2];
+      if (prePage.route == 'pages/ordersubmit/main') {
+        wx.reLaunch({
+          url: '/pages/cart/main'
+        })
+      }
     }
 
   }
 </script>
 
 <style lang="scss" scoped>
+
+  .order-item-detail {
+    background-color: white;
+  }
+
   .order-submit-button {
     position: fixed;
     display: flex;

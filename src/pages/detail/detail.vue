@@ -105,18 +105,21 @@
       </van-tabs>
     </div>
     <div class="zm-goods__review">
-      <van-cell :title="reviewTitle" is-link
+      <van-cell title="用户评价" is-link
                 link-type="navigateTo"
                 url="/pages/comments/main"
                 value="查看全部"
                 value-class="zm-goods__review_value" />
-      <div class="zm-goods__review_detail">
-        <img :src="comment.url" class="avatar-img">
+      <div v-if="comment.content !== null" class="zm-goods__review_detail">
+        <img :src="comment.avatarUrl" class="avatar-img">
         <div style="width: 60%;">
           <div style="background-color: #CFD4DA">
             {{comment.content}}
           </div>
         </div>
+      </div>
+      <div v-else style="background-color: white; text-align: center;">
+        暂无评价
       </div>
     </div>
     <div class="zm-goods__actions">
@@ -197,7 +200,7 @@
 
 <script>
 
-  import {GET_PRODUCT_DETAIL_BY_ID, GET_PRODUCT_SKU_DETAIL_BY_ID } from '@/utils/api';
+  import {GET_PRODUCT_DETAIL_BY_ID, GET_PRODUCT_SKU_DETAIL_BY_ID, GET_STAR_COMMENT } from '@/utils/api';
   import {request} from "@/utils/request";
 
   import { mapGetters, mapActions } from 'vuex';
@@ -210,7 +213,6 @@
       good: {
       },
       popShow:false,
-
       urls: {"firstUrl":"http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/机器猫.jpg"},
       productSKUs: [
       ],
@@ -218,10 +220,7 @@
 
       },
       popupText: "加入购物车",
-      comment: {
-        url:"http://pic4.zhimg.com/50/v2-8fdee93e812b539c2b88cacce3007a94_hd.jpg",
-        content:"必吃榜来拔草啦~嘉善必吃榜来拔草啦~嘉善必吃榜来拔草啦~嘉善必吃榜来拔草啦~嘉善"
-      }
+      comment: null
     }
   },
   //如何支持pathVariable 的请求？？
@@ -245,17 +244,7 @@
     },
 
     addCart() {
-      let cartProduct = {
-        skuId : this.chooseSKU.id,
-        url : this.good.headPicUrl,
-        productId : this.chooseSKU.productId,
-        attributeName : this.chooseSKU.attributeName,
-        productName: this.good.name,
-        type : this.good.type,
-        salePrice: this.chooseSKU.salePrice,
-        linePrice: this.chooseSKU.linePrice
-      }
-      this.addProductToCart(cartProduct);
+      this.addProductToCart(this.chooseSKU);
       this.popShow = false;
       toast("成功添加购物车");
     },
@@ -271,18 +260,7 @@
       this.popShow = true;
     },
     addToBuy() {
-      let cartProduct = {
-        skuId : this.chooseSKU.id,
-        url : this.good.headPicUrl,
-        productId : this.chooseSKU.productId,
-        attributeName : this.chooseSKU.attributeName,
-        productName: this.good.name,
-        type : this.good.type,
-        salePrice: this.chooseSKU.salePrice,
-        linePrice: this.chooseSKU.linePrice
-      };
-
-      this.addProductToCart(cartProduct);
+      this.addProductToCart(this.chooseSKU);
       this.popShow = false;
       var url = "../cart/main";
       wx.switchTab({
@@ -324,21 +302,33 @@
     popUpClose() {
       console.log("popUpClose");
       this.popShow = false;
+    },
+    getStarComment(data) {
+      request(
+        GET_STAR_COMMENT,
+        'GET',
+        data
+      ).then(
+        (response) => {
+          console.log("this.good response", response);
+         this.comment = response;
+        }
+      )
     }
+
+
   },
-    mounted() {
+    onShow() {
       console.log(this.$root.$mp.query);
         let params = {};
           params.productId = this.$root.$mp.query.productId;
           //后续可以将这两个请求合并成一个
           this.getProductDetail(params);
+          this.getStarComment(params);
       },
     computed: {
       attribute() {
         return "已选择：" + this.chooseSKU.attributeName;
-      },
-      reviewTitle() {
-        return "评价" + "(" + this.active + ")";
       },
       ...mapGetters(
         [

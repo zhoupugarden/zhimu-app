@@ -54,6 +54,8 @@ export const GET_ORDER_DETAIL = BASE_API_URL + '/order/detail';
 
 export const GET_ORDER_LOG = BASE_API_URL + '/order/log/list';
 
+export const GET_STAR_COMMENT = BASE_API_URL + '/comment/product/star';
+
 
 
 

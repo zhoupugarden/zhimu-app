@@ -20,7 +20,7 @@
     </div>
 
     <div class="product-item-count">
-      *{{productItemInfo.quantity}}
+      {{productItemInfo.quantity}}
     </div>
     <div class="product-item-total">
       {{productItemInfo.totalAmount}}

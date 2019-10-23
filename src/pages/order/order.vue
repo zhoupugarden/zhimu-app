@@ -46,7 +46,7 @@
   data() {
     return {
       active:0,
-      isLogin:true,
+      isLogin:false,
       orderItems:{},
       waitCommentItems:{},
       waitPayItems:{}
@@ -86,13 +86,17 @@
     computed: {
       ...mapGetters(
         [
-          'userId'
+          'userId','token'
         ]
       )
     },
     onShow() {
+    if (this.token) {
+      this.isLogin = true;
+      this.getOrderListByUserId();
+    }
     console.log("this.isLogin", this.isLogin);
-    this.getOrderListByUserId();
+
     }
 }
 </script>
