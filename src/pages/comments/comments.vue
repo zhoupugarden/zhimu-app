@@ -55,16 +55,16 @@
         差评({{comments.bad}})
       </div>
     </div>
-    <div class="comment-detail">
-      <comment-item></comment-item>
-      <comment-item></comment-item>
+    <div v-for= "(item, index) in comment.commentItemList" :key="index" class="comment-detail">
+      <comment-item :detail="item"></comment-item>
     </div>
   </div>
 </template>
 
 <script>
   import CommentItem from '@/components/CommentItem';
-
+  import {GET_PRODUCT_COMMENT } from '@/utils/api';
+  import {request} from "@/utils/request";
 
   export default {
     components: {
@@ -73,9 +73,6 @@
     data() {
       return {
         active:100,
-        balanceRecords: {
-          total: 798
-        },
         comments : {
           total:100,
           havePic:20,
@@ -86,6 +83,20 @@
       }
     },
     methods: {
+
+      getProductComment(params) {
+        request(
+          GET_PRODUCT_COMMENT,
+          'GET',
+          params
+        ).then(
+          (response) => {
+            console.log("this.good response", response);
+            this.comment = response;
+          }
+        )
+      },
+
       activeTag0() {
         this.active = 0;
       },
@@ -118,8 +129,12 @@
       tagStyle4() {
         return this.active === 4 ? "comment-active-tag-style": "comment-tag-style";
       }
+    },
+    onShow() {
+      console.log("productID: ",this.$root.$mp.query);
+      let params = this.$root.$mp.query;
+      this.getProductComment(params);
     }
-
   }
 </script>
 

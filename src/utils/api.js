@@ -56,6 +56,17 @@ export const GET_ORDER_LOG = BASE_API_URL + '/order/log/list';
 
 export const GET_STAR_COMMENT = BASE_API_URL + '/comment/product/star';
 
+export const CANCEL_ORDER = BASE_API_URL + '/order/cancel';
+
+export const PAY_ORDER = BASE_API_URL + '/order/pay';
+
+export const GET_PRODUCT_COMMENT = BASE_API_URL + '/comment/product/list';
+
+export const SUBMIT_ORDER_COMMENT = BASE_API_URL + '/comment/order/submit';
+
+export const  GET_COMMENT_ORDER_INFO = BASE_API_URL + '/order/comment/info';
+
+
 
 
 

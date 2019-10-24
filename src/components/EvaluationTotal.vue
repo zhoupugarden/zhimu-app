@@ -18,7 +18,6 @@
         <van-tag round size="medium" @click="chooseTag(index)" :color="tagColor[index]">{{item}}</van-tag>
       </div>
     </div>
-
   </div>
   
 </template>
@@ -28,6 +27,10 @@
   const activeColor = "#f2826a";
   export default {
     name: "EvaluationTotal",
+
+    props: {
+      orderInfo: Object
+    },
 
     data() {
       return {
@@ -48,7 +51,7 @@
         console.log("changeTag", event);
         let tagId = event;
         if (this.choosedTag.indexOf(this.tagDescs[tagId]) === -1) {
-          console.log("不存在")
+          console.log("不存在");
           this.choosedTag.push(this.tagDescs[tagId]);
           this.tagColor[tagId] = activeColor;
         }else {

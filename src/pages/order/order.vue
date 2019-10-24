@@ -11,17 +11,17 @@
           tab-class="van-tabs__custom"
           title="全部">
           <div v-for="(item, index) in orderItems" :key = "index" class="order-list">
-            <order-card :orderInfo="item"></order-card>
+            <order-card :orderInfo="item" @cancelOrder="refreshItemStatus"></order-card>
           </div>
         </van-tab>
         <van-tab title="待评价">
           <div v-for="(item, index) in waitCommentItems" :key = "index" class="order-list">
-            <order-card :orderInfo="item"></order-card>
+            <order-card :orderInfo="item" ></order-card>
           </div>
         </van-tab>
         <van-tab title="待付款">
           <div v-for="(item, index) in waitPayItems" :key = "index" class="order-list">
-            <order-card :orderInfo="item"></order-card>
+            <order-card :orderInfo="item" ></order-card>
           </div>
         </van-tab>
       </van-tabs>

@@ -2,16 +2,16 @@
   <div class="evaluationitem-container">
     <div class="evaluation-product-item">
       <div class="product-pic">
-        <img :src="productItem.imgUrl" mode="aspectFill" class="img-class">
+        <img :src="itemInfo.picUrl" mode="aspectFill" class="img-class">
       </div>
       <div class="product-info">
         <div class="product-info_item">
-          <div>{{productItem.name}}</div>
-          <div>{{productItem.price}}</div>
+          <div>{{itemInfo.productName}}</div>
+          <div>{{itemInfo.salePrice}}</div>
         </div>
         <div class="product-info_item">
-          <div>{{productItem.attributeName}}</div>
-          <div>{{productItem.quantity}}</div>
+          <div>{{itemInfo.attributeName}}</div>
+          <div>{{itemInfo.quantity}}</div>
         </div>
       </div>
     </div>
@@ -47,6 +47,10 @@
 
   export default {
 
+    props: {
+      itemInfo: Object
+    },
+
     components: {
       Upload
     },
@@ -55,13 +59,6 @@
     data() {
       return {
         rateValue: 0,
-        productItem:{
-          imgUrl:'https://img1.qunarzz.com/travel/d8/1704/ea/e2c26c442e55e1b5.jpg_480x360x95_e5675a93.jpg',
-          name:"杨宇测试",
-          price:10.12,
-          attributeName:"个",
-          quantity:2
-        },
         srcList:[],
         ossConfig: {}
       }
@@ -81,7 +78,10 @@
       },
       choosedPics(data) {
         let that = this;
-        console.log("data: ", data)
+        console.log("data: ", data);
+
+        //多图片上传
+
         UploadAliyunOss(
           {
             filePath:data.all[0],
@@ -93,14 +93,9 @@
               console.log("上传失败")
               console.log(res)
             }
-
           }
 
         );
-
-
-
-
       }
     },
 

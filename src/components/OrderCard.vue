@@ -26,10 +26,10 @@
     </div>
     <div class="order-card__operation">
       <div style="padding: 5px" v-show="orderInfo.orderStatus === 1">
-        <van-button size="small">取消订单</van-button>
+        <van-button size="small" @click="cancelOrder">取消订单</van-button>
       </div>
        <div v-show="orderInfo.orderStatus === 1">
-         <van-button size="small" type="primary">马上付款</van-button>
+         <van-button size="small" type="primary" @click="payOrder">马上付款</van-button>
        </div>
       <div v-show="orderInfo.orderStatus === 2">
         <van-button size="small" type="primary" @click="navigateToEvaluation">评价得积分</van-button>
@@ -40,6 +40,9 @@
 </template>
 
 <script>
+
+  import {CANCEL_ORDER,PAY_ORDER} from '@/utils/api';
+  import {request} from "@/utils/request";
   export default {
     props: {
       orderInfo:Object
@@ -60,6 +63,42 @@
         wx.navigateTo({
           url
         });
+      },
+      cancelOrder() {
+      //  需要刷新订单列表
+        let orderNo = this.orderInfo.orderNo;
+        let data = {};
+        data.orderNo = orderNo;
+        request(
+          CANCEL_ORDER,
+          'post',
+          data
+        ).then(
+          response => {
+            console.log("取消订单响应：", response);
+            this.orderInfo.orderStatus == 99;
+            this.orderInfo.orderStatusDesc == "已取消";
+          }
+        )
+      },
+      payOrder() {
+        let orderNo = this.orderInfo.orderNo;
+        let data = {};
+        data.orderNo = orderNo;
+        request(
+          PAY_ORDER,
+          'post',
+          data
+        ).then(
+          response => {
+            console.log("支付订单响应：", response);
+
+          //  在这里需要调用微信支付
+
+
+
+          }
+        )
       }
     }
 

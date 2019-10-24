@@ -1,26 +1,30 @@
 <template>
   <div class="comment-item-container">
     <div class="avatar-url">
-      <img :src="commentItems.avatarUrl" class="avatar-img">
+      <img :src="detail.avatarUrl" class="avatar-img">
     </div>
     <div class="use-name">
       {{commentItems.userName}}
     </div>
     <div class="product-star">
-      <van-rate :value="commentItems.star"/>
+      <van-rate :value="detail.overAllScore"/>
+    </div>
+    <div>
+      <van-icon name="bookmark-o" color="E0E0E0" />
+      {{tagStr}}
     </div>
     <div class="comment-date">
-      {{commentItems.commentDate}}
+      {{detail.commentDate}}
     </div>
     <div class="user-comment">
-      {{commentItems.commentContent}}
+      {{detail.content}}
 
     </div>
     <div class="merchant-feed-back">
-      {{commentItems.feedBackContent}}
+      {{detail.reply}}
     </div>
 
-    <div class="feedback-pics" v-for="(src,index) in commentItems.urls" :key="index">
+    <div class="feedback-pics" v-for="(src,index) in detail.picUrls" :key="index">
       <img  :src="src" :style="{'width':width || '120rpx','height':height || '120rpx'}" class="img" >
     </div>
   </div>
@@ -32,19 +36,20 @@
 
     name: "",
     props: {
-      // commentItems:Object
+      detail:Object
     },
     data() {
       return {
-        commentItems: {
-          avatarUrl:"http://pic4.zhimg.com/50/v2-8fdee93e812b539c2b88cacce3007a94_hd.jpg",
-          urls:["http://pic4.zhimg.com/50/v2-8fdee93e812b539c2b88cacce3007a94_hd.jpg"],
-          userName:"测试用户",
-          star:5,
-          commentDate:"2019-09-04",
-          commentContent:"必吃榜来拔草啦~嘉善必吃榜来拔草啦~嘉善必吃榜来拔草啦~嘉善必吃榜来拔草啦~嘉善",
-          feedBackContent:". 澳大利亚素食者控告邻居烤肉违反住宅法令. 澳大利亚一名妇女正向法院上诉，试图阻止她的邻居在庭院烧烤食物，法院驳回了她的指控"
+      }
+    },
+    computed: {
+      tagStr() {
+        let tagStr = "";
+        let tags = this.detail.contentTags;
+        for (let tag of tags) {
+          tagStr = tag + ",";
         }
+        return tagStr.slice(0,-1);
       }
     }
   }

@@ -107,7 +107,7 @@
     <div class="zm-goods__review">
       <van-cell title="用户评价" is-link
                 link-type="navigateTo"
-                url="/pages/comments/main"
+                :url="commentUrl"
                 value="查看全部"
                 value-class="zm-goods__review_value" />
       <div v-if="comment.content !== null" class="zm-goods__review_detail">
@@ -202,7 +202,6 @@
 
   import {GET_PRODUCT_DETAIL_BY_ID, GET_PRODUCT_SKU_DETAIL_BY_ID, GET_STAR_COMMENT } from '@/utils/api';
   import {request} from "@/utils/request";
-
   import { mapGetters, mapActions } from 'vuex';
   import { ADD_PRODUCT_TO_CART } from '@/store/mutation-types';
   import {toast} from '../../utils/toast';
@@ -216,11 +215,11 @@
       urls: {"firstUrl":"http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/机器猫.jpg"},
       productSKUs: [
       ],
-      chooseSKU :{
-
-      },
+      chooseSKU :{},
       popupText: "加入购物车",
-      comment: null
+      comment: null,
+      commentUrl:"",
+
     }
   },
   //如何支持pathVariable 的请求？？
@@ -316,15 +315,15 @@
       )
     }
 
-
   },
     onShow() {
       console.log(this.$root.$mp.query);
-        let params = {};
+          let params = {};
           params.productId = this.$root.$mp.query.productId;
           //后续可以将这两个请求合并成一个
           this.getProductDetail(params);
           this.getStarComment(params);
+          this.commentUrl = "/pages/comments/main?productId=" + this.$root.$mp.query.productId;
       },
     computed: {
       attribute() {

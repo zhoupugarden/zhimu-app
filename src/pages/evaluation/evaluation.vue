@@ -1,11 +1,11 @@
 <template>
   <div class="evaluation-container">
     <div class="evaluation-total">
-      <evaluation-total></evaluation-total>
+      <evaluation-total :orderInfo="orderInfo"></evaluation-total>
 
     </div>
     <div class="evaluation-detail">
-      <evaluation-item></evaluation-item>
+      <evaluation-item :itemInfo="orderInfo.orderCommentDetailList"></evaluation-item>
     </div>
     <div class="evaluation-switch">
       <div style="font-size: 20px;">
@@ -21,7 +21,7 @@
       <div class="evaluation-add-button_wrap">
         <van-button round
                     custom-class="custom-button"
-                    @click="navigateToNew"
+                    @click="submitOrderComment"
                     type="primary">立即评价</van-button>
       </div>
     </div>
@@ -32,6 +32,8 @@
 <script>
   import EvaluationItem from '@/components/EvaluationItem';
   import EvaluationTotal from '@/components/EvaluationTotal';
+  import {GET_COMMENT_ORDER_INFO, SUBMIT_ORDER_COMMENT } from '@/utils/api';
+  import {request} from "@/utils/request";
 
 
   export default {
@@ -40,18 +42,53 @@
     },
     data() {
       return {
-        isAnonymous:true
+        isAnonymous:true,
+        orderInfo: {}
       }
     },
     methods: {
       onChangeSwitch(event) {
         console.log(event)
         this.isAnonymous = event.mp.detail;
+      },
+
+      getCommentOrderInfo(params) {
+        request(
+          GET_COMMENT_ORDER_INFO,
+          'POST',
+          params
+        ).then(
+          (response) => {
+            console.log("this.good response", response);
+            this.orderInfo = response;
+
+          }
+        )
+      },
+
+      submitOrderComment() {
+        request(
+          SUBMIT_ORDER_COMMENT,
+          'GET',
+          params
+        ).then(
+          (response) => {
+            console.log("this.good response", response);
+            //  提示获赠积分，跳转订单列表
+          }
+        )
       }
 
     },
     computed: {
+    },
+
+    onShow() {
+      console.log("orderNo: ",this.$root.$mp.query);
+      let params = this.$root.$mp.query;
+      this.getCommentOrderInfo(params);
     }
+
 
   }
 </script>
