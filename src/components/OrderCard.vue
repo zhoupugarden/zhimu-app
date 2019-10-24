@@ -48,6 +48,8 @@
       orderInfo:Object
     },
     data() {
+      return {
+      }
     },
     methods: {
       navigateToOrderDetail() {
@@ -76,8 +78,8 @@
         ).then(
           response => {
             console.log("取消订单响应：", response);
-            this.orderInfo.orderStatus == 99;
-            this.orderInfo.orderStatusDesc == "已取消";
+            this.orderInfo.orderStatus = 99;
+            this.orderInfo.orderStatusDesc = "已取消";
           }
         )
       },
@@ -94,8 +96,6 @@
             console.log("支付订单响应：", response);
 
           //  在这里需要调用微信支付
-
-
 
           }
         )

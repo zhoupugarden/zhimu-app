@@ -55,7 +55,7 @@
       余额
     </div>
     <div class="order-submit-balance">
-      <van-cell :title="userBalanceAmount" custom-class="custome-cell"/>
+      <van-cell :title=" '' + userBalanceAmount" custom-class="custome-cell"/>
     </div>
     <div class="order-submit-product">
       <van-cell title="商品" :value= "'￥' + cartTotalPrice" title-class="product-title-class" value-class="product-value-class"/>
@@ -423,9 +423,9 @@
         console.log("balanceMount, cartTotalPrice", this.userInfo.balanceAmount , this.cartTotalPrice)
 
         if (this.userInfo.balanceAmount >= this.cartTotalPrice) {
-          return this.cartTotalPrice - this.couponValue ;
+          return this.cartTotalPrice - this.couponValue;
         } else {
-          return this.userInfo.balanceAmount + "";
+          return this.userInfo.balanceAmount;
         }
       },
 
