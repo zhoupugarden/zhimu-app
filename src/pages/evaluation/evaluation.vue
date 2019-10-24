@@ -48,7 +48,7 @@
     },
     methods: {
       onChangeSwitch(event) {
-        console.log(event)
+        console.log(event);
         this.isAnonymous = event.mp.detail;
       },
 

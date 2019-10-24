@@ -67,21 +67,31 @@
         });
       },
       cancelOrder() {
-      //  需要刷新订单列表
-        let orderNo = this.orderInfo.orderNo;
-        let data = {};
-        data.orderNo = orderNo;
-        request(
-          CANCEL_ORDER,
-          'post',
-          data
-        ).then(
-          response => {
-            console.log("取消订单响应：", response);
-            this.orderInfo.orderStatus = 99;
-            this.orderInfo.orderStatusDesc = "已取消";
-          }
-        )
+        let that = this;
+        wx.showActionSheet({
+          itemList:["取消订单"],
+          success: function(res) {
+            if(res.tapIndex === 0){
+              let orderNo = that.orderInfo.orderNo;
+              let data = {};
+              data.orderNo = orderNo;
+              request(
+                CANCEL_ORDER,
+                'post',
+                data
+              ).then(
+                response => {
+                  console.log("取消订单响应：", response);
+                  that.orderInfo.orderStatus = 99;
+                  that.orderInfo.orderStatusDesc = "已取消";
+                }
+              )
+            } else {
+
+            }
+          },
+        });
+
       },
       payOrder() {
         let orderNo = this.orderInfo.orderNo;
@@ -94,9 +104,7 @@
         ).then(
           response => {
             console.log("支付订单响应：", response);
-
           //  在这里需要调用微信支付
-
           }
         )
       }

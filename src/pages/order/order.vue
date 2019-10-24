@@ -1,7 +1,15 @@
 <template>
   <div class="order-container">
-    <div v-if="!isLogin">
+    <div v-if="!isLogin" class="not-login-container">
+
+    <div class="not-login-content">
+      <van-icon size="20px" color="#CFD4DA" name="info-o" />
+      <div style="font-size: 20px; color: #CFD4DA">
+        您还没有登录，请登录后查看
+      </div>
       <van-button @click="navigateToLogin">登录</van-button>
+    </div>
+
     </div>
     <div v-else>
       <van-tabs :active="active"
@@ -111,6 +119,16 @@
     width: 100%;
     height:100%;
   }
+  .not-login-container {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+  }
+  .not-login-content {
+    display: flex;
+    text-align: center;
+  }
+
   .order-list {
   }
 </style>
