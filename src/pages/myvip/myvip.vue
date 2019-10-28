@@ -11,11 +11,11 @@
       <div style="color: white; font-size: 10px; font-family: 'Microsoft YaHei'">
         (使用会员卡年均节省477元)
       </div>
-      <div v-if="isVip===0">
+      <div v-if="userInfo === 0">
         <van-button type="primary" size="small" @click="navigateToBuy">开通</van-button>
       </div>
       <div v-else>
-        vip
+        vip用户
       </div>
 
     </div>
@@ -47,16 +47,12 @@
       </div>
     </div>
 
-    <div v-if="isVip === 0" class="my-vip-button">
-
+    <div v-if="userInfo === 0" class="my-vip-button">
       <van-button type="primary" size="large" @click="navigateToBuy">立即开通</van-button>
-
     </div>
     <div v-else>
-
+        会员截止日期：{{userInfo.vipValidEndTime}}
     </div>
-
-
     <van-popup :show="popShow">
       <div class="popshow-container">
         <div style="font-size: 18px; font-weight: bold">
@@ -76,7 +72,9 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
+  import { mapGetters , mapActions} from 'vuex';
+  import {MY_USER_INFO} from '@/utils/api';
+  import {request} from "@/utils/request";
 
   const popContents = [
     {
@@ -109,7 +107,8 @@
         popShow: false,
         popContent: {
 
-        }
+        },
+        userInfo:{}
 
       }
     },
@@ -129,14 +128,32 @@
         wx.navigateTo({
           url
         });
+      },
+      getUserInfo(token) {
+        let params = {};
+        params.token = token;
+        request(
+          MY_USER_INFO,
+          'GET',
+          params
+        ).then(
+          response => {
+            //将userID放在存储中
+            console.log("response",response)
+            this.userInfo = response;
+          }
+        )
       }
     },
     computed: {
       ...mapGetters(
         [
-          'userId','isVip'
+          'userId','isVip','token'
         ]
       ),
+    },
+    onShow() {
+      this.getUserInfo(this.token)
     }
 
   }

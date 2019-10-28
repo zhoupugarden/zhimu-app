@@ -219,6 +219,9 @@
       popupText: "加入购物车",
       comment: null,
       commentUrl:"",
+      
+
+
 
     }
   },

@@ -49,7 +49,8 @@
               });
             } else {
               that.urls.splice(index,1);
-              that.$emit("delete",that.urls);
+              //把删除的index通知上层
+              that.$emit("delete",index);
             }
           },
         });

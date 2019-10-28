@@ -83,7 +83,8 @@
     methods: {
       ...mapActions(
         [
-          'storeToken'
+          'storeToken',
+          'storeUserId'
         ]
       ),
 
@@ -199,6 +200,11 @@
         ).then(
           response => {
             that.storeToken(response.token);
+            that.storeUserId(response.id);
+            console.log("response====", response);
+            //将提交数据情况，后续用object.assign清楚
+            this.phoneNo = "";
+            this.verifyCode = "";
             if (response.avatarUrl === null) {
               wx.getSetting({
                 success(res) {
@@ -220,9 +226,13 @@
                             userUpdateWxBo.nickName = res.userInfo.nickName;
                             userUpdateWxBo.gender = res.userInfo.gender;
                             that.updateUserWxInfo(userUpdateWxBo);
-                            that.backToPage();
+                            //这里back可能更新动作还未结束，返回上一页面获取不到最新信息
+                            // that.backToPage();
                             // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
                             // 所以此处加入 callback 以防止这种情况
+                          },
+                          fail(res) {
+                            console.log("fail response", res)
                           }
                         })
                       }
@@ -245,7 +255,6 @@
                         userUpdateWxBo.nickName = res.userInfo.nickName;
                         userUpdateWxBo.gender = res.userInfo.gender;
                         that.updateUserWxInfo(userUpdateWxBo);
-                        that.backToPage();
                       }
                     })
                   }
@@ -262,8 +271,6 @@
           }
         );
       },
-
-
 
       backToPage() {
         let pages = getCurrentPages();
@@ -283,7 +290,6 @@
             {
               url: '/' + route
             }
-
           )
 
         }else {
@@ -293,17 +299,18 @@
             }
           )
         }
-
       },
 
       updateUserWxInfo(data) {
+        let that = this;
         request(
           UPDATE_USER_WX_INFO,
           'post',
           data
         ).then(
           response => {
-            console.log("update user wx info", response)
+            console.log("update user wx info", response);
+            that.backToPage();
           }
         )
       },

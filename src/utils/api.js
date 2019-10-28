@@ -62,9 +62,11 @@ export const PAY_ORDER = BASE_API_URL + '/order/pay';
 
 export const GET_PRODUCT_COMMENT = BASE_API_URL + '/comment/product/list';
 
-export const SUBMIT_ORDER_COMMENT = BASE_API_URL + '/comment/order/submit';
+export const SUBMIT_ORDER_COMMENT = BASE_API_URL + '/comment/add';
 
 export const  GET_COMMENT_ORDER_INFO = BASE_API_URL + '/order/comment/info';
+
+export const  MOCK_WX_PAY = BASE_API_URL + '/wx/pay/callback';
 
 
 

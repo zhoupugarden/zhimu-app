@@ -7,7 +7,8 @@
     "van-tab": "/static/vant/tab/index",
     "van-cell": "/static/vant/cell/index",
     "van-icon": "/static/vant/icon/index",
-    "van-popup": "/static/vant/popup/index"
+    "van-popup": "/static/vant/popup/index",
+    "van-dialog": "/static/vant/dialog/index"
   },
   "navigationBarTextStyle": "black",
   "navigationBarTitleText": "购买会员"

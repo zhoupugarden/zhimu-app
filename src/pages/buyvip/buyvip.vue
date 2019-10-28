@@ -15,15 +15,17 @@
     <div class="buy-vip-button">
       <van-button type="primary" size="large" @click="charge">立即支付</van-button>
     </div>
+    <van-dialog id="van-dialog" />
 
   </div>
 </template>
 
 <script>
   import PrivilegeItem from '@/components/PrivilegeItem';
+  import Dialog from '../../../static/vant/dialog/dialog';
   import { mapGetters } from 'vuex';
 
-  import {CHARGE} from '@/utils/api';
+  import {CHARGE, MOCK_WX_PAY} from '@/utils/api';
   import {request} from "@/utils/request";
 
   export default {
@@ -34,7 +36,26 @@
       return {}
     },
     methods: {
+      mockWxPay(data) {
+        request(
+          MOCK_WX_PAY,
+          'POST',
+          data
+        ).then(
+          response => {
+            console.log("this response", response);
+          //  微信支付成功后，跳转到myvip页面
+            let url = "../myvip/main" ;
+            console.log("url",url);
+            wx.navigateTo({
+              url
+            });
+          }
+        )
+      },
+
       charge() {
+        let that = this;
         let params = {};
         params.userId = this.userId;
         params.productId = 9;
@@ -47,6 +68,19 @@
         ).then(
           response => {
             console.log("this response", response);
+            let data = {};
+            data.out_trade_no = response.orderNo;
+            data.transaction_id = response.unifiedOrderNo;
+            data.total_fee = 50000;
+
+            Dialog.confirm({
+              title: '删除确认'
+            }).then(() => {
+              that.mockWxPay(data);
+            }).catch(() => {
+              // on cancel
+            });
+
           }
         )
       }

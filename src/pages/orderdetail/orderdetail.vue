@@ -4,8 +4,7 @@
     <van-tabs :active="active" @change="onChange">
       <van-tab title="订单详情">
         <div>
-
-        <div v-for="(detail_, index) in orderInfo.orderProductDetailList" :key="index" class="order-item-detail">
+        <div v-for="(detail_, index) in orderProductDetailList" :key="index" class="order-item-detail">
           <product-item :productItemInfo="detail_"></product-item>
         </div>
 
@@ -53,7 +52,7 @@
           </van-cell-group>
         </div>
 
-        <div class="order-submit-button">
+        <div v-show= "orderInfo.orderStatus === 1" class="order-submit-button">
           <van-button custom-class="custom-button"
                       @click="orderPay"
                       type="primary"
@@ -64,7 +63,7 @@
       <van-tab title="订单状态">
         <van-steps
           :steps="steps"
-          :active="stepActive"
+          :active="activeStepIndex"
           direction="vertical"
           active-color="#f44"
         />
@@ -88,39 +87,32 @@
     data() {
       return {
         active:0,
-        stepActive:1,
         orderInfo: {},
         orderProductDetailList: {},
-        steps: [
-          {
-            text: '订单已提交 2019-10-10 10:19:18',
-            desc: '蛋糕制作中请耐心等待'
-          },
-          {
-            text: '步骤二',
-            desc: '描述信息'
-          },
-          {
-            text: '步骤三',
-            desc: '描述信息'
-          },
-          {
-            text: '订单已配送',
-            desc: '配送小哥(蜂鸟配送-13918237123)已出发,请确保电话畅通'
-          }
-        ]
+        steps: [],
+        orderNo:"",
+        activeStepIndex:0
 
       }
     },
     methods: {
       onChange(event) {
         console.log("event:", event);
+        if (event.mp.detail.index === 1) {
+          this.getOrderLog();
+        }else {
+          let params = {};
+          params.orderNo = this.orderNo;
+          this.getOrderDetail(params);
+        }
       },
       orderPay() {
       },
 
 
-      getOrderLog(params) {
+      getOrderLog() {
+        let params = {};
+        params.orderNo = this.orderNo;
         request(
           GET_ORDER_LOG,
           'GET',
@@ -128,6 +120,9 @@
         ).then(
           response => {
             console.log("this response", response);
+            this.steps = response;
+            console.log("this.steps.length ", this.steps.length)
+            this.activeStepIndex = this.steps.length - 1;
           }
         )
       },
@@ -155,9 +150,9 @@
 
     onShow() {
       let params = this.$root.$mp.query;
-      console.log(this.$root.$mp.query);
+      console.log("order detail: ", this.$root.$mp.query);
       this.getOrderDetail(params);
-      this.getOrderLog(params);
+      this.orderNo = this.$root.$mp.query.orderNo;
     },
     onUnload() {
       let pages = getCurrentPages();

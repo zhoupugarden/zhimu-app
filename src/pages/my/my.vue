@@ -13,7 +13,7 @@
           <div @click="navigateToMission">
             <van-tag color="green">签到有奖</van-tag>
           </div>
-          <div v-if="basicInfo.level === 0">
+          <div v-if="basicInfo.level === 0" @click="navigateToMyVip">
             <van-tag color="gold">加入会员享受VIP福利</van-tag>
           </div>
           <div v-else>
@@ -122,6 +122,13 @@
         'storeUserId','storeIsVip'
       ]
     ),
+    navigateToMyVip() {
+      let url = "../myvip/main" ;
+      console.log("url",url)
+      wx.navigateTo({
+        url
+      });
+    },
 
     navToSetting() {
       if (!this.isLogin) {

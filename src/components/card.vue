@@ -1,5 +1,11 @@
 <template>
   <div class="zm-panel" >
+    <div v-show="cardInfo.onlineStatus !== 1001 && cardInfo.onlineStatus !== 1002">
+      <van-tag>{{onlineStatusDesc}}</van-tag>
+    </div>
+    <div v-show="cardInfo.onlineStatus == 1002">
+      <van-tag type="danger">{{onlineStatusDesc}}</van-tag>
+    </div>
     <div class="zm-card" >
       <div class="zm-card__thumb" @click="navigateToProduct">
         <img class="zm-card__img" mode="aspectFill"
@@ -14,7 +20,7 @@
           <span v-if="cardInfo.linePrice" class="zm-card__detail__line_price">￥{{cardInfo.linePrice}}</span>
         </div>
 
-        <div @click="popCart" class="zm-detail__icon">
+        <div v-show= "cardInfo.onlineStatus === 1001 || cardInfo.onlineStatus === 1002" @click="popCart" class="zm-detail__icon">
           <div v-if="cardInfo.pmsProductSkuList.length > 1" class="choose_attribute">
             选规格
           </div>
@@ -49,6 +55,20 @@
       popCart() {
         console.log("popCart waaaaa");
         this.$emit('popCart', {"productId":this.cardInfo.id});
+      }
+    },
+    computed: {
+      onlineStatusDesc() {
+        if (this.cardInfo.onlineStatus === 1003) {
+          return "当日售罄"
+        }
+        if (this.cardInfo.onlineStatus === 1004) {
+          return "缺货"
+        }
+        if (this.cardInfo.onlineStatus === 1002) {
+          return "预售"
+        }
+
       }
     },
     created() {

@@ -5,7 +5,8 @@
     "van-goods-action-icon": "/static/vant/goods-action-icon/index",
     "van-goods-action-button": "/static/vant/goods-action-button/index",
     "van-icon": "/static/vant/icon/index",
-    "van-button": "/static/vant/button/index"
+    "van-button": "/static/vant/button/index",
+    "van-tag": "/static/vant/tag/index"
   },
   "navigationBarTitleText": "ZHI MU"
 }

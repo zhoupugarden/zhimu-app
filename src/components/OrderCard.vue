@@ -60,7 +60,7 @@
         });
       },
       navigateToEvaluation() {
-        var url = "/pages/evaluation/main";
+        var url = "/pages/evaluation/main?orderNo=" + this.orderInfo.orderNo;
         console.log("url",url);
         wx.navigateTo({
           url
@@ -91,7 +91,6 @@
             }
           },
         });
-
       },
       payOrder() {
         let orderNo = this.orderInfo.orderNo;
