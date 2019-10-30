@@ -65,7 +65,7 @@
     },
     data() {
       return {
-        isAnonymous:0,
+        isAnonymous:false,
         orderInfo: {},
         isActive:false,
         rateValue: 0,
@@ -177,9 +177,9 @@
       onChangeSwitch(event) {
         console.log(event);
         if (event.mp.detail) {
-          this.isAnonymous = 1;
+          this.isAnonymous = true;
         } else {
-          this.isAnonymous = 0;
+          this.isAnonymous = false;
         }
 
       },
@@ -215,13 +215,18 @@
             console.log("this.good response", response);
             //  提示获赠积分，跳转订单列表
             let pointCount = response.pointCount;
+            let title = "";
+            if (response.commentType === 1) {
+              title = "有图评价成功";
+            } else {
+              title = "评价成功";
+            }
 
             wx.showModal({
-              title: '评价成功',
+              title: title,
               content: '您已获赠' + pointCount + '积分',
               confirmText: '确定',
               showCancel: false,
-
               success(res) {
                 if(res.confirm) {
                   wx.switchTab(

@@ -107,9 +107,7 @@
         }
       },
       orderPay() {
-
         let that = this;
-
         let orderNo = this.orderInfo.orderNo;
         let data = {};
         data.orderNo = orderNo;
@@ -125,7 +123,6 @@
             data.out_trade_no = response.orderNo;
             data.transaction_id = response.unifiedOrderNo;
             data.total_fee = response.amount;
-
             Dialog.confirm({
               title: '确认支付'
             }).then(() => {

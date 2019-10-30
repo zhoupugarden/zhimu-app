@@ -39,6 +39,8 @@
     },
     methods: {
       navigateToWxLogin() {
+
+        //先获取手机号
         wx.getSetting({
           success(res) {
             if (!res.authSetting['scope.userLocation']) {
@@ -59,8 +61,6 @@
                           console.log(ress)
                         }
                       })
-
-
                     }
                   })
                 }

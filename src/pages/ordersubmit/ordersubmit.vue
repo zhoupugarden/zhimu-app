@@ -147,7 +147,7 @@
         couponCanUseList:[],
         chosedCoupon: null,
         addressArray: [],
-        selfAddress:"年家浜东路129弄",
+        selfAddress:"周浦镇年家浜东路129弄",
         datePopShow:false,
         timePopShow:false,
         couponPopShow:false,
@@ -408,7 +408,8 @@
       },
       currentAddress() {
         if(this.addressId === 0 && this.addressArray.length > 0) {
-          let addressItem =  this.addressArray.find(item => item.isDefault === 1);
+          //取最新添加的地址
+          let addressItem =  this.addressArray[this.addressArray.length - 1];
           this.addressId = addressItem.id;
           return addressItem;
         }else {
