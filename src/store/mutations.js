@@ -8,23 +8,23 @@ const mutations = {
     // [方法名](参数1,参数2...){方法}
     [types.ADD_PRODUCT_TO_CART](state, cartItem) {
       console.log(cartItem)
-      state.cartList.push({
-        cartItem,
-        inventory:1
-      });
+      cartItem.quantity = 1;
+      state.cartList.push(
+        cartItem
+      );
     },
 
     [types.DECREMENT_INVENTORY](state, {skuId}) {
-      let cartItem = state.cartList.find(item => item.cartItem.skuId === skuId)
-      cartItem.inventory--
+      let cartItem = state.cartList.find(item => item.skuId === skuId)
+      cartItem.quantity--
     },
     [types.INCREMENT_INVENTORY](state, {skuId}) {
-      let cartItem = state.cartList.find(item => item.cartItem.skuId === skuId)
-      cartItem.inventory++
+      let cartItem = state.cartList.find(item => item.skuId === skuId)
+      cartItem.quantity++
 
     },
     [types.DEL_PRODUCT_FROM_CART](state, {skuId}) {
-      let index = state.cartList.findIndex( item => item.cartItem.skuId === skuId)
+      let index = state.cartList.findIndex( item => item.skuId === skuId)
       console.log("index", index);
       state.cartList.splice(index, 1);
     },

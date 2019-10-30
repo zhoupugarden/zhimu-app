@@ -219,10 +219,6 @@
       popupText: "加入购物车",
       comment: null,
       commentUrl:"",
-      
-
-
-
     }
   },
   //如何支持pathVariable 的请求？？

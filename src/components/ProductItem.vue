@@ -1,31 +1,14 @@
 <template>
   <div class="product-item-container">
-    <div class="product-item-url">
-      <img :src="productItemInfo.picUrl" class="img-class">
-    </div>
-    <div class="product-item-info">
-      <div>
-        {{productItemInfo.productName}}
-      </div>
-      <div>
-        {{productItemInfo.attributeName}}
-      </div>
-    </div>
-    <div class="product-item-price">
-      ￥{{productItemInfo.salePrice}}
-    </div>
-
-    <div class="product-item-price">
-      ￥{{productItemInfo.linePrice}}
-    </div>
-
-    <div class="product-item-count">
-      {{productItemInfo.quantity}}
-    </div>
-    <div class="product-item-total">
-      {{productItemInfo.totalAmount}}
-    </div>
-
+    <van-card
+      :num="productItemInfo.quantity"
+      :price="productItemInfo.salePrice"
+      :desc="productItemInfo.attributeName"
+      :origin-price="productItemInfo.linePrice"
+      :title="productItemInfo.productName"
+      :thumb="productItemInfo.picUrl"
+      custom-class="root-custom-class"
+    ></van-card>
   </div>
 
 </template>
@@ -67,6 +50,10 @@
     font-weight: lighter;
     font-size: 14px;
   }
+</style>
 
-
+<style lang="scss">
+  ._van-card {
+    width: 100% !important;
+  }
 </style>

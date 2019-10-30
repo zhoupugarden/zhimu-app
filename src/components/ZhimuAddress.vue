@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="address-operation">
-      <div class="address-operation_edit">
+      <div class="address-operation_edit" @click="updateAddress">
         <van-icon name="edit" />
       </div>
       <div class="address-operation_remove" @click="removeAddress">
@@ -25,8 +25,7 @@
 <script>
   export default {
     props: {
-      addressInfo:Object,
-      jump:Boolean
+      addressInfo:Object
     },
     data () {
       return {
@@ -34,27 +33,31 @@
       }
     },
     methods: {
-      // backToOrderSubmit() {
-      //   if (this.jump != null) {
-      //     var url = "/pages/ordersubmit/main?addressInfo=" + "12333";
-      //     console.log("url",url)
-      //     wx.navigateTo({
-      //       url
-      //     });
-      //   } else {
-      //     console.log("不用跳转", this.jump)
-      //   }
-      //
-      // },
-
+      backToOrderSubmit(e) {
+        let pages = getCurrentPages();
+        console.log("pageUrl", pages);
+        let prePage = pages[1];
+        if (prePage.route === 'pages/ordersubmit/main') {
+          prePage.setData({addressId:e.id})
+          wx.redirectTo({
+            url: '/' + prePage.route + '?addressId=' + e.id
+          })
+        }
+      },
       removeAddress() {
         this.$emit("removeAddress", this.addressInfo.id);
+      },
+      updateAddress() {
+        let url = "../newaddress/main?addressId=" + this.addressInfo.id;
+        console.log("url",url)
+        wx.navigateTo({
+          url
+        });
       }
     },
 
-    mounted() {
-      console.log(this.addressInfo)
-      console.log("this.jump", this.jump)
+    onShow() {
+      console.log(this.addressInfo);
     }
   }
 </script>

@@ -1,8 +1,9 @@
 <template>
   <div class="myaddress-container">
-    <div v-for="(item, index_) in addressArray" :key="index" @click="backToOrderSubmit(item)">
+    <div v-for="(item, index_) in addressArray" :key="index">
       <zhimu-address
         @removeAddress="ondelAddress"
+        @updateAddress="updateAddress"
         :addressInfo="item">
       </zhimu-address>
     </div>
@@ -14,7 +15,6 @@
                     type="primary">新增收货地址</van-button>
       </div>
     </div>
-
     <van-dialog id="van-dialog" />
   </div>
 </template>
@@ -61,11 +61,13 @@
         }
       );
     },
+    updateAddress(data) {
+      console.log("updateAddress:", data)
+    },
 
     listUserAddress() {
       let params = {};
       params.userId = this.userId;
-
       request(
         GET_USER_ADDRESS,
         'GET',
@@ -76,7 +78,6 @@
           console.log("this response", response);
         }
       )
-
     },
 
     delUserAddress(data) {
@@ -93,29 +94,33 @@
       )
     },
 
-
     navigateToNew() {
-      var url = "/pages/newaddress/main";
+
+      let length = this.addressArray.length;
+      let url = "";
+      if (length === 0) {
+        url = "/pages/newaddress/main?isNew=true";
+      } else {
+        url = "/pages/newaddress/main?isNew=false";
+      }
       console.log("url",url)
       wx.navigateTo({
         url
       });
     },
-    backToOrderSubmit(item) {
-      console.log("this.event:", item)
-      if (this.jump === "true") {
-        var url = "/pages/ordersubmit/main?addressId=" + item.id;
-        console.log("url",url);
-        wx.navigateTo({
-          url
-        });
-      } else {
-        console.log("不用跳转", this.jump)
+    backToOrderSubmit(e) {
+      let pages = getCurrentPages();
+      console.log("pageUrl", pages);
+      let prePage = pages[1];
+      if (prePage.route === 'pages/ordersubmit/main') {
+        prePage.setData({addressId:e.id})
+        wx.redirectTo({
+          url: '/' + prePage.route + '?addressId=' + e.id
+        })
       }
 
     }
   },
-
     computed: {
       ...mapGetters(
         [
@@ -123,19 +128,33 @@
         ]
       )
     },
-    mounted() {
-    if (null != this.$root.$mp.query) {
-      console.log("this.$root.$mp.query", this.$root.$mp.query);
-      this.jump = this.$root.$mp.query.jump;
-    }
-    },
     onShow() {
     this.listUserAddress();
+    },
+
+    onUnload() {
+      let pages = getCurrentPages();
+      console.log("pageUrl", pages);
+      let prePage = pages[0];
+      console.log("prePage:", prePage)
+      
+      if (prePage.route === 'pages/my/main') {
+        wx.switchTab({
+          url: '/' + prePage.route
+        })
+      } else {
+        wx.redirectTo({
+          url: prePage.route
+        })
+      }
+
     }
 
 
 
-}
+
+
+  }
 </script>
 
 <style lang="scss" scoped>

@@ -1,12 +1,13 @@
 <template>
   <div class="zm-panel" >
-    <div v-show="cardInfo.onlineStatus !== 1001 && cardInfo.onlineStatus !== 1002">
+
+    <div class="zm-card" >
+      <div v-show="cardInfo.onlineStatus !== 1001 && cardInfo.onlineStatus !== 1002" class="zm-card__tag">
       <van-tag>{{onlineStatusDesc}}</van-tag>
     </div>
-    <div v-show="cardInfo.onlineStatus == 1002">
-      <van-tag type="danger">{{onlineStatusDesc}}</van-tag>
-    </div>
-    <div class="zm-card" >
+      <div v-show="cardInfo.onlineStatus == 1002" class="zm-card__tag">
+        <van-tag type="danger">{{onlineStatusDesc}}</van-tag>
+      </div>
       <div class="zm-card__thumb" @click="navigateToProduct">
         <img class="zm-card__img" mode="aspectFill"
              :src="cardInfo.headPicUrl">
@@ -68,7 +69,7 @@
         if (this.cardInfo.onlineStatus === 1002) {
           return "预售"
         }
-
+        return ""
       }
     },
     created() {
@@ -76,7 +77,7 @@
     }
   }
 </script>
-<style lang="scss"  scoped>
+<style lang="scss" scoped>
   .zm-panel {
     position: relative;
     background: #fff;
@@ -99,6 +100,12 @@
       /*border-top-width: 1px;*/
       /*border-bottom-width: 1px;*/
     /*}*/
+    .zm-card__tag {
+      position: absolute;
+      z-index: 1;
+      left: 10px;
+      top: 10px;
+    }
     .zm-card {
       margin-left:0;
       width:auto;

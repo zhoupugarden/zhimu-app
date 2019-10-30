@@ -13,14 +13,14 @@ export default {
     cartTotalCount: state => {
       return state.cartList.reduce(
         (count, item) => {
-          return count + item.inventory
+          return count + item.quantity
         }, 0
       )
     },
   cartProductListName: state => {
       let listName = [];
    for (let i = 0; i< state.cartList.length; i++) {
-     listName.push(state.cartList[i].cartItem.productName)
+     listName.push(state.cartList[i].productName)
    }
       return listName.join('、');
   },
@@ -30,20 +30,20 @@ export default {
       } else {
         return state.cartList.reduce(
           (total, cartListItem) => {
-            return total + cartListItem.cartItem.salePrice * cartListItem.inventory
+            return total + cartListItem.salePrice * cartListItem.quantity
           }, 0
         )
       }
     },
     productCartList: state => state.cartList.filter(
-      item => item.cartItem.type != 2
+      item => item.type != 2
     ),
     freeCartList: state => state.cartList.filter(
-      item => item.cartItem.type === 2
+      item => item.type === 2
     ),
     isExistCake: state => {
       let cakeList = state.cartList.find(
-        item => item.cartItem.type === 1
+        item => item.type === 1
       );
       if (cakeList === undefined ||cakeList.length === 0) {
         return false;

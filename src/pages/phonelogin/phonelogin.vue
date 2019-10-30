@@ -199,6 +199,7 @@
           data
         ).then(
           response => {
+            console.log("myPhoneLogin", response)
             that.storeToken(response.token);
             that.storeUserId(response.id);
             console.log("response====", response);
@@ -274,10 +275,9 @@
 
       backToPage() {
         let pages = getCurrentPages();
-        //返回登录前的页面
+        console.log("pages======", pages)
           let curPage = pages[pages.length - 3];
         console.log("curPage",curPage, pages.length );
-
           let route = curPage.route;
         console.log("url",route);
         if (tabUrls.find(

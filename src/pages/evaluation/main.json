@@ -8,7 +8,8 @@
     "van-cell": "/static/vant/cell/index",
     "van-rate": "/static/vant/rate/index",
     "van-switch": "/static/vant/switch/index",
-    "van-tag": "/static/vant/tag/index"
+    "van-tag": "/static/vant/tag/index",
+    "van-card": "/static/vant/card/index"
   },
   "navigationBarTextStyle": "black",
   "navigationBarTitleText": "评价"

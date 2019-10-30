@@ -31,7 +31,7 @@
        <div v-show="orderInfo.orderStatus === 1">
          <van-button size="small" type="primary" @click="payOrder">马上付款</van-button>
        </div>
-      <div v-show="orderInfo.orderStatus === 2">
+      <div v-show="orderInfo.orderStatus === 2 && orderInfo.isComment === 0">
         <van-button size="small" type="primary" @click="navigateToEvaluation">评价得积分</van-button>
       </div>
     </div>

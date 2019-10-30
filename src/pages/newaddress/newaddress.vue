@@ -36,7 +36,7 @@
       <div class="address-add-button_wrap">
         <van-button round
                     custom-class="custom-button"
-                    @click="addNewAddress"
+                    @click="addOrUpdateAddress"
                     type="primary">下一步</van-button>
       </div>
     </div>
@@ -47,7 +47,17 @@
 
 <script>
 
-  import {ADD_NEW_ADDRESS} from '@/utils/api';
+  const defaultAdress = {
+    receiverName:"",
+    addressName:"请选择",
+    roadName:"请选择",
+    roadDetail:"",
+    receiverPhone:"",
+    latitude:null,
+    longitude:null
+  }
+
+  import {ADD_NEW_ADDRESS, GET_ADDRESS_BY_ID, UPDATE_USER_ADDRESS} from '@/utils/api';
   import {request} from "@/utils/request";
   import { mapGetters} from 'vuex';
   export default {
@@ -55,20 +65,23 @@
   data() {
     return {
       active:0,
-      address: {
-        receiverName:"",
-        addressName:"请选择",
-        roadName:"请选择",
-        roadDetail:"",
-        receiverPhone:"",
-        latitude:null,
-        longitude:null
-      }
+      address: {},
+      isNew:false,
+      addressId:""
 
     }
 
   },
   methods: {
+
+    addOrUpdateAddress() {
+      if (this.addressId) {
+        this.updateAddress();
+      }else {
+        this.addNewAddress();
+      }
+    },
+
     addNewAddress() {
       let params = this.address;
       params.userId = this.userId;
@@ -81,6 +94,44 @@
           this.items = response;
           console.log("this response", response);
           let url = "/pages/myaddress/main" ;
+          console.log("url",url);
+          let pages = getCurrentPages();
+          console.log("pageUrl", pages);
+          let prePage = pages[pages.length - 3];
+          console.log("this.isNew === 'true'", this.isNew === 'true');
+          console.log("prePage === 'pages/ordersubmit/main'", prePage.route === 'pages/ordersubmit/main')
+          if (this.isNew === 'true' && prePage.route === 'pages/ordersubmit/main') {
+            wx.navigateBack(
+              {
+                url:"/pages/ordersubmit/main"
+              }
+            )
+          } else {
+            wx.navigateTo({
+              url
+            });
+          }
+          // 操作后清空原有数据
+          this.address = Object.assign({}, defaultAdress);
+        }
+      )
+    },
+
+    updateAddress() {
+      let params = this.address;
+      params.addressId = this.addressId;
+      params.userId = this.userId;
+      request(
+        UPDATE_USER_ADDRESS,
+        'POST',
+        params
+      ).then(
+        response => {
+          console.log("update response", response);
+          // 操作后清空原有数据
+          this.address = Object.assign({}, defaultAdress);
+          this.addressId = "";
+          let url = "../myaddress/main";
           console.log("url",url)
           wx.navigateTo({
             url
@@ -89,6 +140,21 @@
         }
       )
     },
+    getAddressById(addressId) {
+      let params = {};
+      params.addressId = addressId;
+      request(
+        GET_ADDRESS_BY_ID,
+        'GET',
+        params
+      ).then(
+        response => {
+          this.address = response;
+          console.log("this response", response);
+        }
+      )
+    },
+
 
     receiverNameChange(event) {
       this.address.receiverName = event.mp.detail;
@@ -182,7 +248,22 @@
         ]
       )
     },
+    onShow() {
+      let params = this.$root.$mp.query;
+      console.log("this.$root.$mp.query", params);
+      if (params.isNew) {
+        this.isNew = params.isNew;
+      }
+      if (params.addressId) {
+        this.addressId = params.addressId;
+        this.getAddressById(params.addressId);
+        this.$root.$mp.query = "";
+      }
 
+    },
+    onUnload() {
+      this.address = Object.assign({}, defaultAdress);
+    }
 
   }
 </script>

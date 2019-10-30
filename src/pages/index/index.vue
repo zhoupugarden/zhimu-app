@@ -146,6 +146,7 @@
         this.popCartActive = false;
       },
       addToCart(data) {
+        console.log("addTocart", data)
         this.addProductToCart(data);
         //加些过渡动画
         this.popCartActive = false;

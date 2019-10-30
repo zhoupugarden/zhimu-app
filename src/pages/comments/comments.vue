@@ -3,7 +3,7 @@
     <div class="comments-header">
       <div class="comment-overall">
         <div>
-          5.0
+          {{comments.totalScore}}
         </div>
         <div>
           综合评价
@@ -16,7 +16,7 @@
           </div>
           <van-rate size="12" value="3"></van-rate>
           <div>
-            3.0
+            {{comments.tasteScore}}
           </div>
         </div>
         <div class="comment-pack">
@@ -25,13 +25,13 @@
           </div>
           <van-rate size="12" value="3"></van-rate>
           <div>
-            3.0
+            {{comments.packageScore}}
           </div>
         </div>
       </div>
       <div class="comment-delivery-rate">
         <div>
-            5.0
+          {{comments.deliverScore}}
         </div>
         <div>
             配送评分
@@ -40,22 +40,22 @@
     </div>
     <div class="comments-tag">
       <div :class="tagStyle0" @click="activeTag0">
-        全部({{comments.total}})
+        全部({{comments.totalCount}})
       </div>
       <div :class="tagStyle1" @click="activeTag1">
-        有图评价({{comments.havePic}})
+        有图评价({{comments.urlCount}})
       </div>
       <div :class="tagStyle2" @click="activeTag2">
-        好评({{comments.good}})
+        好评({{comments.goodCount}})
       </div>
       <div :class="tagStyle3" @click="activeTag3">
-        中评({{comments.normal}})
+        中评({{comments.middleCount}})
       </div>
       <div :class="tagStyle4" @click="activeTag4">
-        差评({{comments.bad}})
+        差评({{comments.badCount}})
       </div>
     </div>
-    <div v-for= "(item, index) in comment.commentItemList" :key="index" class="comment-detail">
+    <div v-for= "(item, index) in comments.commentItemList" :key="index" class="comment-detail">
       <comment-item :detail="item"></comment-item>
     </div>
   </div>
@@ -83,7 +83,6 @@
       }
     },
     methods: {
-
       getProductComment(params) {
         request(
           GET_PRODUCT_COMMENT,
@@ -92,7 +91,7 @@
         ).then(
           (response) => {
             console.log("this.good response", response);
-            this.comment = response;
+            this.comments = response;
           }
         )
       },

@@ -12,20 +12,19 @@
           </div>
         </div>
         <div class="total-score">
-          <van-rate size="30" :value="rateValue" @click="activeTags"/>
+          <van-rate size="30" :value="rateValue" @change="activeTags"/>
         </div>
         <div v-if="isActive" class="total-tags">
           <div v-for="(item, index) in tagDescs" :key="index" >
             <van-tag round size="medium" @click="chooseTag(index)" :color="tagColor[index]">{{item}}</van-tag>
           </div>
         </div>
-
     </div>
     <div v-for= "(item, index) in orderInfo.orderCommentDetailList" class="evaluation-detail">
       <evaluation-item :itemInfo="item"
                        :ossConfig="ossConfig"
                        @rateChange="rateChange"
-                       @contentChange="contentChange"
+                       @fieldChange="contentChange"
                        @picUpload="picUpload"
                        @deletePic="deletePic"
       ></evaluation-item>
@@ -103,8 +102,10 @@
         }
         console.log(this.choosedTag)
       },
-      activeTags() {
-        this.isActive=true
+      activeTags(event) {
+        console.log("event", event)
+        this.isActive=true;
+        this.rateValue = event.mp.detail
       },
 
       rateChange(data) {
@@ -202,17 +203,36 @@
         commentBo.userId = this.userId;
         commentBo.deliverScore = this.rateValue;
         commentBo.itemBos = this.commentItems;
-        commentBo.Tags = this.choosedTag;
+        commentBo.tags = this.choosedTag;
         commentBo.isAnonymous = this.isAnonymous;
-
         request(
           SUBMIT_ORDER_COMMENT,
           'POST',
           commentBo
         ).then(
           (response) => {
+            // 如果成功，清空数据，提示积分，确认后跳转订单列表
             console.log("this.good response", response);
             //  提示获赠积分，跳转订单列表
+            let pointCount = response.pointCount;
+
+            wx.showModal({
+              title: '评价成功',
+              content: '您已获赠' + pointCount + '积分',
+              confirmText: '确定',
+              showCancel: false,
+
+              success(res) {
+                if(res.confirm) {
+                  wx.switchTab(
+                    {
+                      url:'/pages/order/main'
+                    }
+                  )
+                }
+              }
+            });
+
           }
         )
       }
@@ -231,6 +251,13 @@
       this.orderNo = params.orderNo;
       this.getCommentOrderInfo(params);
       this.getOssConfig();
+    },
+    onUnload() {
+      this.isAnonymous = 0;
+      this.isActive = false;
+        this.rateValue = 0;
+        this.choosedTag= [];
+        this.commentItems = [];
     }
 
 

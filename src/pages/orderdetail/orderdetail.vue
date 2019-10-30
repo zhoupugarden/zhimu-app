@@ -7,7 +7,6 @@
         <div v-for="(detail_, index) in orderProductDetailList" :key="index" class="order-item-detail">
           <product-item :productItemInfo="detail_"></product-item>
         </div>
-
         <div class="order-freeitem-detail">
           <van-cell-group>
           <van-cell title="数字蜡烛" value="1个" />
@@ -52,7 +51,7 @@
           </van-cell-group>
         </div>
 
-        <div v-show= "orderInfo.orderStatus === 1" class="order-submit-button">
+        <div v-if = "orderInfo.orderStatus === 1" class="order-submit-button">
           <van-button custom-class="custom-button"
                       @click="orderPay"
                       type="primary"
@@ -69,15 +68,16 @@
         />
       </van-tab>
     </van-tabs>
-
+    <van-dialog id="van-dialog" />
   </div>
 </template>
 
 <script>
 
   import ProductItem from '@/components/ProductItem';
-  import {GET_ORDER_DETAIL, GET_ORDER_LOG} from '@/utils/api';
+  import {GET_ORDER_DETAIL, GET_ORDER_LOG, PAY_ORDER, MOCK_WX_PAY} from '@/utils/api';
   import {request} from "@/utils/request";
+  import Dialog from '../../../static/vant/dialog/dialog';
 
   export default {
     components: {
@@ -107,8 +107,51 @@
         }
       },
       orderPay() {
+
+        let that = this;
+
+        let orderNo = this.orderInfo.orderNo;
+        let data = {};
+        data.orderNo = orderNo;
+        request(
+          PAY_ORDER,
+          'post',
+          data
+        ).then(
+          response => {
+            console.log("支付订单响应：", response);
+            //  在这里需要调用微信支付
+            let data = {};
+            data.out_trade_no = response.orderNo;
+            data.transaction_id = response.unifiedOrderNo;
+            data.total_fee = response.amount;
+
+            Dialog.confirm({
+              title: '确认支付'
+            }).then(() => {
+              that.mockWxPay(data);
+            }).catch(() => {
+              // on cancel
+            });
+          }
+        )
       },
 
+      mockWxPay(data) {
+        request(
+          MOCK_WX_PAY,
+          'POST',
+          data
+        ).then(
+          response => {
+            console.log("this response", response);
+            //  微信支付成功后，跳转到myvip页面
+            let params = {};
+            params.orderNo = this.orderNo;
+            this.getOrderDetail(params);
+          }
+        )
+      },
 
       getOrderLog() {
         let params = {};
@@ -153,6 +196,7 @@
       console.log("order detail: ", this.$root.$mp.query);
       this.getOrderDetail(params);
       this.orderNo = this.$root.$mp.query.orderNo;
+      console.log(this.orderInfo.orderStatus === 1)
     },
     onUnload() {
       let pages = getCurrentPages();

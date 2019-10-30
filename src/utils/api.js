@@ -68,6 +68,10 @@ export const  GET_COMMENT_ORDER_INFO = BASE_API_URL + '/order/comment/info';
 
 export const  MOCK_WX_PAY = BASE_API_URL + '/wx/pay/callback';
 
+export const  GET_ADDRESS_BY_ID = BASE_API_URL + '/address/listByAddressId';
+
+export const  UPDATE_USER_ADDRESS = BASE_API_URL + '/address/update';
+
 
 
 

@@ -128,9 +128,9 @@
   import {toast} from '../../utils/toast';
   import {  mapActions } from 'vuex';
   import { mapGetters } from 'vuex';
-  import {GET_COUPON_BY_USER_ID, GET_USER_ADDRESS, MY_USER_INFO,ORDER_SUBMIT, PRE_USE_COUPON} from '@/utils/api';
+  import {GET_COUPON_BY_USER_ID, MOCK_WX_PAY, GET_USER_ADDRESS, MY_USER_INFO,ORDER_SUBMIT, PRE_USE_COUPON} from '@/utils/api';
   import {request} from "@/utils/request";
-  import {_MyDate} from "@/utils/dateUtil";
+  import {formatYMD} from "@/utils/dateUtil";
 
 
   export default {
@@ -173,7 +173,7 @@
         console.log("this.switchValue:", this.switchValue)
       },
       navigateToChooseAddress() {
-        var url = "../myaddress/main?jump=" + "true";
+        var url = "../myaddress/main";
         console.log("url",url)
         wx.navigateTo({
           url
@@ -213,7 +213,8 @@
         const {detail, currentTarget} = event.mp;
         if (!isNaN(detail)) {
           const date = new Date(detail);
-          this.currentDate = date.toLocaleDateString();
+         console.log(formatYMD(detail));
+          this.currentDate = formatYMD(detail);
           this.datePopShow = false;
         }else {
           this.datePopShow = false;
@@ -285,11 +286,11 @@
         let productItem = {};
 
         for(let item of data) {
-          productItem.categoryId = item.cartItem.categoryId;
-          productItem.productId = item.cartItem.productId;
-          productItem.skuId = item.cartItem.id;
-          productItem.quantity = item.inventory;
-          productItem.productName = item.cartItem.productName;
+          productItem.categoryId = item.categoryId;
+          productItem.productId = item.productId;
+          productItem.skuId = item.id;
+          productItem.quantity = item.quantity;
+          productItem.productName = item.productName;
           productItems.push(productItem)
         }
       return productItems;
@@ -395,7 +396,6 @@
       ),
 
       deliverValue() {
-
         if(this.cartTotalPrice < 30) {
           return 8;
         }
@@ -405,9 +405,7 @@
         if (this.cartTotalPrice >= 100) {
           return 0;
         }
-
       },
-
       currentAddress() {
         if(this.addressId === 0 && this.addressArray.length > 0) {
           let addressItem =  this.addressArray.find(item => item.isDefault === 1);
@@ -468,14 +466,7 @@
 
     },
     onShow() {
-
-      if (!this.token) {
-        console.log("用户没有登录");
-        let url = "../login/main";
-        wx.navigateTo({
-          url: url
-        });
-      } else {
+      console.log("this.addressId", this.addressId);
         //要把原有已选的值清空
         let params = this.$root.$mp.query;
         console.log(this.$root.$mp.query);
@@ -489,7 +480,13 @@
         let myDate = new Date();
         this.currentDate = "2019-10-10";
         this.currentTime = "10:00-11:00";
-      }
+    },
+    onUnload() {
+      console.log("onUnload");
+      let url = "/pages/cart/main";
+      wx.switchTab({
+        url: url
+      });
     }
   }
 </script>

@@ -1,20 +1,16 @@
 <template>
   <div class="evaluationitem-container">
-    <div class="evaluation-product-item">
-      <div class="product-pic">
-        <img :src="itemInfo.picUrl" mode="aspectFill" class="img-class">
-      </div>
-      <div class="product-info">
-        <div class="product-info_item">
-          <div>{{itemInfo.productName}}</div>
-          <div>{{itemInfo.salePrice}}</div>
-        </div>
-        <div class="product-info_item">
-          <div>{{itemInfo.attributeName}}</div>
-          <div>{{itemInfo.quantity}}</div>
-        </div>
-      </div>
-    </div>
+
+    <van-card
+      :num="itemInfo.quantity"
+      :price="itemInfo.salePrice"
+      :desc="itemInfo.attributeName"
+      :origin-price="itemInfo.linePrice"
+      :title="itemInfo.productName"
+      :thumb="itemInfo.picUrl"
+      custom-class="root-custom-class"
+    ></van-card>
+
     <hr style="border: 1px solid darkgray; margin: 2px 0px" />
     <div class="evaluation-score">
       <span style="font-size: 12px;">味道</span>
@@ -79,8 +75,9 @@
               filePath:url,
               ossConfig: that.ossConfig,
               success: function (res) {
-                console.log("上传成功")
-                params.picUrls.push(url);
+                console.log("上传成功", res);
+                let ossUrl = res;
+                params.picUrls.push(ossUrl);
                 that.uploadPic(params)
               },
               fail: function (res) {

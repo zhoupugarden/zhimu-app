@@ -12,8 +12,8 @@ export default {
       console.log(data)
       let cartItem = state.cartList.find(item => {
         //
-        return item.cartItem.id === data.id
-        console.log(item.cartItem.id , data.id)
+        return item.id === data.id
+        console.log(item.id , data.id)
       })
       console.log(cartItem)
       if (!cartItem) {

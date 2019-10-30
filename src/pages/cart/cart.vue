@@ -43,7 +43,7 @@
         </div>
 
         <div class="cart-container__bottom--button">
-          <van-button size="large" type="primary" @click="navigateToSubmit">下一步</van-button>
+          <van-button size="large" type="primary" @click="navigateToSubmitOrLogin">下一步</van-button>
         </div>
       </div>
       <van-popup position="bottom"
@@ -156,7 +156,8 @@
         'cartTotalPrice',
         'productCartList',
         'freeCartList',
-        'isExistCake'
+        'isExistCake',
+        'userId'
       ]
     )
 
@@ -181,18 +182,22 @@
     popUpShow() {
       this.popShow = true;
     },
-    navigateToSubmit() {
-      var url = "/pages/ordersubmit/main?isCart=" + true;
+    navigateToSubmitOrLogin() {
+      let submitUrl = "/pages/ordersubmit/main";
+      let loginUrl = "/pages/login/main";
+      let url = "";
 
-      console.log(this.productCartList)
-      console.log("url",url)
+      if (this.userId) {
+        url = submitUrl;
+      } else {
+        url = loginUrl;
+      }
       wx.navigateTo({
         url
       });
     },
     removeItem(data) {
-      console.log(data)
-
+      console.log(data);
       Dialog.confirm({
         title: '删除确认'
       }).then(() => {

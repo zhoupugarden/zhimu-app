@@ -2,7 +2,7 @@
   <div class="zm-card" >
       <div class="zm-card__thumb" >
         <image
-          :src="cardItem.cartItem.picUrl"
+          :src="cardItem.picUrl"
           mode="aspectFit"
           lazy-load="true"
           class="zm-card__img thumb-class"
@@ -18,21 +18,21 @@
         </van-tag>
         </div>
       <div class="zm-card__content">
-        <div class="zm-card__title"> {{cardItem.cartItem.productName}}</div>
-        <div class="zm-card__attr">{{cardItem.cartItem.attributeName}}</div>
+        <div class="zm-card__title"> {{cardItem.productName}}</div>
+        <div class="zm-card__attr">{{cardItem.attributeName}}</div>
         <slot name="tags"></slot>
         <div class="zm-card__close">
           <van-icon name="close" @click="removeProduct"/>
         </div>
         <div class="zm-card__bottom">
-          <view  class="zm-card__price price-class">￥{{ cardItem.cartItem.salePrice }}</view>
-          <view  class="zm-card__origin-price origin-price-class">￥ {{ cardItem.cartItem.linePrice }}</view>
+          <view  class="zm-card__price price-class">￥{{ cardItem.salePrice }}</view>
+          <view  class="zm-card__origin-price origin-price-class">￥ {{ cardItem.linePrice }}</view>
           <slot name="bottom" />
           <div class="zm-card__stepper">
             <van-stepper
               @plus="increInventory"
               @minus="decreInventory"
-              :value="cardItem.inventory"></van-stepper>
+              :value="cardItem.quantity"></van-stepper>
           </div>
         </div>
       </div>
@@ -47,15 +47,15 @@
     },
     methods: {
       removeProduct() {
-        console.log(this.cardItem.cartItem)
-        this.$emit('removeItem', this.cardItem.cartItem)
+        console.log(this.cardItem)
+        this.$emit('removeItem', this.cardItem)
       },
       increInventory() {
         console.log(this.cardItem.cartItem)
-        this.$emit('increItem', this.cardItem.cartItem)
+        this.$emit('increItem', this.cardItem)
       },
       decreInventory() {
-        this.$emit('decreItem', this.cardItem.cartItem)
+        this.$emit('decreItem', this.cardItem)
       }
     }
 

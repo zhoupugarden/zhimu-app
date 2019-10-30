@@ -4,14 +4,14 @@
       <img :src="detail.avatarUrl" class="avatar-img">
     </div>
     <div class="use-name">
-      {{commentItems.userName}}
+      {{detail.nickName}}
     </div>
     <div class="product-star">
       <van-rate :value="detail.overAllScore"/>
     </div>
     <div>
       <van-icon name="bookmark-o" color="E0E0E0" />
-      {{tagStr}}
+      {{detail.tags}}
     </div>
     <div class="comment-date">
       {{detail.commentDate}}
@@ -20,13 +20,15 @@
       {{detail.content}}
 
     </div>
-    <div class="merchant-feed-back">
+    <div v-show="detail.reply" class="merchant-feed-back">
       {{detail.reply}}
     </div>
-
-    <div class="feedback-pics" v-for="(src,index) in detail.picUrls" :key="index">
-      <img  :src="src" :style="{'width':width || '120rpx','height':height || '120rpx'}" class="img" >
+    <div class="feedback-pics">
+      <div  v-for="(src,index) in detail.picUrls" :key="index">
+        <img  :src="src" :style="{'width':width || '120rpx','height':height || '120rpx'}" class="img" @click="previewImage(src)">
+      </div>
     </div>
+
   </div>
   
 </template>
@@ -42,14 +44,15 @@
       return {
       }
     },
-    computed: {
-      tagStr() {
-        let tagStr = "";
-        let tags = this.detail.contentTags;
-        for (let tag of tags) {
-          tagStr = tag + ",";
-        }
-        return tagStr.slice(0,-1);
+    methods: {
+      previewImage(data) {
+        console.log("image data", data)
+        wx.previewImage(
+          {
+            current: data,
+            urls:[data]
+          }
+        )
       }
     }
   }
@@ -87,6 +90,9 @@
   }
   .merchant-feed-back {
     background-color: #CFD4DA;
+  }
+  .feedback-pics {
+    display: flex;
   }
   .img{
     margin:10rpx 20rpx 10rpx 0;
