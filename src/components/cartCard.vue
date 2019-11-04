@@ -51,7 +51,7 @@
         this.$emit('removeItem', this.cardItem)
       },
       increInventory() {
-        console.log(this.cardItem.cartItem)
+        console.log(this.cardItem)
         this.$emit('increItem', this.cardItem)
       },
       decreInventory() {

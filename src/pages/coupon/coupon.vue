@@ -10,9 +10,9 @@
           <div v-for="(item, index) in couponValidList" :key="index">
             <coupon-item :couponInfo="item"></coupon-item>
           </div>
-          <div class="coupon-redeem">
-            <van-button custom-class="van-button__custom" @click="navgateToPointRedeem">兑换优惠券</van-button>
-          </div>
+        </div>
+        <div class="coupon-redeem">
+          <van-button custom-class="van-button__custom" @click="navgateToPointRedeem">兑换优惠券</van-button>
         </div>
       </van-tab>
       <van-tab title="已使用">
@@ -128,6 +128,9 @@
     color: green;
     display: flex;
     justify-content: center;
+  }
+  .coupon-list {
+    padding-bottom: 100px;
   }
   .coupon-redeem {
     position: fixed;

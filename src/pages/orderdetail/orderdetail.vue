@@ -183,7 +183,7 @@
     },
     computed: {
       deliverDesc() {
-        return this.orderInfo.deliverName + this.orderInfo.deliverPhone;
+        return "由骑手：" + this.orderInfo.deliverName + "为您配送" + "联系电话：" + this.orderInfo.deliverPhone;
       }
     },
 
@@ -193,19 +193,17 @@
       console.log("order detail: ", this.$root.$mp.query);
       this.getOrderDetail(params);
       this.orderNo = this.$root.$mp.query.orderNo;
-      console.log(this.orderInfo.orderStatus === 1)
     },
     onUnload() {
       let pages = getCurrentPages();
       console.log("pageUrl", pages);
       let prePage = pages[pages.length - 2];
       if (prePage.route == 'pages/ordersubmit/main') {
-        wx.reLaunch({
+        wx.switchTab({
           url: '/pages/cart/main'
         })
       }
     }
-
   }
 </script>
 

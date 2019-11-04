@@ -31,10 +31,11 @@
           ></card>
         </view>
       </scroll-view>
-
+      <div>
         <cart-pop :popShow="popCartActive"
                   :productSKUs="productSKUs"
                   @popUpClose="closeActive" @addProductToCart="addToCart"></cart-pop>
+      </div>
     </div>
   </div>
 
@@ -49,8 +50,7 @@
   import {  mapActions } from 'vuex';
 
   const ITEM_HEIGHT = 260;
-  const defaultCategoryAndProductBriefInfo = {
-  };
+
   export default{
     components: {
       card, cartPop
@@ -69,8 +69,7 @@
         isActive:true,
         mainActiveIndex:0,
         popCartActive: false,
-        productSKUs:[
-        ]
+        productSKUs:[]
       }
     },
     computed: {
@@ -135,7 +134,8 @@
         console.log("data",data);
         // this.getProductSkuDetail(data);
         let productId = data.productId;
-        this.productSKUs = this.items[this.mainActiveIndex].pmsProductPlusList.find(
+        this.productSKUs
+          = this.items[this.mainActiveIndex].pmsProductPlusList.find(
           item => item.id === productId
         );
         console.log("this.productSKUs", this.productSKUs)
@@ -165,7 +165,8 @@
 
 
     },
-    created() {
+    //create 只执行一次
+    onShow() {
       this.indexList();
       // this.getCategoryAndProductBrief();
       console.log("this.items{}", this.items)
@@ -176,7 +177,7 @@
 
 <style lang="scss" scoped>
   .index-container {
-    position: fixed;
+    position: relative;
     top: 0px;
     width: 100%;
     height: 100px;

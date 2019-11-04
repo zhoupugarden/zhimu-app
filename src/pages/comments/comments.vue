@@ -55,7 +55,7 @@
         差评({{comments.badCount}})
       </div>
     </div>
-    <div v-for= "(item, index) in comments.commentItemList" :key="index" class="comment-detail">
+    <div v-for= "(item, index) in commentItemList" :key="index" class="comment-detail">
       <comment-item :detail="item"></comment-item>
     </div>
   </div>
@@ -73,13 +73,9 @@
     data() {
       return {
         active:100,
-        comments : {
-          total:100,
-          havePic:20,
-          good:23,
-          normal:22,
-          bad:1
-        },
+        comments : {},
+        commentItemList:{},
+        originCommentItemList:{}
       }
     },
     methods: {
@@ -92,24 +88,38 @@
           (response) => {
             console.log("this.good response", response);
             this.comments = response;
+            this.commentItemList = this.comments.commentItemList;
+            this.originCommentItemList = this.comments.commentItemList;
           }
         )
       },
 
       activeTag0() {
+        //全部评价
         this.active = 0;
+        this.commentItemList = this.originCommentItemList;
+
       },
       activeTag1() {
+        //有图评价
         this.active = 1;
+        this.commentItemList = this.originCommentItemList.filter(i => i.picFlag === 1);
       },
       activeTag2() {
+        //好评
         this.active = 2;
+        this.commentItemList = this.originCommentItemList.filter(i => i.commentLevel === 1);
+
       },
       activeTag3() {
+        //中评
         this.active = 3;
+        this.commentItemList = this.originCommentItemList.filter(i => i.commentLevel === 2);
       },
       activeTag4() {
+        //差评
         this.active = 4;
+        this.commentItemList = this.originCommentItemList.filter(i => i.commentLevel === 3);
       }
     },
     computed: {

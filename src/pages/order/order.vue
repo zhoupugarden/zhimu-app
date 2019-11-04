@@ -1,7 +1,6 @@
 <template>
   <div class="order-container">
     <div v-if="!isLogin" class="not-login-container">
-
     <div class="not-login-content">
       <van-icon size="20px" color="#CFD4DA" name="info-o" />
       <div style="font-size: 20px; color: #CFD4DA">
@@ -9,7 +8,6 @@
       </div>
       <van-button @click="navigateToLogin">登录</van-button>
     </div>
-
     </div>
     <div v-else>
       <van-tabs :active="active"
@@ -91,9 +89,13 @@
           this.waitPayItems = response.filter(item => item.orderStatus === 1);
         }
       )
+    },
 
-    }
   },
+    onReachBottom() {
+      console.log("到达底部")
+    },
+
     computed: {
       ...mapGetters(
         [
@@ -105,8 +107,10 @@
     if (this.token) {
       this.isLogin = true;
       this.getOrderListByUserId();
+    } else {
+      console.log("this.isLogin", this.isLogin);
+      this.isLogin = false;
     }
-    console.log("this.isLogin", this.isLogin);
 
     }
 }

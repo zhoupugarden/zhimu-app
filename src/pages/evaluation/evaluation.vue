@@ -181,7 +181,6 @@
         } else {
           this.isAnonymous = false;
         }
-
       },
 
       getCommentOrderInfo(params) {

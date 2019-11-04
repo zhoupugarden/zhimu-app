@@ -9,6 +9,7 @@
       :thumb="productItemInfo.picUrl"
       custom-class="root-custom-class"
     ></van-card>
+    <van-divider />
   </div>
 
 </template>
@@ -26,6 +27,7 @@
   .product-item-container {
     display: flex;
     justify-content: space-around;
+    background-color: white;
   }
   .img-class {
     width: 100px;
@@ -50,10 +52,14 @@
     font-weight: lighter;
     font-size: 14px;
   }
+  .root-custom-class {
+    background-color: white;
+  }
 </style>
 
 <style lang="scss">
   ._van-card {
     width: 100% !important;
+    margin: 5px;
   }
 </style>

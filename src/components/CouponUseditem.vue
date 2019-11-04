@@ -54,6 +54,7 @@
           return "免邮";
         }
         if (this.couponInfo.couponType === 4) {
+          return "单品兑换";
         }
 
       },
@@ -68,6 +69,7 @@
           return "最高减免运费8元";
         }
         if (this.couponInfo.couponType === 4) {
+          return "限购指定款商品";
         }
       }
 

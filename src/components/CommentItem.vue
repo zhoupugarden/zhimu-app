@@ -1,11 +1,25 @@
 <template>
   <div class="comment-item-container">
-    <div class="avatar-url">
-      <img :src="detail.avatarUrl" class="avatar-img">
+
+    <div>
+      <div v-if="detail.isShow === 1" class="avatar-url">
+        <img :src="detail.avatarUrl" class="avatar-img">
+      </div>
+      <div v-else class="avatar-url">
+        <img src="/static/images/avatar.png" class="avatar-img">
+      </div>
     </div>
-    <div class="use-name">
-      {{detail.nickName}}
+
+    <div>
+      <div v-if="detail.isShow === 1" class="use-name">
+        {{detail.nickName}}
+      </div>
+      <div v-else>
+        匿名用户
+      </div>
     </div>
+
+
     <div class="product-star">
       <van-rate :value="detail.overAllScore"/>
     </div>

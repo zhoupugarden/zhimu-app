@@ -1,6 +1,6 @@
 <template>
   <div class="cart-container">
-    <div class="cart-no-container" v-if="cartList.length===0">
+    <div class="cart-no-container" v-if="isEmptyCart">
       <van-icon name="shopping-cart-o"></van-icon>
       <div style="font-size: small; font-family: 'Microsoft YaHei'">您的购物车是空的</div>
     </div>
@@ -36,9 +36,17 @@
         <div class="cart-container__bottom--line">
         </div>
         <div class="cart-container__bottom--total">
-          总计：{{cartTotalPrice}}
-          <div class="cart-container__bottom--fee">
-            另需配送费5元
+          <div>
+            总计：￥{{cartTotalPrice}}
+          </div>
+          <div v-show="cartTotalPrice < 100" class="cart-container__bottom--fee">
+            <span>另需配送费</span>
+            <span>{{deliverFee}}元,</span>
+            <span>再买</span>
+            <span style="color: red">{{needAmount}}元</span>
+            <span>可减</span>
+            <span style="color: red">{{freeFee}}元</span>
+            <span>配送费</span>
           </div>
         </div>
 
@@ -54,7 +62,7 @@
         <div class="van-popup__custom--container">
           <div v-for="(item, index) in payGood" :key="index">
             <pay-card
-              @addToCart="addGoodToCart"
+                @addToCart="addGoodToCart"
               :item="item"
             ></pay-card>
           </div>
@@ -152,18 +160,58 @@
   computed: {
     ...mapGetters(
       [
-        'cartList',
         'cartTotalPrice',
         'productCartList',
         'freeCartList',
         'isExistCake',
         'userId'
       ]
-    )
+    ),
+    cartList() {
+      return this.$store.getters.cartList
+    },
+
+    isEmptyCart() {
+      if (this.$store.getters.cartList.length === 0) {
+        return false;
+      }else {
+        return true;
+      }
+    },
+
+    deliverFee() {
+      if (this.cartTotalPrice < 30) {
+        return 8;
+      }
+      else if (this.cartTotalPrice >= 30 && this.cartTotalPrice < 100) {
+        return 5;
+      } else {
+        return 0
+      }
+    },
+    needAmount() {
+      if (this.cartTotalPrice < 30) {
+        return 30 - this.cartTotalPrice;
+      }
+      else if (this.cartTotalPrice >= 30 && this.cartTotalPrice < 100) {
+        return 100 - this.cartTotalPrice;
+      }else {
+        return 0
+      }
+    },
+    freeFee() {
+      if (this.cartTotalPrice < 30) {
+        return 3;
+      }
+      else if (this.cartTotalPrice >= 30 && this.cartTotalPrice < 100) {
+        return 5;
+      } else {
+        return 0
+      }
+    }
 
   },
   methods: {
-
     ...mapActions(
       [
         'delProductFromCart',
@@ -230,7 +278,6 @@
       console.log("Card good",data)
       this.addProductToCart(data);
     }
-
   },
   mounted() {
     console.log("需要检查库存")
@@ -284,7 +331,12 @@
   }
   .cart-container__bottom--fee {
     font-size: 50%;
-    display: inline-block;
+    padding-left: 10px;
+  }
+  .cart-container__bottom--total {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
   }
 
   .cart-container__fitting--nav {

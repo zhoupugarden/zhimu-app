@@ -57,6 +57,7 @@
           return "免邮";
         }
         if (this.couponInfo.couponType === 4) {
+          return "￥" + this.couponInfo.disAmount;
         }
         if (this.couponInfo.couponType === 5) {
           return "￥" + this.couponInfo.disAmount;
@@ -74,6 +75,7 @@
           return "最高减免运费8元";
         }
         if (this.couponInfo.couponType === 4) {
+          return "仅限蛋糕类商品";
         }
         if (this.couponInfo.couponType === 5) {
           return "仅限蛋糕类商品";

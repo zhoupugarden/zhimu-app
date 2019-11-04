@@ -21,7 +21,7 @@
         </div>
       </div>
         <van-cell custom-class="demo"
-                  title="会员5张9折券，本次至少可省￥13.80" link-type="navigateTo"
+                  :title="vipTip" link-type="navigateTo"
                   url="/pages/myvip/main" is-link value="立即开通" />
     </div>
     <div class="zm-goods__extroInfo">
@@ -149,29 +149,39 @@
                @close="popUpClose"
                :overlay="true">
       <div class="van-popup__panel">
-        <div class="van-popup__panel_price">
-          {{chooseSKU.salePrice}}
+        <div style="display: flex; align-items: center; padding: 10px">
+          <div class="van-popup__panel_price">
+            ￥{{chooseSKU.salePrice}}
+          </div>
+          <span v-if="good.stock <= 5" style="color: red; padding-left: 10px;">少量库存</span>
         </div>
         <div class="van-popup__panel_line">
         </div>
         <div class="van-popup__panel_extro">
-          <van-icon name="fire-o"/>
-          <span>{{chooseSKU.cakeSize}}</span>
-          <van-icon name="fire-o"/>
-          <span>{{chooseSKU.capacity}}</span>
-          <van-icon name="fire-o"/>
-          <span>{{chooseSKU.copies}}</span>
-          <van-icon name="fire-o"/>
-          <span>{{chooseSKU.cutlery}}</span>
+          <div class="van-popup__panel_extro_item">
+            <van-icon name="fire-o"/>
+            <span>{{chooseSKU.cakeSize}}</span>
+          </div>
+          <div class="van-popup__panel_extro_item">
+            <van-icon name="fire-o"/>
+            <span>{{chooseSKU.capacity}}</span>
+          </div>
+          <div class="van-popup__panel_extro_item">
+            <van-icon name="fire-o"/>
+            <span>{{chooseSKU.copies}}</span>
+          </div>
+          <div class="van-popup__panel_extro_item">
+            <van-icon name="fire-o"/>
+            <span>{{chooseSKU.cutlery}}</span>
+          </div>
         </div>
         <div class="van-popup__panel_attribute">
-          <div>规格：</div>
+          <div style="font-size: 12px">规格</div>
           <span v-for="(item, index) in productSKUs" :key="index">
               <van-button :id="item.id"
                           :type="item.id === chooseSKU.id ? 'primary' : 'default'"
                           size="mini" @click="selectedSKU">{{item.attributeName}}</van-button>
             </span>
-
         </div>
         <div v-if= "popupText === '加入购物车' " class="van-popup__panel_shopcart">
           <van-goods-action>
@@ -182,7 +192,6 @@
             />
           </van-goods-action>
         </div>
-
         <div v-else class="van-popup__panel_shopcart">
           <van-goods-action>
             <van-goods-action-button
@@ -213,8 +222,7 @@
       },
       popShow:false,
       urls: {"firstUrl":"http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/机器猫.jpg"},
-      productSKUs: [
-      ],
+      productSKUs: [],
       chooseSKU :{},
       popupText: "加入购物车",
       comment: null,
@@ -328,6 +336,11 @@
       attribute() {
         return "已选择：" + this.chooseSKU.attributeName;
       },
+      vipTip() {
+        let freeAmount = this.chooseSKU.salePrice * 0.1;
+        return "会员5张9折券，本次至少可省￥" + freeAmount;
+      },
+
       ...mapGetters(
         [
           'cartTotalCount'
@@ -348,6 +361,13 @@
   }
   .zm-goods__detail-img {
     width: 100%;
+  }
+  .van-popup__panel_extro_item {
+    box-sizing: border-box;
+    flex: 0 0 50%;
+    padding: 5px 5px;
+    font-size: 16px;
+    font-family: "Microsoft YaHei";
   }
 
   .zm-goods__review_detail {
@@ -382,6 +402,12 @@
     width:90%;
     border-bottom:2px solid #F39B00;
     transition:width .4s ease-in-out;
+  }
+  .van-popup__panel_extro {
+    display: flex;
+    flex-flow: row wrap;
+    align-content: flex-start;
+    padding: 10px;
   }
 
   .zm-goods__extroInfo {

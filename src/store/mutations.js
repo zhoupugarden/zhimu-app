@@ -17,6 +17,7 @@ const mutations = {
     [types.DECREMENT_INVENTORY](state, {skuId}) {
       let cartItem = state.cartList.find(item => item.skuId === skuId)
       cartItem.quantity--
+      console.log("DECREMENT_INVENTORY", state.cartList, state.cartList.length)
     },
     [types.INCREMENT_INVENTORY](state, {skuId}) {
       let cartItem = state.cartList.find(item => item.skuId === skuId)
@@ -27,6 +28,8 @@ const mutations = {
       let index = state.cartList.findIndex( item => item.skuId === skuId)
       console.log("index", index);
       state.cartList.splice(index, 1);
+      console.log("DEL_PRODUCT_FROM_CART", state.cartList, state.cartList.length)
+
     },
     [types.CHECK_OUT_CART](state) {
       state.cartList = []

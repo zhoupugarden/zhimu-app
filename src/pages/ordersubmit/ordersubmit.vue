@@ -96,19 +96,20 @@
         :columns="timeColumns" />
     </van-popup>
 
-    <van-popup :show="couponPopShow"
-               custom-style="height:80%"
-               @close="closeCouponPopup"
-               position="bottom">
-      <div v-for="(item , index) in couponCanUseList" :key="index" @click="chooseCouponItem(item)">
+      <van-popup :show="couponPopShow"
+                 custom-style="height:80%"
+                 @close="closeCouponPopup"
+                 position="bottom">
+        <div style="padding-bottom: 10px">
+          <div v-for="(item , index) in couponCanUseList" :key="index" @click="chooseCouponItem(item)">
+            <coupon-item :couponInfo="item" @preCheckCoupon="preCheckCoupon"></coupon-item>
+          </div>
+  </div>
+        <div style="display: flex;justify-content: center;background-color: white;">
+          <van-button type= "primary" @click = "noUseCoupon" custom-class="custom-button">不适用优惠券</van-button>
+        </div>
+      </van-popup>
 
-          <coupon-item :couponInfo="item" @preCheckCoupon="preCheckCoupon"></coupon-item>
-
-      </div>
-      <div style="position: fixed; bottom: 5px; width: 100%">
-        <van-button type= "primary" @click = "noUseCoupon" custom-class="custom-button">不适用优惠券</van-button>
-      </div>
-    </van-popup>
 
     <van-popup :show="productPopShow"
                custom-style="height:80%"
@@ -288,7 +289,7 @@
         for(let item of data) {
           productItem.categoryId = item.categoryId;
           productItem.productId = item.productId;
-          productItem.skuId = item.id;
+          productItem.skuId = item.skuId;
           productItem.quantity = item.quantity;
           productItem.productName = item.productName;
           productItems.push(productItem)
@@ -308,7 +309,7 @@
             this.items = response;
             console.log("this response", response);
             if (!response.isApply) {
-              toast(response.failReason);
+              toast(response.notApplyReason);
             } else {
               that.couponPopShow = false;
               that.couponValue = response.couponAmount;
@@ -399,7 +400,7 @@
         if(this.cartTotalPrice < 30) {
           return 8;
         }
-        if (this.cartTotalPrice >=30 && this.cartTotalPrice < 30) {
+        if (this.cartTotalPrice >=30 && this.cartTotalPrice < 100) {
           return 5;
         }
         if (this.cartTotalPrice >= 100) {
@@ -407,6 +408,14 @@
         }
       },
       currentAddress() {
+
+        if (this.switchValue === -1) {
+          return "";
+        }
+        if (this.addressArray.length === 0) {
+          return "";
+        }
+
         if(this.addressId === 0 && this.addressArray.length > 0) {
           //取最新添加的地址
           let addressItem =  this.addressArray[this.addressArray.length - 1];

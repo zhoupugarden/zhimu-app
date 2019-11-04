@@ -14,7 +14,8 @@
     "van-icon": "/static/vant/icon/index",
     "van-toast": "/static/vant/toast/index",
     "van-card": "/static/vant/card/index",
-    "van-dialog": "/static/vant/dialog/index"
+    "van-dialog": "/static/vant/dialog/index",
+    "van-divider": "/static/vant/divider/index"
   },
   "navigationBarTextStyle": "black",
   "navigationBarTitleText": "订单提交"

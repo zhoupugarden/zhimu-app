@@ -3,13 +3,16 @@
     <van-popup :position="position"
                :show="popShow"
                z-index="200"
-               custom-style="left:20%"
+               custom-style="left:10%"
                @close="popUpClose"
                >
       <div class="van-popup__panel">
         <div style="padding-left: 10%">
-          <div class="van-popup__panel_price">
-            {{chooseSKU.salePrice}}
+          <div style="display: flex;align-items: center">
+            <div class="van-popup__panel_price">
+              {{chooseSKU.salePrice}}
+            </div>
+            <span style="color: red; padding-left: 10px" v-show="productSKUs.stock < 5">少量库存</span>
           </div>
           <div class="van-popup__panel_extro">
             <div class="van-popup__panel_extro__item">
@@ -32,8 +35,8 @@
           <div style="font-family: 'Microsoft YaHei'; font-size: 14px;padding:10px 0px;">规格</div>
           <div class="van-popup__panel_attribute">
           <span v-for="(item, index) in productSKUs.pmsProductSkuList" :key="index">
-              <van-button :id="item.id"
-                          :type="item.id === chooseSKU.id ? 'primary' : 'default'"
+              <van-button :id="item.skuId"
+                          :type="item.skuId === chooseSKU.skuId ? 'primary' : 'default'"
                           size="mini" @click="selectedSKU">{{item.attributeName}}</van-button>
             </span>
           </div>
@@ -65,20 +68,7 @@ export default {
   },
   data() {
     return {
-      chooseSKU: {
-
-      }
-
-    }
-  },
-
-  watch: {
-    productSKUs() {
-      this.chooseSKU = this.productSKUs.pmsProductSkuList.find(
-        function (sku) {
-          return sku.isPrime === true;
-        }
-      );
+      chooseSKU:{}
     }
   },
 
@@ -90,8 +80,37 @@ export default {
     },
     addToCart() {
       this.$emit('addProductToCart', this.chooseSKU);
+    },
+    selectedSKU(event) {
+      console.log("event", event);
+      this.chooseSKU = this.productSKUs.pmsProductSkuList.find(
+        sku => sku.skuId === parseInt(event.mp.target.id)
+      );
+      console.log("this.chooseSku", this.chooseSKU)
+    }
+  },
+
+  watch: {
+    productSKUs() {
+      this.chooseSKU = this.productSKUs.pmsProductSkuList.find(
+        function (sku) {
+          return sku.isPrime === true;
+        }
+      );
+      console.log("this.chooseSKU", this.chooseSKU)
     }
   }
+
+  // computed: {
+  //   chooseSKU() {
+  //     this.productSKUs.pmsProductSkuList.find(
+  //       function (sku) {
+  //         return sku.isPrime === true;
+  //       }
+  //     );
+  //   }
+  // }
+
 }
 </script>
 
