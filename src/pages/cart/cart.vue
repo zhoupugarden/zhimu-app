@@ -6,7 +6,7 @@
     </div>
     <div v-else>
       <div class="cart-container__detail">
-        <div v-for="(item, index) in productCartList" :key="index">
+        <div v-for="(item, index) in cartList" :key="index">
           <cart-card
             @increItem="increItem"
             @decreItem="decreItem"
@@ -14,24 +14,25 @@
             :cardItem="item"></cart-card>
         </div>
       </div>
-      <div v-if="showTip" class="cart-container__tip">
+      <div v-show="showTip" class="cart-container__tip">
         请在下方选择需要的配件
-      </div>
       <div class="cart-container__fitting">
         <div class="cart-container__fitting--nav">
-          <van-button size="small" @click="addFire">蜡烛</van-button>
-          <van-button size="small" @click="addHat">帽子</van-button>
-          <van-button size="small" @click="addPeachFire">桃心蜡烛</van-button>
+          <van-button size="small" @click="addFire">数字蜡烛</van-button>
+          <van-button size="small" @click="addChocolate">巧克力牌</van-button>
           <van-button size="small" @click="popUpShow">配件饰品</van-button>
         </div>
         <div class="cart-container__fitting--detail">
           <div v-for="(item, index) in freeCartList" :key="index">
             <free-card :item="item"
-                       @delFromCart="removeItem"
+                       @delFromCart="removeFreeItem"
+                       @fieldChange="fieldChange"
             ></free-card>
           </div>
         </div>
       </div>
+      </div>
+
       <div class="cart-container__bottom">
         <div class="cart-container__bottom--line">
         </div>
@@ -83,86 +84,39 @@
   import Dialog from '../../../static/vant/dialog/dialog';
 
 
-  export default {
+  const freeGood = [
+    {
+      url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
+      productName:"巧克力牌",
+      attributeName:"1个",
+      holdValue:"请输入祝福语(14字内)",
+    },
+    {
+      url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
+      productName:"数字蜡烛",
+      attributeName:"1个",
+      holdValue:"请输入年龄",
+    }
+  ];
 
+  export default {
   components: {
     cartCard, FreeCard, PayCard
   },
 
   data() {
     return {
-      good : {
-        url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-        name:"yangyu测试",
-        tag:"热销",
-        price:"10.12",
-        originPrice:"100",
-        title:"杨宇测试",
-        attribute:"1个",
-      },
       totalAmount: 1000,
-      showTip:true,
       popShow:false,
-      freeGood:[
-        {
-          skuId:31,
-          url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-          productName:"yangyu测试",
-          salePrice:"0.00",
-          attributeName:"1个",
-          type:2
-        },
-        {
-          skuId:32,
-          salePrice:"0.00",
-          url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-          productName:"yangyu测试",
-          attributeName:"1个",
-          type:2
-        },
-        {
-          skuId:33,
-          url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-          productName:"yangyu测试",
-          attributeName:"1个",
-          salePrice:"0.00",
-          type:2
-        }
-      ],
-      payGood: [
-        {
-          url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-          tag:"热销",
-          salePrice:"10.12",
-          originPrice:"100",
-          title:"杨宇测试",
-          attributeName:"1个",
-          productId:456,
-          skuId:58,
-          productName:"付费商品",
-          type:1
-        },
-        {
-          url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-          tag:"热销",
-          salePrice:"10.12",
-          originPrice:"100",
-          title:"杨宇测试",
-          attributeName:"1个",
-          productId:456,
-          skuId:59,
-          productName:"付费商品",
-          type:1
-        }
-      ]
+      payGood: [],
+      birthNum:"",
+      remark:""
     }
   },
   computed: {
     ...mapGetters(
       [
         'cartTotalPrice',
-        'productCartList',
-        'freeCartList',
         'isExistCake',
         'userId'
       ]
@@ -170,9 +124,25 @@
     cartList() {
       return this.$store.getters.cartList
     },
+    freeCartList() {
+      return this.$store.getters.freeCartList
+    },
+
+    showTip() {
+      let cake = this.$store.getters.cartList.find(
+        i => i.type === 1
+      );
+      console.log("cake", cake)
+      if (cake) {
+        return true;
+      } else {
+        return false;
+      }
+
+    },
 
     isEmptyCart() {
-      if (this.$store.getters.cartList.length === 0) {
+      if (this.$store.getters.cartList.length) {
         return false;
       }else {
         return true;
@@ -217,7 +187,10 @@
         'delProductFromCart',
         'incrementInventory',
         'decrementInventory',
-        'addProductToCart'
+        'addProductToCart',
+        'addFreeCart',
+        'delFreeFromCart',
+        'checkoutFreeCartList'
       ]
     ),
     storeButton() {
@@ -234,6 +207,8 @@
       let submitUrl = "/pages/ordersubmit/main";
       let loginUrl = "/pages/login/main";
       let url = "";
+
+      //add-free-cart
 
       if (this.userId) {
         url = submitUrl;
@@ -254,6 +229,15 @@
         // on cancel
       });
     },
+
+    removeFreeItem(data) {
+      console.log("removeFreeItem", data);
+      this.delFreeFromCart(data);
+    },
+    fieldChange(data) {
+      console.log("fieldChange: ", data)
+    },
+
     increItem(data) {
       console.log(data)
       this.incrementInventory(data)
@@ -262,22 +246,29 @@
       console.log(data)
       this.decrementInventory(data)
     },
-    addFire() {
-      let fire = this.freeGood[0];
-      this.addProductToCart(fire);
-    },
-    addHat() {
-      let hat = this.freeGood[1];
-      this.addProductToCart(hat);
-    },
-    addPeachFire() {
-      let peach = this.freeGood[2];
-      this.addProductToCart(peach);
-    },
     addGoodToCart(data) {
       console.log("Card good",data)
       this.addProductToCart(data);
+    },
+    addChocolate() {
+      let data = {};
+      data.url = freeGood[0].url;
+      data.productName = freeGood[0].productName;
+      data.holdValue = freeGood[0].holdValue;
+      data.value = this.remark;
+      this.addFreeCart(data);
+    },
+    addFire() {
+      let data = {};
+      data.url = freeGood[1].url;
+      data.holdValue = freeGood[1].holdValue;
+      data.productName = freeGood[1].productName;
+      data.value = this.birthNum;
+      this.addFreeCart(data);
     }
+
+
+
   },
   mounted() {
     console.log("需要检查库存")

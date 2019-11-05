@@ -58,7 +58,7 @@
         let that = this;
         let params = {};
         params.userId = this.userId;
-        params.productId = 9;
+        params.productId = 11;
         params.chargeAmount = 500;
         console.log("charge");
         request(

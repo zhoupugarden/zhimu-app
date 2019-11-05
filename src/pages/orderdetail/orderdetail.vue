@@ -12,6 +12,8 @@
           <van-cell title="数字蜡烛" value="1个" />
           <van-cell title="桃心蜡烛" value="1个" />
           <van-cell title="赠送餐具" value="5份" />
+          <van-cell title="火柴" value="1个" />
+          <van-cell title="巧克力牌" value="happy birthday" />
           </van-cell-group>
         </div>
         <div class="order-coupon-detail">

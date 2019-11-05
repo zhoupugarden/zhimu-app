@@ -38,9 +38,7 @@ export default {
     productCartList: state => state.cartList.filter(
       item => item.type != 2
     ),
-    freeCartList: state => state.cartList.filter(
-      item => item.type === 2
-    ),
+    freeCartList: state => state.freeList,
     isExistCake: state => {
       let cakeList = state.cartList.find(
         item => item.type === 1

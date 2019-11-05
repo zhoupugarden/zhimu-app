@@ -22,6 +22,10 @@ export default {
         commit(types.INCREMENT_INVENTORY, data)
       }
     },
+    addFreeCart:({state, commit}, data) => {
+      commit(types.ADD_FREE_TO_CART, data)
+    },
+
     decrementInventory: ({commit}, {skuId}) => {
       console.log(skuId);
       commit(types.DECREMENT_INVENTORY, {skuId})
@@ -35,6 +39,11 @@ export default {
     delProductFromCart:({commit}, {skuId}) => {
       commit(types.DEL_PRODUCT_FROM_CART, {skuId})
     },
+
+    delFreeFromCart:({commit}, {productName}) => {
+    commit(types.DEL_FREE_FROM_CART, {productName})
+  },
+
     storeToken: ({commit}, token) => {
       commit(types.TOKEN, token)
     },
@@ -50,6 +59,9 @@ export default {
     checkoutCartList: ({commit}) => {
       commit(types.CHECK_OUT_CART)
     },
+  checkoutFreeCartList: ({commit}) => {
+    commit(types.CHECK_OUT_FREE_CART)
+  },
 
 
 }

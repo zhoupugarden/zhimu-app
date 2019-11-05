@@ -367,6 +367,10 @@
           params.couponCode = this.chosedCoupon.couponCode;
         }
         params.productItems = this.convertCartList(this.cartList);
+
+        params.freeItems = this.freeCartList;
+
+
         params.remark = "留言待补充";
 
         request(

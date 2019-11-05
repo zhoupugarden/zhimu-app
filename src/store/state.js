@@ -3,7 +3,8 @@ const state = {
     cartList:[],
     token:'',
     userId:'',
-    isVip:0
+    isVip:0,
+    freeList:[]
 }
 
 export default state;

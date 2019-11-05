@@ -13,6 +13,12 @@ const mutations = {
         cartItem
       );
     },
+    [types.ADD_FREE_TO_CART](state, freeCartItem) {
+      console.log("freeCartItem", freeCartItem)
+      state.freeList.push(
+        freeCartItem
+      )
+    },
 
     [types.DECREMENT_INVENTORY](state, {skuId}) {
       let cartItem = state.cartList.find(item => item.skuId === skuId)
@@ -28,13 +34,29 @@ const mutations = {
       let index = state.cartList.findIndex( item => item.skuId === skuId)
       console.log("index", index);
       state.cartList.splice(index, 1);
-      console.log("DEL_PRODUCT_FROM_CART", state.cartList, state.cartList.length)
+      console.log("DEL_PRODUCT_FROM_CART", state.cartList, state.cartList.length);
+
+      if (!state.cartList.find(item=>item.type===1))  {
+        state.freeList = []
+      }
+
 
     },
-    [types.CHECK_OUT_CART](state) {
+  [types.DEL_FREE_FROM_CART](state, {productName}) {
+    let index = state.freeList.findIndex( item => item.productName === productName)
+    console.log("index", index);
+    state.freeList.splice(index, 1);
+  },
+
+  [types.CHECK_OUT_CART](state) {
       state.cartList = []
     },
-    [types.TOKEN](state, token) {
+  [types.CHECK_OUT_FREE_CART](state) {
+    state.freeList = []
+  },
+
+
+  [types.TOKEN](state, token) {
       state.token = token;
     },
     [types.LOG_OUT](state) {

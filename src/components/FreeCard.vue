@@ -1,41 +1,42 @@
 <template>
   <div class="freecard-container">
-    <img :src="item.cartItem.url" class="freecard-container__pic">
+    <img :src="item.url" class="freecard-container__pic">
     <div class="freecard-container__name">
-      {{item.cartItem.productName}} / ￥ 0.00
+      {{item.productName}} / ￥ 0.00
     </div>
-
-    <div class="freecard-container__stepper">
-      <van-stepper value="1"></van-stepper>
-    </div>
-
+    <van-field
+      :value="value"
+      :placeholder="item.holdValue"
+      border="false"
+      @change="fieldChange"
+    />
     <div class="freecard-container_close">
       <van-icon name="cross" @click="delFromCart"></van-icon>
     </div>
   </div>
-
   <!--免费配件购物车展示-->
 </template>
 
 <script>
-
   export default {
-
     props: {
       item:Object
     },
     data() {
       return {
-        count: 0
+        count: 0,
+        value:""
       }
     },
     methods: {
       delFromCart() {
         this.$emit("delFromCart" , this.item)
+      },
+
+      fieldChange(event) {
+        this.$emit("fieldChange", event)
       }
     }
-
-
   }
 </script>
 <style lang="scss"  scoped>
@@ -58,7 +59,4 @@
     height: 40px;
   }
   }
-
-
-
 </style>
