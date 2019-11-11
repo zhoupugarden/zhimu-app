@@ -63,7 +63,7 @@
 
 <script>
   import CommentItem from '@/components/CommentItem';
-  import {GET_PRODUCT_COMMENT } from '@/utils/api';
+  import {GET_PRODUCT_COMMENT, GET_PRODUCT_COMMENT_LIST } from '@/utils/api';
   import {request} from "@/utils/request";
 
   export default {
@@ -74,8 +74,12 @@
       return {
         active:100,
         comments : {},
-        commentItemList:{},
-        originCommentItemList:{}
+        commentItemList:[],
+        productId:null,
+        picFlag: null,
+        pageSize:10,
+        pageNum:1,
+        level:null
       }
     },
     methods: {
@@ -88,38 +92,99 @@
           (response) => {
             console.log("this.good response", response);
             this.comments = response;
-            this.commentItemList = this.comments.commentItemList;
-            this.originCommentItemList = this.comments.commentItemList;
+          }
+        )
+      },
+      getProductCommentList(data) {
+        request(
+          GET_PRODUCT_COMMENT_LIST,
+          'GET',
+          data
+        ).then(
+          (response) => {
+            console.log("this.good response", response);
+            this.commentItemList = response.list;
           }
         )
       },
 
+      getProductCommentListAdd(data) {
+        request(
+          GET_PRODUCT_COMMENT_LIST,
+          'GET',
+          data
+        ).then(
+          (response) => {
+            console.log("this.good response", response);
+            let tmplist = response.list;
+            this.commentItemList = this.commentItemList.concat(tmplist);
+          }
+        )
+      },
+
+
+
       activeTag0() {
         //全部评价
         this.active = 0;
-        this.commentItemList = this.originCommentItemList;
-
+        this.level = null;
+        this.picFlag = null;
+        this.pageSize = 10;
+        this.pageNum = 1;
+        let params = {};
+        params.productId = this.productId;
+        params.pageSize = this.pageSize;
+        params.pageNum = this.pageNum;
+        this.commentItemList = this.getProductCommentList(params);
       },
       activeTag1() {
         //有图评价
         this.active = 1;
-        this.commentItemList = this.originCommentItemList.filter(i => i.picFlag === 1);
+        this.level = null;
+        this.picFlag = 1;
+        let params = {};
+        params.picFlag = this.picFlag;
+        params.productId = this.productId;
+        params.pageSize = this.pageSize;
+        params.pageNum = this.pageNum;
+        this.commentItemList = this.getProductCommentList(params);
+
       },
       activeTag2() {
         //好评
         this.active = 2;
-        this.commentItemList = this.originCommentItemList.filter(i => i.commentLevel === 1);
-
+        this.level = 1;
+        this.picFlag = null;
+        let params = {};
+        params.level = this.level;
+        params.productId = this.productId;
+        params.pageSize = this.pageSize;
+        params.pageNum = this.pageNum;
+        this.commentItemList = this.getProductCommentList(params);
       },
       activeTag3() {
         //中评
         this.active = 3;
-        this.commentItemList = this.originCommentItemList.filter(i => i.commentLevel === 2);
+        this.level = 2;
+        this.picFlag = null;
+        let params = {};
+        params.level = this.level;
+        params.productId = this.productId;
+        params.pageSize = this.pageSize;
+        params.pageNum = this.pageNum;
+        this.commentItemList = this.getProductCommentList(params);
       },
       activeTag4() {
         //差评
         this.active = 4;
-        this.commentItemList = this.originCommentItemList.filter(i => i.commentLevel === 3);
+        this.level = 3;
+        this.picFlag = null;
+        let params = {};
+        params.level = this.level;
+        params.productId = this.productId;
+        params.pageSize = this.pageSize;
+        params.pageNum = this.pageNum;
+        this.commentItemList = this.getProductCommentList(params);
       }
     },
     computed: {
@@ -139,10 +204,29 @@
         return this.active === 4 ? "comment-active-tag-style": "comment-tag-style";
       }
     },
+    onReachBottom() {
+      //要做个判断， 如果size已经小于10， 则不再分页查询
+      console.log("到达底部");
+      let params = {};
+      params.productId = this.productId;
+      params.pageSize = this.pageSize;
+      params.pageNum = this.pageNum + 1;
+      this.pageNum = this.pageNum + 1;
+      if (null !== this.level) {
+        params.level = this.level;
+      }
+      if (null !== this.level) {
+        params.picFlag = this.picFlag;
+      }
+      this.getProductCommentListAdd(params);
+    },
+
     onShow() {
       console.log("productID: ",this.$root.$mp.query);
       let params = this.$root.$mp.query;
+      this.productId = params.productId;
       this.getProductComment(params);
+      this.getProductCommentList(params);
     }
   }
 </script>

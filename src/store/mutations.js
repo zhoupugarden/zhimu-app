@@ -15,6 +15,7 @@ const mutations = {
     },
     [types.ADD_FREE_TO_CART](state, freeCartItem) {
       console.log("freeCartItem", freeCartItem)
+      // this.$set(this, state.freeList, freeCartItem);
       state.freeList.push(
         freeCartItem
       )
@@ -46,6 +47,11 @@ const mutations = {
     let index = state.freeList.findIndex( item => item.productName === productName)
     console.log("index", index);
     state.freeList.splice(index, 1);
+  },
+  [types.UPDATE_FREE_FROM_CART](state, data) {
+    let freeItem = state.freeList.find( item => item.productName === data.productName)
+    console.log("freeItem", freeItem);
+    freeItem.value = data.value;
   },
 
   [types.CHECK_OUT_CART](state) {

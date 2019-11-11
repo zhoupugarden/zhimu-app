@@ -64,7 +64,9 @@ export const CANCEL_ORDER = BASE_API_URL + '/order/cancel';
 
 export const PAY_ORDER = BASE_API_URL + '/order/pay';
 
-export const GET_PRODUCT_COMMENT = BASE_API_URL + '/comment/product/list';
+export const GET_PRODUCT_COMMENT = BASE_API_URL + '/comment/product/dashboard';
+
+export const GET_PRODUCT_COMMENT_LIST = BASE_API_URL + '/comment/product/list';
 
 export const SUBMIT_ORDER_COMMENT = BASE_API_URL + '/comment/add';
 
@@ -75,6 +77,12 @@ export const  MOCK_WX_PAY = BASE_API_URL + '/wx/pay/callback';
 export const  GET_ADDRESS_BY_ID = BASE_API_URL + '/address/listByAddressId';
 
 export const  UPDATE_USER_ADDRESS = BASE_API_URL + '/address/update';
+
+export const  PAY_FITTING_LIST = BASE_API_URL + '/product/PayFitting/list';
+
+export const  ADD_SIGN = BASE_API_URL + '/sign/add';
+
+export const  SIGN_INDEX = BASE_API_URL + '/sign/index';
 
 
 

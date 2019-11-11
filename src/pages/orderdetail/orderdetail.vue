@@ -179,6 +179,12 @@
             console.log("this response", response);
             this.orderInfo = response;
             this.orderProductDetailList = this.orderInfo.orderProductDetailList;
+          let status = this.orderInfo.orderStatus;
+          let pages = getCurrentPages();
+          let prePage = pages[pages.length - 2];
+          if (prePage.route === 'pages/ordersubmit/main' && status === 1) {
+            this.orderPay();
+          }
           }
         )
       }

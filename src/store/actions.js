@@ -43,8 +43,12 @@ export default {
     delFreeFromCart:({commit}, {productName}) => {
     commit(types.DEL_FREE_FROM_CART, {productName})
   },
+    updateFreeFromCart:({commit}, data) => {
+    commit(types.UPDATE_FREE_FROM_CART, data)
+    },
 
-    storeToken: ({commit}, token) => {
+
+  storeToken: ({commit}, token) => {
       commit(types.TOKEN, token)
     },
     logout: ({commit}) => {

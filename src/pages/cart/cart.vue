@@ -23,16 +23,16 @@
           <van-button size="small" @click="popUpShow">配件饰品</van-button>
         </div>
         <div class="cart-container__fitting--detail">
-          <div v-for="(item, index) in freeCartList" :key="index">
-            <free-card :item="item"
+          <div v-for="(item_, index) in freeCartList" :key="index">
+            <free-card
                        @delFromCart="removeFreeItem"
                        @fieldChange="fieldChange"
+                       :freeItem="item_"
             ></free-card>
           </div>
         </div>
       </div>
       </div>
-
       <div class="cart-container__bottom">
         <div class="cart-container__bottom--line">
         </div>
@@ -71,7 +71,6 @@
       </van-popup>
       <van-dialog id="van-dialog" />
     </div>
-
   </div>
 </template>
 
@@ -79,9 +78,12 @@
   import cartCard from '@/components/cartCard';
   import FreeCard from '@/components/FreeCard';
   import PayCard from '@/components/PayCard';
-  import { mapState, mapMutations,mapGetters, mapActions } from 'vuex';
+  import { mapGetters, mapActions } from 'vuex';
   import { SET_OPEN_ID } from '@/store/mutation-types';
   import Dialog from '../../../static/vant/dialog/dialog';
+
+  import {PAY_FITTING_LIST} from '@/utils/api';
+  import {request} from "@/utils/request";
 
 
   const freeGood = [
@@ -116,16 +118,19 @@
   computed: {
     ...mapGetters(
       [
+        'freeCartList',
         'cartTotalPrice',
         'isExistCake',
         'userId'
       ]
     ),
     cartList() {
-      return this.$store.getters.cartList
+      return this.$store.getters.cartList;
+      this.$forceUpdate()
     },
-    freeCartList() {
-      return this.$store.getters.freeCartList
+    freeList() {
+      console.log("this.$store.state.freeList", this.$store.state.freeList)
+        return this.$store.getters.freeCartList
     },
 
     showTip() {
@@ -138,7 +143,6 @@
       } else {
         return false;
       }
-
     },
 
     isEmptyCart() {
@@ -190,9 +194,24 @@
         'addProductToCart',
         'addFreeCart',
         'delFreeFromCart',
-        'checkoutFreeCartList'
+        'checkoutFreeCartList',
+        'updateFreeFromCart'
       ]
     ),
+
+    payFittingList() {
+      request(
+        PAY_FITTING_LIST,
+        'GET'
+      ).then(
+        response => {
+          this.payGood = response;
+          console.log("this response", response);
+          this.popShow = true;
+        }
+      )
+    },
+
     storeButton() {
       this.setOpenId("123456")
     },
@@ -201,7 +220,7 @@
       this.popShow = false;
     },
     popUpShow() {
-      this.popShow = true;
+      this.payFittingList()
     },
     navigateToSubmitOrLogin() {
       let submitUrl = "/pages/ordersubmit/main";
@@ -235,7 +254,12 @@
       this.delFreeFromCart(data);
     },
     fieldChange(data) {
-      console.log("fieldChange: ", data)
+      console.log("fieldChange: ", data);
+      let productName = data.productName;
+      let value = data.value;
+      let freeItem = this.$store.state.freeList.find(i => i.productName === productName);
+
+      this.updateFreeFromCart(data);
     },
 
     increItem(data) {
@@ -247,7 +271,7 @@
       this.decrementInventory(data)
     },
     addGoodToCart(data) {
-      console.log("Card good",data)
+      console.log("Card good",data);
       this.addProductToCart(data);
     },
     addChocolate() {
@@ -265,12 +289,11 @@
       data.productName = freeGood[1].productName;
       data.value = this.birthNum;
       this.addFreeCart(data);
+      this.$forceUpdate();
     }
 
-
-
   },
-  mounted() {
+  onShow() {
     console.log("需要检查库存")
   }
 }

@@ -44,9 +44,17 @@
         <van-cell title="时间" :value="currentTime" custom-class="custome-cell-time" is-link arrow-direction="down" @click="timePop"/>
       </div>
     </div>
+    <div style="display: flex;">
+
     <div style="font-weight: bolder">
       优惠券
     </div>
+    <div>
+      <span style="background-color: #230000; border: 1px solid black; color: white; font-size: 12px">VIP</span>
+      <span class="vip_tip">{{vipTip}}</span>
+    </div>
+    </div>
+
 
     <div class="order-submit-coupon">
       <van-cell :title="chooseCouponTip" custom-class="custome-cell" is-link arrow-direction="down" @click="couponPop"/>
@@ -166,7 +174,8 @@
     methods: {
       ...mapActions(
         [
-          'checkoutCartList'
+          'checkoutCartList',
+          'checkoutFreeCartList'
         ]
       ),
       switchOther() {
@@ -284,13 +293,13 @@
 
       convertCartList(data) {
         let productItems = [];
-        let productItem = {};
-
         for(let item of data) {
+          let productItem = {};
           productItem.categoryId = item.categoryId;
           productItem.productId = item.productId;
           productItem.skuId = item.skuId;
           productItem.quantity = item.quantity;
+          productItem.type = item.type;
           productItem.productName = item.productName;
           productItems.push(productItem)
         }
@@ -368,8 +377,7 @@
         }
         params.productItems = this.convertCartList(this.cartList);
 
-        params.freeItems = this.freeCartList;
-
+        params.freeProductItems = this.freeCartList;
 
         params.remark = "留言待补充";
 
@@ -379,7 +387,6 @@
           params
         ).then(
           response => {
-            this.checkoutCartList();
             console.log("this response", response);
             let orderNo = response.orderNo;
             if (response.orderStatus === 2) {
@@ -388,6 +395,9 @@
             } else {
               this.navigateToOrderDetail(orderNo);
             }
+
+            this.checkoutCartList();
+            this.checkoutFreeCartList();
           }
         )
 
@@ -396,9 +406,16 @@
     computed: {
       ...mapGetters(
         [
-           'cartList','cartTotalCount','cartTotalPrice','cartProductListName','token','userId'
+           'cartList','freeCartList', 'cartTotalCount','cartTotalPrice','cartProductListName','token','userId'
         ]
       ),
+      vipTip() {
+        if (this.cartTotalPrice <= 80) {
+          return "加入会员可得免邮卡本次省8元";
+        } else {
+          return "加入会员可得5张9折卡本次省" + this.cartTotalPrice * 0.1 + "元";
+        }
+      },
 
       deliverValue() {
         if(this.cartTotalPrice < 30) {
@@ -527,6 +544,14 @@
     text-align: center;
     line-height: 25px;
     padding: 0px 5px;
+  }
+  .vip_tip {
+    background-color: #F39B00;
+    color: white;
+    border: 1px solid black;
+    font-size: 12px;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
   }
   .un-switch-style {
     font-size: 14px;

@@ -1,12 +1,12 @@
 <template>
   <div class="freecard-container">
-    <img :src="item.url" class="freecard-container__pic">
+    <img :src="freeItem.url" class="freecard-container__pic">
     <div class="freecard-container__name">
-      {{item.productName}} / ￥ 0.00
+      {{freeItem.productName}} / ￥ 0.00
     </div>
     <van-field
-      :value="value"
-      :placeholder="item.holdValue"
+      :value="freeItem.value"
+      :placeholder="freeItem.holdValue"
       border="false"
       @change="fieldChange"
     />
@@ -20,21 +20,22 @@
 <script>
   export default {
     props: {
-      item:Object
+      freeItem:Object
     },
     data() {
       return {
-        count: 0,
-        value:""
+        count: 0
       }
     },
     methods: {
       delFromCart() {
-        this.$emit("delFromCart" , this.item)
+        this.$emit("delFromCart" , this.freeItem)
       },
-
       fieldChange(event) {
-        this.$emit("fieldChange", event)
+        let data = {};
+        data.productName = this.freeItem.productName;
+        data.value = event.mp.detail;
+        this.$emit("fieldChange", data)
       }
     }
   }
