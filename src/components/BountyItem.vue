@@ -29,7 +29,20 @@
 
     methods: {
       bountyRedeem() {
-        this.$emit('redeemCoupon', this.item)
+        let that = this;
+        wx.showModal({
+          title: "提示",
+          content: '需要消耗' + that.item.needBounty + '奖励金，确认兑换？',
+          confirmText: '兑换',
+          confirmColor: "#f44",
+          showCancel: true,
+          success(res) {
+            if(res.confirm) {
+              that.$emit('redeemCoupon', that.item)
+            }
+          }
+        });
+
       }
     }
   }

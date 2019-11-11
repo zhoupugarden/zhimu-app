@@ -41,6 +41,8 @@
   import CouponOutitem from '@/components/CouponOutitem';
   import CouponUseditem from '@/components/CouponUseditem';
   import CouponOffitem from '@/components/CouponOffitem';
+  import { mapGetters} from 'vuex';
+
 
   import {GET_COUPON_BY_USER_ID} from '@/utils/api';
   import {request} from "@/utils/request";
@@ -95,7 +97,12 @@
         return this.couponList.filter(item => {
           return item.status === 3
         })
-      }
+      },
+        ...mapGetters(
+          [
+            'userId','token'
+          ]
+        )
     },
 
 
@@ -103,7 +110,7 @@
       let params = this.$root.$mp.query;
       console.log(this.$root.$mp.query);
       let data = {};
-      data.userId = params.userId;
+      data.userId = this.userId;
 
       this.getCoupon(data);
     }

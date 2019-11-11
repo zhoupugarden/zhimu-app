@@ -9,9 +9,9 @@
       </div>
     </div>
 
-    <div class="detail-container">
+    <div @click="popBountyLog" class="detail-container">
       <div>
-        <van-icon color="orange" @click="popBountyLog" name="bars" />
+        <van-icon color="orange"  name="bars" />
       </div>
       <div style="color: orange; font-size: 16px; padding: 3px">明细</div>
     </div>
@@ -31,9 +31,9 @@
       </div>
 
     </div>
-    <div class="sign-rule">
+    <div @click="popTip" class="sign-rule">
       <div>
-        <van-icon @click="popTip" name="question-o" />
+        <van-icon  name="question-o" />
       </div>
       <div>
         签到规则
@@ -99,29 +99,14 @@
       position="center"
       @close="onPopupLogClose"
       close-on-click-overlay
+      @click=""
     >
-      <div>
-        签到规则
+      <div v-for="(item, index) in signDetailList" :key="index">
+        <span>{{item.id}}</span>
+        <span>{{item.desc}}</span>
+        <span>{{item.signDate}}</span>
       </div>
-      <div>
-        1、签到获取的奖励金可累计用于兑换优惠券
-        2、签到获取的奖励金可累计用于兑换优惠券
-        3、签到获取的奖励金可累计用于兑换优惠券
-        4、签到获取的奖励金可累计用于兑换优惠券
-        1、签到获取的奖励金可累计用于兑换优惠券
-        2、签到获取的奖励金可累计用于兑换优惠券
-        3、签到获取的奖励金可累计用于兑换优惠券
-        4、签到获取的奖励金可累计用于兑换优惠券
-        1、签到获取的奖励金可累计用于兑换优惠券
-        2、签到获取的奖励金可累计用于兑换优惠券
-        3、签到获取的奖励金可累计用于兑换优惠券
-        4、签到获取的奖励金可累计用于兑换优惠券
-      </div>
-
     </van-popup>
-
-
-
 
   </div>
 </template>
@@ -129,23 +114,23 @@
 <script>
 
   import BountyItem from '@/components/BountyItem';
-  import {ADD_SIGN,SIGN_INDEX } from '@/utils/api';
+  import {ADD_SIGN,SIGN_INDEX,BOUNTY_REDEEM,SIGN_DETAIL } from '@/utils/api';
   import {request} from "@/utils/request";
   import { mapGetters} from 'vuex';
 
   const coupons = [
     {
-      ruleId:1,
+      couponRuleId:7,
       couponValue:5,
       needBounty:5
     },
     {
-      ruleId:2,
+      couponRuleId:8,
       couponValue:10,
       needBounty:10
     },
     {
-      ruleId:3,
+      couponRuleId:3,
       couponValue:20,
       needBounty:20
     }
@@ -167,6 +152,7 @@
         signText:"签到",
         buttonColor:"#FF5951",
         sign:false,
+        signDetailList:[],
         steps: [
           {
           },
@@ -196,14 +182,9 @@
       }
     },
     methods: {
-
-      redeemCoupon(data) {
-        console.log("redeemCoupon", data)
-      },
-
-
       popBountyLog() {
         this.popLogShow = true;
+        this.signDetail();
       },
       onPopupLogClose() {
         this.popLogShow = false;
@@ -235,6 +216,40 @@
         )
       },
 
+      redeemCoupon(data) {
+        console.log("redeemCoupon", data)
+        let param = {};
+        param.userId = this.userId;
+        param.couponRuleId = data.couponRuleId;
+        param.bounty = data.needBounty;
+        request(
+          BOUNTY_REDEEM,
+          'post',
+          param
+        ).then(
+          (response) => {
+            this.bounty = response.bounty;
+            wx.showModal({
+              title: "提示",
+              content: '优惠券兑换成功!',
+              confirmText: '去看看',
+              showCancel: true,
+              success(res) {
+                if(res.confirm) {
+                  wx.navigateTo(
+                    {
+                      url:'/pages/coupon/main'
+                    }
+                  )
+                }
+              }
+            });
+
+
+          }
+        )
+      },
+
       signIndex() {
         let param = {};
         param.userId = this.userId;
@@ -252,24 +267,21 @@
           }
         )
       },
-
-      test() {
-        let params = {};
-        params.pageNum = 1;
-        params.pageSize = 10;
-        params.productId = 100;
+      signDetail() {
+        let param = {};
+        param.userId = this.userId;
         request(
-          "http://localhost:8080/comment/product/list",
-          'GET',
-          params
+          SIGN_DETAIL,
+          'get',
+          param
         ).then(
-          response => {
+          (response) => {
             console.log("this response", response);
-            this.disable = response.isSign;
+            this.signDetailList = response;
+
           }
         )
-      }
-
+      },
     },
     computed: {
       ...mapGetters(

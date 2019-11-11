@@ -82,7 +82,11 @@ export const  PAY_FITTING_LIST = BASE_API_URL + '/product/PayFitting/list';
 
 export const  ADD_SIGN = BASE_API_URL + '/sign/add';
 
+export const  BOUNTY_REDEEM = BASE_API_URL + '/sign/redeem';
+
 export const  SIGN_INDEX = BASE_API_URL + '/sign/index';
+
+export const  SIGN_DETAIL = BASE_API_URL + '/sign/detail';
 
 
 
