@@ -8,7 +8,7 @@
 
     <van-cell-group>
       <van-field
-        :value="message"
+        :value="content"
         type="textarea"
         placeholder="请填写..."
         custom-style="height:200px"
@@ -35,7 +35,8 @@
     <div style="padding-top: 100px;display: flex;justify-content: center">
       <van-button round
                   custom-class="custom-button"
-                  type="primary">提交申请</van-button>
+                  @click="problemSubmit"
+                  type="primary">提交</van-button>
     </div>
 
     <van-popup
@@ -57,8 +58,12 @@
 </template>
 
 <script>
-  export default {
 
+  import {SUBMIT_PROBLEM} from '@/utils/api';
+  import {request} from "@/utils/request";
+
+
+  export default {
   components: {
   },
 
@@ -66,6 +71,9 @@
     return {
       active:0,
       complaintType:"请选择",
+      content:"",
+      contactName:"",
+      contactPhoneNo:"",
       popup:false,
       typeColumn:["客服问题","产品问题","配送问题","系统问题","其他问题"]
 
@@ -81,7 +89,7 @@
       this.popup = false
     },
     onConfirm(event) {
-      console.log("onConfirm", event)
+      console.log("onConfirm", event);
       this.complaintType = event.mp.detail.value;
       this.popup = false
     },
@@ -90,6 +98,38 @@
     },
     popupClose() {
       this.popup = false;
+    },
+
+    problemSubmit() {
+      let param = {};
+      param.problemType = this.complaintType;
+      param.content = this.content;
+      param.contactName = data.contactName;
+      param.contactPhone = data.contactPhoneNo;
+      request(
+        SUBMIT_PROBLEM,
+        'post',
+        param
+      ).then(
+        (response) => {
+          wx.showModal({
+            title: "提示",
+            content: '感谢您的意见,我们会在24小时内尽快联系您!',
+            confirmText: '确定',
+            showCancel: false,
+            success(res) {
+              if(res.confirm) {
+                wx.navigateTo(
+                  {
+                    url:'/pages/help/main'
+                  }
+                )
+              }
+            }
+          });
+        }
+      )
+
     }
   }
 

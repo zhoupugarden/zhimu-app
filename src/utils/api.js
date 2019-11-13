@@ -88,10 +88,9 @@ export const  SIGN_INDEX = BASE_API_URL + '/sign/index';
 
 export const  SIGN_DETAIL = BASE_API_URL + '/sign/detail';
 
+export const  POINT_REDEEM = BASE_API_URL + '/point/redeem';
 
-
-
-
+export const  SUBMIT_PROBLEM = BASE_API_URL + '/problem/submit';
 
 
 

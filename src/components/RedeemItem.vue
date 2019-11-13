@@ -1,5 +1,5 @@
 <template>
-  <div class="redeemitem-container">
+  <div @click="navigateToDetail" class="redeemitem-container">
 
       <img :src="redeemItem.imgUrl" class="redeem-item-img">
 
@@ -8,7 +8,7 @@
     </div>
 
     <div class="redeem-item-point">
-      {{redeemItem.itemPoint}}
+      {{redeemItem.point}}
     </div>
     <span style="font-size: 14px; color: white">积分</span>
 
@@ -23,12 +23,18 @@
     },
     data() {
       return {
-        // redeemItem: {
-        //   imgUrl:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-        //   itemName:"积分商品测试",
-        //   itemPoint:"200"
-        // }
       }
+    },
+    methods: {
+      pointRedeem() {
+        this.$emit('pointRedeem', this.redeemItem);
+      },
+      navigateToDetail() {
+        var url = "/pages/redeemdetail/main";
+        wx.navigateTo({
+          url
+        });
+      },
     }
 
   }

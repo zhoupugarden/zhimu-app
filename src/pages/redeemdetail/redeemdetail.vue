@@ -2,50 +2,55 @@
   <div class="redeemdetail-container">
     <div class="redeemdetail-header">
       <div class="redeemdetail-pic">
-        <img :src="redeemItem.picUrl" class="redeemdetail-pic-item">
+        <img :src="redeemItem.imgUrl" class="redeemdetail-pic-item">
       </div>
       <div class="redeemdetail-header-content">
         <div style=" font-size: 16px;  font-family: 'Microsoft YaHei'">
           {{redeemItem.itemName}}
         </div>
         <div style="color: #CDA65B; font-size: 14px; font-weight: bold; font-family: 'Microsoft YaHei'">
-          {{redeemItem.itemPoint}}积分
+          {{redeemItem.point}}积分
         </div>
       </div>
     </div>
 
     <div class="redeemdetail-desc">
       <div style="font-size: 18px; font-weight: bold; font-family: 'Microsoft YaHei'">兑换说明</div>
-      {{redeemItem.itemDesc}}
+      {{redeemItem.Desc}}
     </div>
     <div class="redeemdetail-operation">
       <div style="width: 60%;  ">
-        需{{redeemItem.itemPoint}}积分
+        需{{redeemItem.point}}积分
       </div>
       <div style="width: 40%">
-        <van-button custom-class = "redeem-detail-class" type="primary" size="normal">兑换</van-button>
+        <van-button custom-class = "redeem-detail-class"
+                    @click="pointRedeem"
+                    type="primary" size="normal">兑换</van-button>
       </div>
     </div>
 
-    <!--<van-popup :show="popShow" @close="onClose">-->
-      <!--确认框， 成功兑换，积分不足等-->
-    <!--</van-popup>-->
-
-    <!---->
   </div>
 </template>
 
 <script>
 
+  import {POINT_REDEEM} from '@/utils/api';
+  import { mapGetters} from 'vuex';
+  import {request} from "@/utils/request";
+
   export default {
 
+    props: {
+      redeemItemDemo:Object
+    },
     data() {
       return {
-        redeemItem: {
-          picUrl: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-          itemName:"20元代金券",
-          itemDesc:"1、sdfsdf \n 2、cdsdfsff \n  3、sfdfsdf",
-          itemPoint:"20"
+        redeemItem:{
+          imgUrl:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
+          itemName:"积分商品测试",
+          point:200,
+          Desc:"测试couponRuleId 8",
+          couponRuleId:7
         },
         popShow:false
 
@@ -53,9 +58,43 @@
       }
     },
     methods: {
-      onClose() {
-
+      pointRedeem() {
+        console.log("pointRedeem", this.redeemItem)
+        let param = {};
+        param.userId = this.userId;
+        param.couponRuleId = this.redeemItem.couponRuleId;
+        param.point = this.redeemItem.point;
+        request(
+          POINT_REDEEM,
+          'post',
+          param
+        ).then(
+          (response) => {
+            wx.showModal({
+              title: "提示",
+              content: '优惠券兑换成功!',
+              confirmText: '去看看',
+              showCancel: true,
+              success(res) {
+                if(res.confirm) {
+                  wx.navigateTo(
+                    {
+                      url:'/pages/coupon/main'
+                    }
+                  )
+                }
+              }
+            });
+          }
+        )
       }
+    },
+    computed: {
+      ...mapGetters(
+        [
+          'userId'
+        ]
+      )
     }
 
   }

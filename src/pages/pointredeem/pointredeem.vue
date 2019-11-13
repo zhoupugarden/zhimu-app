@@ -4,7 +4,7 @@
     <div class="redeem-header">
       <div class="redeem-header-total">
         <div style="color: #CDA65B">
-          78
+          {{pointTotal}}
         </div>
         <div style="color: #ACC0D8; font-size: 14px">
           可用积分
@@ -21,8 +21,10 @@
       优惠券专区
     </div>
     <div class="redeem-detail">
-      <div class="redeem-detail-item" v-for="(item, index) in redeemItems" :key="index" @click="navigateToDetail">
-        <redeem-item :redeemItem="item"></redeem-item>
+      <div class="redeem-detail-item" v-for="(item, index) in redeemItems" :key="index">
+        <redeem-item
+          @pointRedeem="pointRedeem"
+          :redeemItem="item"></redeem-item>
       </div>
     </div>
 
@@ -31,6 +33,9 @@
 
 <script>
   import RedeemItem from '@/components/RedeemItem';
+  import {POINT_REDEEM} from '@/utils/api';
+  import { mapGetters} from 'vuex';
+  import {request} from "@/utils/request";
 
   export default {
     components: {
@@ -41,29 +46,38 @@
         balanceRecords: {
           total: 798
         },
+        pointTotal:0,
+
         redeemItems:[
           {
             imgUrl:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
             itemName:"积分商品测试",
-            itemPoint:"200"
+            Desc:"测试couponRuleId 3",
+            point:200,
+            couponRuleId:3
           },
           {
             imgUrl:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
             itemName:"积分商品测试",
-            itemPoint:"200"
+            point:200,
+            Desc:"测试couponRuleId 3",
+            couponRuleId:3
           },
           {
             imgUrl:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
             itemName:"积分商品测试",
-            itemPoint:"200"
+            point:200,
+            Desc:"测试couponRuleId 8",
+            couponRuleId:8
           },
           {
             imgUrl:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
             itemName:"积分商品测试",
-            itemPoint:"200"
+            point:200,
+            Desc:"测试couponRuleId 8",
+            couponRuleId:7
           }
         ]
-
 
       }
     },
@@ -80,13 +94,50 @@
           url
         });
       },
-      navigateToDetail() {
-        var url = "/pages/redeemdetail/main";
-        wx.navigateTo({
-          url
-        });
+
+      pointRedeem(data) {
+        console.log("pointRedeem", data)
+        let param = {};
+        param.userId = this.userId;
+        param.couponRuleId = data.couponRuleId;
+        param.point = data.point;
+        request(
+          POINT_REDEEM,
+          'post',
+          param
+        ).then(
+          (response) => {
+            this.pointTotal = response.point;
+            wx.showModal({
+              title: "提示",
+              content: '优惠券兑换成功!',
+              confirmText: '去看看',
+              showCancel: true,
+              success(res) {
+                if(res.confirm) {
+                  wx.navigateTo(
+                    {
+                      url:'/pages/coupon/main'
+                    }
+                  )
+                }
+              }
+            });
+          }
+        )
       }
+
+
+
+    },
+    computed: {
+      ...mapGetters(
+        [
+          'userId'
+        ]
+      )
     }
+
 
   }
 </script>
@@ -99,7 +150,6 @@
     align-items: center;
     background-color: white;
     padding: 5px 0px;
-
   }
 
   .redeem-header-operation {

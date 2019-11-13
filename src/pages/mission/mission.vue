@@ -10,7 +10,7 @@
     </div>
 
     <div @click="popBountyLog" class="detail-container">
-      <div>
+      <div style="padding: 3px">
         <van-icon color="orange"  name="bars" />
       </div>
       <div style="color: orange; font-size: 16px; padding: 3px">明细</div>
@@ -32,7 +32,7 @@
 
     </div>
     <div @click="popTip" class="sign-rule">
-      <div>
+      <div style="padding: 1px">
         <van-icon  name="question-o" />
       </div>
       <div>
@@ -81,14 +81,20 @@
       @close="onPopupClose"
       close-on-click-overlay
       >
-      <div>
+      <div style="font-size: 18px; font-weight: bold; text-align: center">
         签到规则
       </div>
-      <div>
+      <div style="font-size: 16px;">
         1、签到获取的奖励金可累计用于兑换优惠券
-        2、签到获取的奖励金可累计用于兑换优惠券
-        3、签到获取的奖励金可累计用于兑换优惠券
-        4、签到获取的奖励金可累计用于兑换优惠券
+      </div>
+      <div style="font-size: 16px;">
+        2、签到要连续，断签需从第一天重新开始
+      </div>
+      <div style="font-size: 16px;">
+        3、七天循环一次，第八天从第一天重新开始
+      </div>
+      <div style="font-size: 16px;">
+        4、每日0点刷新，可进行新一天的签到
       </div>
 
     </van-popup>
@@ -99,12 +105,14 @@
       position="center"
       @close="onPopupLogClose"
       close-on-click-overlay
-      @click=""
     >
-      <div v-for="(item, index) in signDetailList" :key="index">
-        <span>{{item.id}}</span>
-        <span>{{item.desc}}</span>
-        <span>{{item.signDate}}</span>
+      <div style="font-size: 18px; font-weight: bold; text-align: center">
+        奖励金记录
+      </div>
+      <div style="margin: 0px 10px" v-for="(item, index) in signDetailList" :key="index">
+        <span style="font-size: 12px;">{{item.id}}.</span>
+        <span style="font-size: 12px; padding: 5px">{{item.desc}}</span>
+        <span style="font-size: 10px; font-weight: lighter">{{item.signDate}}</span>
       </div>
     </van-popup>
 
@@ -177,7 +185,7 @@
             desc: '+2'
           }
         ],
-        couponItems: Object.assign([], coupons)
+        couponItems: []
 
       }
     },
@@ -306,6 +314,7 @@
 
     onShow() {
       this.signIndex();
+      this.couponItems = Object.assign([], coupons);
     }
 
   }
