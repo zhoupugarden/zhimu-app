@@ -85,7 +85,7 @@
         response => {
           console.log("orderlist", response);
           this.orderItems = response;
-          this.waitCommentItems = response.filter(item => item.isComment === 0 && item.orderStatus === 2);
+          this.waitCommentItems = response.filter(item => item.isComment === 0 && item.orderStatus === 4);
           this.waitPayItems = response.filter(item => item.orderStatus === 1);
         }
       )

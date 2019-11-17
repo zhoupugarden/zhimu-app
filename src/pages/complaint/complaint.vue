@@ -12,6 +12,7 @@
         type="textarea"
         placeholder="请填写..."
         custom-style="height:200px"
+        @change="contentChange"
       />
     </van-cell-group>
 
@@ -23,11 +24,13 @@
           required
           clearable
           label="联系人"
+          @change="nameChange"
         />
         <van-field
           :value="contactPhoneNo"
           label="联系电话"
           required
+          @change="phoneChange"
         />
       </van-cell-group>
     </div>
@@ -76,14 +79,25 @@
       contactPhoneNo:"",
       popup:false,
       typeColumn:["客服问题","产品问题","配送问题","系统问题","其他问题"]
-
     }
 
   },
   methods: {
-    onChange(event) {
-      console.log(event)
+    contentChange(event) {
+      console.log(event.mp.detail);
+      this.content = event.mp.detail;
     },
+
+    nameChange(event) {
+      console.log(event.mp.detail);
+      this.contactName = event.mp.detail;
+    },
+
+    phoneChange(event) {
+      console.log(event.mp.detail);
+      this.contactPhoneNo = event.mp.detail;
+    },
+
     onCancel(event) {
       console.log("onCancel", event)
       this.popup = false
@@ -102,10 +116,10 @@
 
     problemSubmit() {
       let param = {};
-      param.problemType = this.complaintType;
+      param.problemType = this.typeColumn.findIndex((value) => value == this.complaintType) + 1;
       param.content = this.content;
-      param.contactName = data.contactName;
-      param.contactPhone = data.contactPhoneNo;
+      param.contactName = this.contactName;
+      param.contactPhone = this.contactPhoneNo;
       request(
         SUBMIT_PROBLEM,
         'post',
@@ -129,7 +143,6 @@
           });
         }
       )
-
     }
   }
 
@@ -141,7 +154,6 @@
     margin-top: 10px;
     background-color: white;
   }
-
 
 </style>
 <style lang="scss">

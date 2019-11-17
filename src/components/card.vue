@@ -1,19 +1,14 @@
 <template>
   <div class="zm-panel" >
+    <div class="zm-card" :style="{opacity : maskValue}">
 
-    <div class="zm-card" >
-      <div v-show="cardInfo.onlineStatus !== 1001 && cardInfo.onlineStatus !== 1002" class="zm-card__tag">
-      <van-tag>{{onlineStatusDesc}}</van-tag>
-    </div>
-      <div v-show="cardInfo.onlineStatus == 1002" class="zm-card__tag">
-        <van-tag type="danger">{{onlineStatusDesc}}</van-tag>
-      </div>
       <div class="zm-card__thumb" @click="navigateToProduct">
         <img class="zm-card__img" mode="aspectFill"
              :src="cardInfo.headPicUrl">
       </div>
       <div class="zm-card__detail">
         <div class="zm-card__detail__name">
+          <span>{{onlineStatusDesc}}</span>
           <span>{{cardInfo.name}}</span>
         </div>
         <div class="zm-card__detail__price">
@@ -61,16 +56,25 @@
     computed: {
       onlineStatusDesc() {
         if (this.cardInfo.onlineStatus === 1003) {
-          return "当日售罄"
+          return "售罄 / "
         }
         if (this.cardInfo.onlineStatus === 1004) {
-          return "缺货"
+          return "缺货 / "
         }
         if (this.cardInfo.onlineStatus === 1002) {
-          return "预售"
+          return "预售 / "
         }
         return ""
+      },
+      maskValue() {
+        console.log("maskValue：", this.cardInfo.onlineStatus);
+        if (this.cardInfo.onlineStatus === 1003 || this.cardInfo.onlineStatus === 1004) {
+          return 0.4
+        } else {
+          return 1
+        }
       }
+
     },
     created() {
       console.log(this.cardInfo)

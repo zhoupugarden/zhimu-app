@@ -203,13 +203,50 @@
         </div>
       </div>
     </van-popup>
+
+    <van-popup
+      :show="outShowUp"
+      position="bottom"
+      custom-style="height: 100%;"
+      :close="outShowClose">
+
+      <div class="productNotice">
+        <div >
+          <van-icon @click="outShowClose" name="cross" />
+        </div>
+        <div>
+          {{content}}
+        </div>
+        <div v-show="!isNoticed">
+          <van-cell-group>
+            <van-field
+              :value="phoneNo"
+              center
+              clearable
+              label="手机号码"
+              placeholder="请输入手机号码"
+              border="false"
+              @change="phoneNoChange"
+              use-button-slot
+            >
+              <van-button slot="button"
+                          @click="addProductNotice"
+                          size="small" type="primary">下一步</van-button>
+            </van-field>
+          </van-cell-group>
+        </div>
+        <div>
+          <img :src="good.shareUrl" class="img-class">
+        </div>
+      </div>
+      </van-popup>
     <van-toast  id="van-toast"/>
   </div>
 </template>
 
 <script>
 
-  import {GET_PRODUCT_DETAIL_BY_ID, GET_PRODUCT_SKU_DETAIL_BY_ID, GET_STAR_COMMENT } from '@/utils/api';
+  import {GET_PRODUCT_DETAIL_BY_ID, PRODUCT_NOTICE, GET_PRODUCT_SKU_DETAIL_BY_ID, GET_STAR_COMMENT } from '@/utils/api';
   import {request} from "@/utils/request";
   import { mapGetters, mapActions } from 'vuex';
   import { ADD_PRODUCT_TO_CART } from '@/store/mutation-types';
@@ -221,12 +258,15 @@
       good: {
       },
       popShow:false,
+      outShowUp:false,
       urls: {"firstUrl":"http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/机器猫.jpg"},
       productSKUs: [],
       chooseSKU :{},
       popupText: "加入购物车",
       comment: null,
       commentUrl:"",
+      phoneNo:"",
+      isNoticed:false
     }
   },
   //如何支持pathVariable 的请求？？
@@ -250,9 +290,17 @@
     },
 
     addCart() {
-      this.addProductToCart(this.chooseSKU);
-      this.popShow = false;
-      toast("成功添加购物车");
+      if (this.good.onlineStatus === 1003) {
+        return;
+      }else if (this.good.onlineStatus === 1004)  {
+        //   弹起到货提醒的页面
+        this.popShow = false;
+        this.outShowUp = true;
+      }else {
+        this.addProductToCart(this.chooseSKU);
+        this.popShow = false;
+        toast("成功添加购物车");
+      }
     },
     onClickCartIcon() {
       //调不到bar关联的菜单
@@ -262,20 +310,40 @@
       });
     },
     onAddCartButton() {
-      this.popupText = "加入购物车";
+      if (this.good.onlineStatus === 1003) {
+        this.popupText = "今日售完，请明日再来";
+      }else if (this.good.onlineStatus === 1004)  {
+        this.popupText = "到货通知";
+      }else {
+        this.popupText = "加入购物车";
+      }
       this.popShow = true;
     },
     addToBuy() {
-      this.addProductToCart(this.chooseSKU);
-      this.popShow = false;
-      var url = "../cart/main";
-      wx.switchTab({
-        url
-      });
+      if (this.good.onlineStatus === 1003) {
+        return;
+      }else if (this.good.onlineStatus === 1004)  {
+      //   弹起到货提醒的页面
+        this.popShow = false;
+        this.outShowUp = true;
+      }else {
+        this.addProductToCart(this.chooseSKU);
+        this.popShow = false;
+        var url = "../cart/main";
+        wx.switchTab({
+          url
+        });
+      }
     },
 
     onBuyClickButton() {
-      this.popupText = "立即购买";
+      if (this.good.onlineStatus === 1003) {
+        this.popupText = "今日售完，请明日再来";
+      }else if (this.good.onlineStatus === 1004)  {
+        this.popupText = "到货通知";
+      }else {
+        this.popupText = "立即购买";
+      }
       this.popShow = true;
     },
      getProductDetail(data) {
@@ -309,6 +377,13 @@
       console.log("popUpClose");
       this.popShow = false;
     },
+
+    phoneNoChange(event) {
+      console.log("event: ", event)
+      this.phoneNo = event.mp.detail;
+    },
+
+
     getStarComment(data) {
       request(
         GET_STAR_COMMENT,
@@ -320,9 +395,31 @@
          this.comment = response;
         }
       )
-    }
+    },
+    outShowClose() {
+      this.outShowUp = false;
+    },
 
+    addProductNotice() {
+      let params = {};
+      params.productId = this.good.id;
+      params.phoneNo = this.phoneNo;
+      request(
+        PRODUCT_NOTICE,
+        'POST',
+        params
+      ).then(
+        (response) => {
+          if (response.isRepeated === 1) {
+            toast("您已订阅, 有货时我们将为您发送短信通知", 3000)
+          } else {
+            this.isNoticed = true;
+          }
+        }
+      )
+    }
   },
+
     onShow() {
       console.log(this.$root.$mp.query);
           let params = {};
@@ -331,6 +428,14 @@
           this.getProductDetail(params);
           this.getStarComment(params);
           this.commentUrl = "/pages/comments/main?productId=" + this.$root.$mp.query.productId;
+
+      //    将数据还原，后续用Obejct.assign
+      this.popShow = false;
+      this.outShowUp = false;
+      this.phoneNo = "";
+      this.isNoticed = false;
+
+
       },
     computed: {
       attribute() {
@@ -338,7 +443,14 @@
       },
       vipTip() {
         let freeAmount = this.chooseSKU.salePrice * 0.1;
-        return "会员5张9折券，本次至少可省￥" + freeAmount;
+        return "会员5张9折券，本次至少可省￥" + freeAmount.toFixed(2);
+      },
+      content() {
+        if (this.isNoticed) {
+          return "订阅成功," + this.good.name + "有货时我们将给您发送通知";
+        }else {
+          return "您希望在" + this.good.name + "有货时收到通知么?";
+        }
       },
 
       ...mapGetters(

@@ -33,14 +33,14 @@
       }
     },
     methods: {
-      backToOrderSubmit(e) {
+      backToOrderSubmit() {
         let pages = getCurrentPages();
         console.log("pageUrl", pages);
         let prePage = pages[1];
         if (prePage.route === 'pages/ordersubmit/main') {
-          prePage.setData({addressId:e.id})
+          prePage.setData({addressId:this.addressInfo.id})
           wx.redirectTo({
-            url: '/' + prePage.route + '?addressId=' + e.id
+            url: '/' + prePage.route + '?addressId=' + this.addressInfo.id
           })
         }
       },

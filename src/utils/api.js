@@ -92,6 +92,8 @@ export const  POINT_REDEEM = BASE_API_URL + '/point/redeem';
 
 export const  SUBMIT_PROBLEM = BASE_API_URL + '/problem/submit';
 
+export const  PRODUCT_NOTICE = BASE_API_URL + '/product/notice';
+
 
 
 

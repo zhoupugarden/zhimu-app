@@ -17,30 +17,25 @@
       </van-tab>
       <van-tab title="已使用">
         <div class="coupon-list">
-          <div v-for="(item, index) in couponInValidList" :key="index">
-            <coupon-useditem :couponInfo="item"></coupon-useditem>
+          <div v-for="(item, index) in couponUsedList" :key="index">
+            <coupon-itemm :couponInfo="item"></coupon-itemm>
           </div>
         </div>
       </van-tab>
       <van-tab title="已过期">
         <div class="coupon-list">
-          <div v-for="(item, index) in couponUsedList" :key="index">
-            <coupon-useditem :couponInfo="item"></coupon-useditem>
+          <div v-for="(item, index) in couponInvalidList" :key="index">
+            <coupon-itemm :couponInfo="item"></coupon-itemm>
           </div>
         </div>
       </van-tab>
     </van-tabs>
-
-
-
   </div>
 </template>
 
 <script>
   import CouponItem from '@/components/CouponItem';
-  import CouponOutitem from '@/components/CouponOutitem';
-  import CouponUseditem from '@/components/CouponUseditem';
-  import CouponOffitem from '@/components/CouponOffitem';
+  import CouponItemm from '@/components/CouponItemm';
   import { mapGetters} from 'vuex';
 
 
@@ -49,7 +44,7 @@
 
   export default {
     components: {
-      CouponItem,CouponOutitem,CouponOffitem,CouponUseditem
+      CouponItem, CouponItemm
     },
     data() {
       return {
@@ -79,7 +74,6 @@
             console.log("this response", response);
           }
         )
-
       }
     },
     computed: {
@@ -88,12 +82,12 @@
           return item.status === 1
         })
       },
-      couponInValidList() {
+      couponUsedList() {
         return this.couponList.filter(item => {
           return item.status === 2
         })
       },
-      couponUsedList() {
+      couponInvalidList() {
         return this.couponList.filter(item => {
           return item.status === 3
         })

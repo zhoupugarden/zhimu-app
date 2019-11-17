@@ -2,7 +2,7 @@
   <div class="coupon-item-container">
 
     <div class="coupon-item-left">
-      <div style="font-size: 18px;padding-top: 30%;">
+      <div style="font-size: 18px;padding-top: 20%;">
         {{couponInfo.couponName}}
       </div>
       <div style="font-size: 10px;">
@@ -11,7 +11,7 @@
     </div>
     <hr style="float: left;margin-top:30px;margin-bottom:30px;margin-right: 30px;border: thin dashed #aaa;">
     <div class="coupon-item-right">
-      <div style="color: red;padding-top: 40%;text-align: center;font-size: 20px;">
+      <div style="padding-top: 30%;text-align: center;font-size: 20px;">
         {{couponInfo.couponValue}}
       </div>
       <div style="font-size: 10px;">
@@ -38,9 +38,9 @@
 
 <style lang="scss" scoped>
   .coupon-item-container {
-    background-color: white;
+    background-color: #F0F5FD;
     margin: 8px;
-    height: 90px;
+    height: 80px;
     display: flex;
     justify-content: space-around;
   }

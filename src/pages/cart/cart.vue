@@ -61,6 +61,9 @@
                  @close="popUpClose"
       >
         <div class="van-popup__custom--container">
+          <div >
+            <van-icon @click="popUpClose" name="cross" />
+          </div>
           <div v-for="(item, index) in payGood" :key="index">
             <pay-card
                 @addToCart="addGoodToCart"
@@ -272,6 +275,7 @@
     },
     addGoodToCart(data) {
       console.log("Card good",data);
+      this.popShow = false;
       this.addProductToCart(data);
     },
     addChocolate() {

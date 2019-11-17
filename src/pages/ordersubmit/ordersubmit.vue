@@ -109,8 +109,8 @@
                  @close="closeCouponPopup"
                  position="bottom">
         <div style="padding-bottom: 10px">
-          <div v-for="(item , index) in couponCanUseList" :key="index" @click="chooseCouponItem(item)">
-            <coupon-item :couponInfo="item" @preCheckCoupon="preCheckCoupon"></coupon-item>
+          <div v-for="(item , index) in couponCanUseList" :key="index" @click="chooseCouponItem(item)" style="margin: 10px">
+            <coupon-itemc :couponInfo="item" @preCheckCoupon="preCheckCoupon"></coupon-itemc>
           </div>
   </div>
         <div style="display: flex;justify-content: center;background-color: white;">
@@ -133,6 +133,7 @@
 
 <script>
   import CouponItem from '@/components/CouponItem';
+  import CouponItemc from '@/components/CouponItemc';
   import ProductItem from '@/components/ProductItem';
   import {toast} from '../../utils/toast';
   import {  mapActions } from 'vuex';
@@ -144,7 +145,7 @@
 
   export default {
     components: {
-      CouponItem,ProductItem
+      CouponItem, ProductItem, CouponItemc
     },
     data() {
       return {
@@ -345,14 +346,32 @@
                 return item.status === 1;
               }
             );
-            console.log("validCouponList", validCouponList);
-
-            console.log("couponCanUseList", this.couponCanUseList);
           }
         )
       },
+      validParams() {
+        if (this.switchValue === 1 & this.addressId === 0) {
+          wx.showModal({
+            title: "错误",
+            content: '亲,请先选择收货地址',
+            confirmText: '确定',
+            showCancel: false,
+            success(res) {
+              if(res.confirm) {
+                console.log("选择收货地址");
+              }
+            }
+          });
+          return false;
+        } else {
+          return true;
+        }
+      },
 
       orderSubmit() {
+        if (!this.validParams()) {
+          return;
+        }
         let params = {};
         params.userId = this.userId;
         params.addressId = this.addressId;

@@ -4,33 +4,41 @@
     <van-tabs :active="active" @change="onChange">
       <van-tab title="订单详情">
         <div>
-        <div v-for="(detail_, index) in orderProductDetailList" :key="index" class="order-item-detail">
-          <product-item :productItemInfo="detail_"></product-item>
-        </div>
-        <div class="order-freeitem-detail">
-          <van-cell-group>
-          <van-cell title="数字蜡烛" value="1个" />
-          <van-cell title="桃心蜡烛" value="1个" />
-          <van-cell title="赠送餐具" value="5份" />
-          <van-cell title="火柴" value="1个" />
-          <van-cell title="巧克力牌" value="happy birthday" />
-          </van-cell-group>
-        </div>
-        <div class="order-coupon-detail">
-          <van-cell title="其他优惠" :value="orderInfo.couponAmount" />
-        </div>
-        <div class="order-total-info">
-          <van-cell title="总计" :value="orderInfo.totalAmount" />
-        </div>
+          <div style="background-color: white">
+            <div v-for="(detail_, index) in orderProductDetailList" :key="index" class="order-item-detail">
+              <product-item :productItemInfo="detail_"></product-item>
+            </div>
+            <div v-for="(item , index) in orderInfo.extroInfos" :key="index" class="order-freeitem-detail">
+              <div style="display: flex; justify-content: space-between" >
+                <div>
+                  <span>
+                    {{item.productName}}
+                  </span>
+                  <span v-show="item.value">
+                    ({{item.value}})
+                  </span>
+                </div>
+                <div>
+                  x {{item.quantity}}
+                </div>
+              </div>
+            </div>
+            <div class="order-coupon-detail">
+              <img src="../../asset/coupon_dis.png" style="width: 20px;height: 20px">
+              <van-cell title="其他优惠" :value="orderInfo.couponAmount" />
+            </div>
+            <div class="order-total-info">
+              <van-cell title="总计" :value="orderInfo.totalAmount" />
+            </div>
+            <div class="order-need-info">
+              <van-cell title="需付" :value="orderInfo.needPayAmount" />
+            </div>
+            <div class="merchant-contact-info">
+              <van-cell icon="phone-o" title="联系客服">
+              </van-cell>
+            </div>
+          </div>
 
-        <div class="order-need-info">
-          <van-cell title="需付" :value="orderInfo.needPayAmount" />
-        </div>
-
-        <div class="merchant-contact-info">
-          <van-cell icon="phone-o" title="联系客服">
-          </van-cell>
-        </div>
         <div>
           配送信息
         </div>
@@ -131,6 +139,7 @@
               that.mockWxPay(data);
             }).catch(() => {
               // on cancel
+              console.log("取消微信支付")
             });
           }
         )
@@ -191,11 +200,14 @@
     },
     computed: {
       deliverDesc() {
-        return "由骑手：" + this.orderInfo.deliverName + "为您配送" + "联系电话：" + this.orderInfo.deliverPhone;
+        if (this.orderInfo.orderStatus === 4) {
+          return "由骑手：" + this.orderInfo.deliverName + "为您配送" + "联系电话：" + this.orderInfo.deliverPhone;
+        } else {
+          return "正在为你安排配送小哥";
+        }
+
       }
     },
-
-
     onShow() {
       let params = this.$root.$mp.query;
       console.log("order detail: ", this.$root.$mp.query);
@@ -219,6 +231,10 @@
 
   .order-item-detail {
     background-color: white;
+  }
+  .order-freeitem-detail {
+    font-size: 12px;
+    padding: 0 10px;
   }
 
   .order-submit-button {
