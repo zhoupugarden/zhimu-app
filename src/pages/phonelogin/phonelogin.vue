@@ -263,9 +263,7 @@
                 fail(res) {
                   console.log("fail res", res);
                 }
-
               });
-
             }else {
               that.backToPage();
             }
@@ -329,6 +327,12 @@
             } else {
               console.log('登录失败！' + resss.errMsg)
             }
+          },
+          fail (fail) {
+            console.log("fail login");
+            let userLoginBo = {};
+            userLoginBo.phoneNo = that.phoneNo;
+            that.myPhoneLogin(userLoginBo);
           }
         })
 

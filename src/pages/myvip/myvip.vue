@@ -148,12 +148,18 @@
     computed: {
       ...mapGetters(
         [
-          'userId','isVip','token'
+          'userId','isVip','token','isLogin'
         ]
       ),
     },
     onShow() {
-      this.getUserInfo(this.token)
+      if (!this.isLogin) {
+        wx.navigateTo({
+          url:'/pages/login/main'
+        })
+      } else {
+        this.getUserInfo(this.token)
+      }
     }
 
   }

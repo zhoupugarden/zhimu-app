@@ -118,18 +118,24 @@
           url: '/' + prePage.route + '?addressId=' + e.id
         })
       }
-
     }
   },
     computed: {
       ...mapGetters(
         [
-          'userId'
+          'userId','isLogin'
         ]
       )
     },
     onShow() {
-    this.listUserAddress();
+
+    if (!this.isLogin) {
+      wx.navigateTo({
+        url:'/pages/login/main'
+      })
+    } else {
+      this.listUserAddress();
+    }
     },
 
     onUnload() {

@@ -75,8 +75,6 @@ const mutations = {
     },
   [types.IS_VIP](state, level) {
     state.isVip = level;
-  },
-
+  }
 }
-
 export default mutations;

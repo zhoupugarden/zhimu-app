@@ -10,6 +10,14 @@ export default {
     token:state => state.token,
     userId: state => state.userId,
     isVip: state => state.isVip,
+    isLogin: state => {
+      if (!state.token) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+
     cartTotalCount: state => {
       return state.cartList.reduce(
         (count, item) => {

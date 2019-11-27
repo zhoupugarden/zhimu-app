@@ -56,16 +56,22 @@
     computed: {
       ...mapGetters(
         [
-          'userId'
+          'userId','isLogin'
         ]
       )
     },
 
     onShow() {
-      this.balanceDetailList();
+      if (this.isLogin) {
+        this.balanceDetailList();
+      } else {
+        wx.navigateTo(
+          {
+            url:'/pages/login/main'
+          }
+        )
+      }
     }
-
-
 
   }
 </script>

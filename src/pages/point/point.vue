@@ -69,13 +69,19 @@
     computed: {
       ...mapGetters(
         [
-          'userId'
+          'userId','isLogin'
         ]
       )
     },
 
     onShow() {
-      this.pointDetailList();
+      if (!this.isLogin) {
+        wx.navigateTo({
+          url:'/pages/login/main'
+        })
+      }else {
+        this.pointDetailList();
+      }
     }
 
 

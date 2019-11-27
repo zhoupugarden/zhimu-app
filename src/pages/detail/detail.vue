@@ -16,7 +16,7 @@
             <van-icon custom-style="{color:#CFD4DA}"	name="share"></van-icon>
           </div>
           <div style="font-size: 12px; color: #CFD4DA">
-            分享
+            <button open-type='share'>分享</button>
           </div>
         </div>
       </div>
@@ -419,6 +419,15 @@
       )
     }
   },
+    onShareAppMessage(res) {
+      if (res.from === 'button') {
+        console.log(res.target)
+      }
+      return {
+        title: "自定义转发标题",
+        path:'/page/detail/main?productId=123'
+      }
+    },
 
     onShow() {
       console.log(this.$root.$mp.query);
