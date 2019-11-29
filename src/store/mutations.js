@@ -14,11 +14,24 @@ const mutations = {
       );
     },
     [types.ADD_FREE_TO_CART](state, freeCartItem) {
-      console.log("freeCartItem", freeCartItem)
-      // this.$set(this, state.freeList, freeCartItem);
-      state.freeList.push(
-        freeCartItem
-      )
+      console.log("freeCartItem", freeCartItem);
+      let isExist = false;
+      state.freeList.forEach(
+        item => {
+          if (item.id === freeCartItem.id) {
+            console.log("免费产品已经存在");
+            isExist = true;
+          }
+        }
+      );
+      if (!isExist) {
+        state.freeList.push(
+          freeCartItem
+        )
+      } else {
+        return;
+      }
+
     },
 
     [types.DECREMENT_INVENTORY](state, {skuId}) {
@@ -40,8 +53,6 @@ const mutations = {
       if (!state.cartList.find(item=>item.type===1))  {
         state.freeList = []
       }
-
-
     },
   [types.DEL_FREE_FROM_CART](state, {productName}) {
     let index = state.freeList.findIndex( item => item.productName === productName)

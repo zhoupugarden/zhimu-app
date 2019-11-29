@@ -201,7 +201,6 @@
         'updateFreeFromCart'
       ]
     ),
-
     payFittingList() {
       request(
         PAY_FITTING_LIST,
@@ -214,7 +213,6 @@
         }
       )
     },
-
     storeButton() {
       this.setOpenId("123456")
     },
@@ -280,6 +278,7 @@
     },
     addChocolate() {
       let data = {};
+      data.id = 1;
       data.url = freeGood[0].url;
       data.productName = freeGood[0].productName;
       data.holdValue = freeGood[0].holdValue;
@@ -288,12 +287,12 @@
     },
     addFire() {
       let data = {};
+      data.id = 2;
       data.url = freeGood[1].url;
       data.holdValue = freeGood[1].holdValue;
       data.productName = freeGood[1].productName;
       data.value = this.birthNum;
       this.addFreeCart(data);
-      this.$forceUpdate();
     }
 
   },
