@@ -22,7 +22,7 @@
 	"projectname": "zhimu-app",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
-	"libVersion": "2.0.4",
+	"libVersion": "2.9.4",
 	"condition": {
 		"search": {
 			"current": -1,

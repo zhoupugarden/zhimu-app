@@ -197,7 +197,7 @@
           url
         });
       },
-      
+
       datePop() {
         this.datePopShow = true;
       },
@@ -432,7 +432,7 @@
         if (this.cartTotalPrice <= 80) {
           return "加入会员可得免邮卡本次省8元";
         } else {
-          return "加入会员可得5张9折卡本次省" + this.cartTotalPrice * 0.1 + "元";
+          return "加入会员可得5张9折卡本次省" + (this.cartTotalPrice * 0.1).toFixed(2) + "元";
         }
       },
 

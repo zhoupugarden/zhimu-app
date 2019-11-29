@@ -275,6 +275,7 @@
     bottom: 0px;
     width: 100%;
     background-color: white;
+    z-index: 1;
   }
   .evaluation-add-button_wrap {
     display: flex;
@@ -284,6 +285,7 @@
   .evaluation-switch {
     display: flex;
     margin: 10px 0px;
+    padding-bottom: 60px;
   }
 
 

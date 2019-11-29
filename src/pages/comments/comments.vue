@@ -221,7 +221,7 @@
       this.getProductCommentListAdd(params);
     },
 
-    onShow() {
+    onLoad() {
       console.log("productID: ",this.$root.$mp.query);
       let params = this.$root.$mp.query;
       this.productId = params.productId;

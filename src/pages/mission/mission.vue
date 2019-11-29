@@ -220,6 +220,16 @@
             this.bounty = response.bounty;
             this.daysCount = response.daysCount;
             this.sign = true;
+            wx.requestSubscribeMessage({
+              tmplIds: ['By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0'],
+              success (res) {
+                console.log("requestSubscribeMessage res", res)
+              },
+              complete(res) {
+                console.log("requestSubscribeMessage res", res)
+              }
+            })
+
           }
         )
       },

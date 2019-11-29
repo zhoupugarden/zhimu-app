@@ -64,23 +64,19 @@
       <van-cell-group>
         <van-cell title="收货地址管理" icon="location-o" is-link link-type="navigateTo"
                   url="/pages/myaddress/main"/>
-        <van-cell title="积分兑换" icon="location-o" is-link link-type="navigateTo"
+        <van-cell title="积分兑换" icon="points" is-link link-type="navigateTo"
                   url="/pages/pointredeem/main"/>
-        <van-cell title="我的会员卡" icon="location-o" is-link link-type="navigateTo"
+        <van-cell title="我的会员卡" icon="idcard" is-link link-type="navigateTo"
                   url="/pages/myvip/main"/>
-        <van-cell title="帮助中心" icon="location-o" is-link link-type="navigateTo"
+        <van-cell title="帮助中心" icon="question-o" is-link link-type="navigateTo"
                   url="/pages/help/main"/>
       </van-cell-group>
     </div>
 
-    <div class="my-customer-phone" @click="navigateToGetUserInfo">
-      <van-cell title="客服电话 138-1740-9664" label="服务时间：9:00-21:00" icon="phone-o" />
+    <div class="my-customer-phone" @click="callCustomerPhone">
+        <van-cell title="客服电话 138-1740-9664" label="服务时间：9:00-21:00" icon="phone-o"/>
     </div>
-
-    <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">获取用户信息</button>
-    <button open-type="getPhoneNumber" lang="zh_CN" @getphonenumber="getPhoneNumber">获取手机号</button>
   </div>
-
 </template>
 
 <script>
@@ -128,6 +124,12 @@
       wx.navigateTo({
         url
       });
+    },
+
+    callCustomerPhone() {
+      wx.makePhoneCall({
+        phoneNumber: '13817409664'
+      })
     },
 
     navToSetting() {
@@ -275,7 +277,7 @@
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .my-container {
     position:relative;
   }

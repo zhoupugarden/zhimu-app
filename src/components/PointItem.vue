@@ -1,6 +1,5 @@
 <template>
   <div class="pointitem-container">
-
     <div class="pointitem-left">
       <div class="pointitem-type">
         {{pointDetailItem.changeDesc}}
@@ -9,15 +8,13 @@
         {{pointDetailItem.changeDate}}
       </div>
     </div>
-
     <div
       style="padding-right: 10px;"
       :style="{color : activeColor}">
-      {{pointDetailItem.changeAmount}}
+      {{flag + pointDetailItem.changeAmount}}
     </div>
-
   </div>
-  
+
 </template>
 
 <script>
@@ -28,19 +25,17 @@
     },
     data() {
       return {
+        flag:"+",
+        activeColor:'green'
       }
     },
-    computed: {
-      pointCount() {
-        return {
-          blueActive: true
-        }
-      },
-      activeColor() {
-        if (this.pointDetailItem.changeType === 1) {
-          return 'green';
-        }else {
-          return 'red';
+    watch: {
+      pointDetailItem(val) {
+        if (val.changeType === 1) {
+          this.activeColor = 'green';
+        } else {
+          this.activeColor = 'red';
+          this.flag = '-';
         }
       }
     }

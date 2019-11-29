@@ -13,7 +13,7 @@
         </div>
         <div class="zm-goods__share">
           <div>
-            <van-icon custom-style="{color:#CFD4DA}"	name="share"></van-icon>
+            <img src="../../asset/share.png" style="width: 20px;height: 20px">
           </div>
           <div style="font-size: 12px; color: #CFD4DA">
             <button open-type='share'>分享</button>
@@ -473,7 +473,9 @@
 </script>
 
 
-<style lang="scss"  scoped>
+<style lang="scss" scoped>
+
+
 
   .zm-goods__detail {
     font-size: 0;
@@ -600,6 +602,8 @@
   }
 </style>
 <style lang="scss">
+
+
   .demo {
     background-color: #ffc95f !important;
     font-size: 8px !important;
