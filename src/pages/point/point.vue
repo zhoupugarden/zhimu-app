@@ -46,7 +46,8 @@
   data() {
     return {
       pointRecords: {
-      }
+      },
+      userInfo: {}
     }
   },
   methods: {
@@ -63,6 +64,21 @@
           console.log("this response", response);
         }
       )
+    },
+    getUserInfo(token) {
+      let params = {};
+      params.token = token;
+      request(
+        MY_USER_INFO,
+        'GET',
+        params
+      ).then(
+        response => {
+          //将userID放在存储中
+          console.log("response",response)
+          this.userInfo = response;
+        }
+      )
     }
 
   },
@@ -73,15 +89,19 @@
         ]
       )
     },
-
-    onShow() {
-      if (!this.isLogin) {
-        wx.navigateTo({
-          url:'/pages/login/main'
-        })
-      }else {
-        this.pointDetailList();
+    onUnload() {
+      let pages = getCurrentPages();
+      let prePage = pages[pages.length -2];
+      let preUrl = prePage.route;
+      if (preUrl === "pages/login/main") {
+        wx.switchTab({
+            url : "/pages/my/main"
+          }
+        )
       }
+    },
+    onShow() {
+      this.pointDetailList();
     }
 
 

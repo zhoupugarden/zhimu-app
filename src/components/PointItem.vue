@@ -25,20 +25,11 @@
     },
     data() {
       return {
-        flag:"+",
-        activeColor:'green'
-      }
-    },
-    watch: {
-      pointDetailItem(val) {
-        if (val.changeType === 1) {
-          this.activeColor = 'green';
-        } else {
-          this.activeColor = 'red';
-          this.flag = '-';
-        }
+        flag: this.pointDetailItem.changeType === 1 ? "+":"-",
+        activeColor:this.pointDetailItem.changeType === 1 ? "green":"red"
       }
     }
+
   }
 </script>
 

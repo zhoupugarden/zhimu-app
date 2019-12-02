@@ -35,14 +35,14 @@ const mutations = {
     },
 
     [types.DECREMENT_INVENTORY](state, {skuId}) {
-      let cartItem = state.cartList.find(item => item.skuId === skuId)
-      cartItem.quantity--
+      let cartItem = state.cartList.find(item => item.skuId === skuId);
+      cartItem.quantity--;
       console.log("DECREMENT_INVENTORY", state.cartList, state.cartList.length)
     },
     [types.INCREMENT_INVENTORY](state, {skuId}) {
-      let cartItem = state.cartList.find(item => item.skuId === skuId)
-      cartItem.quantity++
-
+      let cartItem = state.cartList.find(item => item.skuId === skuId);
+      cartItem.quantity++;
+      console.log("INCREMENT_INVENTORY", state.cartList, state.cartList.length)
     },
     [types.DEL_PRODUCT_FROM_CART](state, {skuId}) {
       let index = state.cartList.findIndex( item => item.skuId === skuId)

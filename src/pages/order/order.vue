@@ -2,13 +2,18 @@
   <div class="order-container">
     <div v-if="!isLogin" class="not-login-container">
     <div class="not-login-content">
-      <van-icon size="20px" color="#CFD4DA" name="info-o" />
-      <div style="font-size: 20px; color: #CFD4DA">
-        您还没有登录，请登录后查看
+      <div>
+        <van-icon size="20px" color="#CFD4DA" name="info-o" />
+        <div style="font-size: 15px; padding: 10px; color: #CFD4DA">
+          您还没有登录，请登录后查看订单
+        </div>
+        <div>
+          <van-button type="primary" @click="navigateToLogin">登录</van-button>
+        </div>
       </div>
-      <van-button @click="navigateToLogin">登录</van-button>
     </div>
     </div>
+
     <div v-else>
       <van-tabs :active="active"
                 custom-class="van-tabs__custom"
@@ -17,7 +22,9 @@
           tab-class="van-tabs__custom"
           title="全部">
           <div v-for="(item, index) in orderItems" :key = "index" class="order-list">
-            <order-card :orderInfo="item" @cancelOrder="refreshItemStatus"></order-card>
+            <order-card :orderInfo="item"
+                        @payOrder="payOrder"
+                        @cancelOrder="refreshItemStatus"></order-card>
           </div>
         </van-tab>
         <van-tab title="待评价">
@@ -33,6 +40,7 @@
       </van-tabs>
 
     </div>
+    <van-dialog id="van-dialog" />
 
   </div>
 
@@ -40,9 +48,11 @@
 
 <script>
   import OrderCard from '@/components/OrderCard';
-  import {ADD_NEW_ADDRESS,GET_ORDER_LIST} from '@/utils/api';
+  import {ADD_NEW_ADDRESS,GET_ORDER_LIST,MOCK_WX_PAY} from '@/utils/api';
   import {request} from "@/utils/request";
   import { mapGetters} from 'vuex';
+  import Dialog from '../../../static/vant/dialog/dialog';
+
   export default {
 
   components: {
@@ -63,10 +73,46 @@
     onChange(event) {
       let a= "";
       if (a = "yangyu") {}
-
       console.log(event)
-
     },
+
+    mockWxPay(data) {
+      let that = this;
+      request(
+        MOCK_WX_PAY,
+        'POST',
+        data
+      ).then(
+        response => {
+          console.log("this response", response);
+          //  微信支付成功后，跳转到myvip页面
+          let params = {};
+          params.orderNo = this.orderNo;
+          that.orderInfo.orderStatus = 2;
+          that.orderInfo.orderStatusDesc = "已支付";
+        }
+      )
+    },
+
+    payOrder(params) {
+      console.log("unifiedOrderNo : ", params);
+      let that = this;
+
+      let data = {};
+      data.out_trade_no = params.orderNo;
+      data.transaction_id = params.unifiedOrderNo;
+      data.total_fee = params.amount;
+      Dialog.confirm({
+        title: '确认支付'
+      }).then(() => {
+        that.mockWxPay(data);
+      }).catch(() => {
+        // on cancel
+        console.log("取消微信支付")
+      });
+    },
+
+
     navigateToLogin() {
       var url = "../login/main";
       console.log("url",url);
@@ -128,8 +174,8 @@
   }
   .not-login-container {
     position: absolute;
-    top: 100px;
-    left: 50%;
+    top: 30%;
+    left: 20%;
   }
   .not-login-content {
     display: flex;

@@ -84,12 +84,12 @@
       },
       couponUsedList() {
         return this.couponList.filter(item => {
-          return item.status === 2
+          return item.status === 3
         })
       },
       couponInvalidList() {
         return this.couponList.filter(item => {
-          return item.status === 3
+          return item.status === 2
         })
       },
         ...mapGetters(
@@ -98,15 +98,22 @@
           ]
         )
     },
-
-
     onShow() {
-      let params = this.$root.$mp.query;
-      console.log(this.$root.$mp.query);
       let data = {};
       data.userId = this.userId;
-
       this.getCoupon(data);
+    },
+
+    onUnload() {
+      let pages = getCurrentPages();
+      let prePage = pages[pages.length -2];
+      let preUrl = prePage.route;
+      if (preUrl === "pages/login/main") {
+        wx.switchTab({
+            url : "/pages/my/main"
+          }
+        )
+      }
     }
 
 

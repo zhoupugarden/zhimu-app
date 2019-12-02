@@ -34,12 +34,10 @@
 
     data() {
       return {
-
       }
     },
     methods: {
       navigateToWxLogin() {
-
         //先获取手机号
         wx.getSetting({
           success(res) {
@@ -52,10 +50,10 @@
                     type: 'wgs84',
                     success (res) {
                       console.log(res)
-                      const latitude = res.latitude
-                      const longitude = res.longitude
-                      const speed = res.speed
-                      const accuracy = res.accuracy
+                      const latitude = res.latitude;
+                      const longitude = res.longitude;
+                      const speed = res.speed;
+                      const accuracy = res.accuracy;
                       wx.chooseLocation({
                         success(ress) {
                           console.log(ress)
@@ -72,12 +70,11 @@
       },
       navigateToUserLogin() {
         let url = "/pages/phonelogin/main" ;
-        console.log("url",url)
+        console.log("url",url);
         wx.navigateTo({
           url
         });
       }
-
     }
 
   }

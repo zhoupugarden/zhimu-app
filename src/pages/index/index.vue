@@ -1,8 +1,5 @@
 <template>
   <div class="index-container">
-    <div class="index-header" @click="navigateToActivity">
-      <image style="width: 100%; height: 100px; " mode="scaleToFill" :src="activityUrl"></image>
-    </div>
     <div class="van-tree-select" :style="setMainHeight">
       <scroll-view scroll-y class="van-tree-select__nav">
         <view v-for="(item, index) in items"
@@ -21,6 +18,9 @@
         class="van-tree-select__content"
         :style="setItemHeight"
       >
+        <div class="index-header" @click="navigateToActivity">
+          <image style="width: 100%; height: 100px; " mode="scaleToFill" :src="activityUrl"></image>
+        </div>
         <div class="category_name_class">{{items[mainActiveIndex].name}}</div>
         <view v-for="(subItem, index) in subItems"
               :key="index"
@@ -46,10 +46,9 @@
   import {request} from "@/utils/request";
   import card from '@/components/card';
   import cartPop from '@/components/cartPop';
-
   import {  mapActions } from 'vuex';
 
-  const ITEM_HEIGHT = 260;
+  const ITEM_HEIGHT = 360;
 
   export default{
     components: {
@@ -66,6 +65,7 @@
         subItems:[],
         mainHeight: 1000,
         itemHeight: 1000,
+        activityHeight:100,
         isActive:true,
         mainActiveIndex:0,
         popCartActive: false,
@@ -216,7 +216,7 @@
     left: 0;
     width: 15%;
     min-width: 95px;
-    background-color: #fafafa
+    background-color: #fafafa;
   }
 
   .van-tree-select__nitem {

@@ -47,7 +47,7 @@
           //  微信支付成功后，跳转到myvip页面
             let url = "../myvip/main" ;
             console.log("url",url);
-            wx.navigateTo({
+            wx.redirectTo({
               url
             });
           }

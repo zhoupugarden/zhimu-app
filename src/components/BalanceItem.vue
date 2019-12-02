@@ -13,7 +13,7 @@
     <div
       style="padding-right: 10px;"
       :style="{color : activeColor}">
-      {{balanceDetailItem.changeAmount}}
+      {{flag}}{{balanceDetailItem.changeAmount}}
     </div>
 
   </div>
@@ -27,6 +27,8 @@
     },
     data() {
       return {
+        flag: this.balanceDetailItem.changeType === 1 ? "+":"-",
+        activeColor:this.balanceDetailItem.changeType === 1 ? "green":"red"
       }
     },
     computed: {
@@ -35,14 +37,8 @@
           blueActive: true
         }
       },
-      activeColor() {
-        if (this.balanceDetailItem.changeType === 1) {
-          return 'green';
-        }else {
-          return 'red';
-        }
-      }
     }
+
   }
 </script>
 

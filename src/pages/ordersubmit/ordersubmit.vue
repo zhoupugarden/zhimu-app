@@ -108,14 +108,24 @@
                  custom-style="height:80%"
                  @close="closeCouponPopup"
                  position="bottom">
-        <div style="padding-bottom: 10px">
-          <div v-for="(item , index) in couponCanUseList" :key="index" @click="chooseCouponItem(item)" style="margin: 10px">
-            <coupon-itemc :couponInfo="item" @preCheckCoupon="preCheckCoupon"></coupon-itemc>
+
+        <div style="position: relative; height: 100%">
+          <div style="padding-bottom: 10px; position: relative; height: 100%">
+            <div style="padding-bottom: 50px;">
+              <div v-for="(item , index) in couponCanUseList" :key="index" @click="chooseCouponItem(item)" style="margin: 10px">
+                <coupon-itemc :couponInfo="item" @preCheckCoupon="preCheckCoupon"></coupon-itemc>
+              </div>
+            </div>
+
+            <div style="background-color: white; width: 100%; position: absolute; bottom: 0; border-top: 1px solid #F4F4F4">
+              <div style="padding-top: 10px;text-align: center;">
+                <van-button type= "primary" @click = "noUseCoupon" custom-class="custom-button">不使用优惠券</van-button>
+              </div>
+            </div>
           </div>
-  </div>
-        <div style="display: flex;justify-content: center;background-color: white;">
-          <van-button type= "primary" @click = "noUseCoupon" custom-class="custom-button">不适用优惠券</van-button>
+
         </div>
+
       </van-popup>
 
 
@@ -515,6 +525,10 @@
       }
 
     },
+    onLoad() {
+      this.currentDate = "2019-10-10";
+      this.currentTime = "10:00-11:00";
+    },
     onShow() {
       console.log("this.addressId", this.addressId);
         //要把原有已选的值清空
@@ -527,17 +541,15 @@
         this.listUserAddress();
         this.getCoupon();
         this.getUserInfo();
-        let myDate = new Date();
-        this.currentDate = "2019-10-10";
-        this.currentTime = "10:00-11:00";
+
     },
-    onUnload() {
-      console.log("onUnload");
-      let url = "/pages/cart/main";
-      wx.switchTab({
-        url: url
-      });
-    }
+    // onUnload() {
+    //   console.log("onUnload");
+    //   let url = "/pages/cart/main";
+    //   wx.switchTab({
+    //     url: url
+    //   });
+    // }
   }
 </script>
 

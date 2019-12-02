@@ -158,9 +158,21 @@
           url:'/pages/login/main'
         })
       } else {
-        this.getUserInfo(this.token)
+        this.getUserInfo(this.token);
+      }
+    },
+    onUnload() {
+      let pages = getCurrentPages();
+      let prePage = pages[pages.length -2];
+      let preUrl = prePage.route;
+      if (preUrl === "pages/login/main") {
+        wx.switchTab({
+            url : "/pages/my/main"
+          }
+        )
       }
     }
+
 
   }
 </script>

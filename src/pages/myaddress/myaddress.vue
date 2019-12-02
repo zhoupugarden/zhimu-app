@@ -1,11 +1,13 @@
 <template>
   <div class="myaddress-container">
-    <div v-for="(item, index_) in addressArray" :key="index">
-      <zhimu-address
-        @removeAddress="ondelAddress"
-        @updateAddress="updateAddress"
-        :addressInfo="item">
-      </zhimu-address>
+    <div style="padding-bottom: 100px;">
+      <div v-for="(item, index_) in addressArray" :key="index">
+        <zhimu-address
+          @removeAddress="ondelAddress"
+          @updateAddress="updateAddress"
+          :addressInfo="item">
+        </zhimu-address>
+      </div>
     </div>
     <div class="address-add-button">
       <div class="address-add-button_wrap">
@@ -23,7 +25,6 @@
   import {GET_USER_ADDRESS,DEL_USER_ADDRESS} from '@/utils/api';
   import {request} from "@/utils/request";
   import { mapGetters} from 'vuex';
-  import Dialog from '../../../static/vant/dialog/dialog';
   export default {
   components: {
     ZhimuAddress
@@ -108,17 +109,17 @@
         url
       });
     },
-    backToOrderSubmit(e) {
-      let pages = getCurrentPages();
-      console.log("pageUrl", pages);
-      let prePage = pages[1];
-      if (prePage.route === 'pages/ordersubmit/main') {
-        prePage.setData({addressId:e.id})
-        wx.redirectTo({
-          url: '/' + prePage.route + '?addressId=' + e.id
-        })
-      }
-    }
+    // backToOrderSubmit(e) {
+    //   let pages = getCurrentPages();
+    //   console.log("pageUrl", pages);
+    //   let prePage = pages[1];
+    //   if (prePage.route === 'pages/ordersubmit/main') {
+    //     prePage.setData({addressId:e.id})
+    //     wx.redirectTo({
+    //       url: '/' + prePage.route + '?addressId=' + e.id
+    //     })
+    //   }
+    // }
   },
     computed: {
       ...mapGetters(
@@ -128,38 +129,20 @@
       )
     },
     onShow() {
-
-    if (!this.isLogin) {
-      wx.navigateTo({
-        url:'/pages/login/main'
-      })
-    } else {
       this.listUserAddress();
-    }
     },
 
     onUnload() {
       let pages = getCurrentPages();
-      console.log("pageUrl", pages);
-      let prePage = pages[0];
-      console.log("prePage:", prePage)
-      
-      if (prePage.route === 'pages/my/main') {
+      let prePage = pages[pages.length -2];
+      let preUrl = prePage.route;
+      if (preUrl === "pages/login/main") {
         wx.switchTab({
-          url: '/' + prePage.route
-        })
-      } else {
-        wx.redirectTo({
-          url: prePage.route
-        })
+            url : "/pages/my/main"
+          }
+        )
       }
-
     }
-
-
-
-
-
   }
 </script>
 

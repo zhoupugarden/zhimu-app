@@ -9,7 +9,6 @@
       <van-button size="small" @click="addToCart">添加</van-button>
     </div>
   </div>
-  <!--免费配件购物车展示-->
 </template>
 
 <script>
@@ -62,6 +61,6 @@
     align-items: center;
   }
   }
-  
+
 
 </style>

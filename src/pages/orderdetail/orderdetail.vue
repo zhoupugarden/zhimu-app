@@ -24,7 +24,7 @@
               </div>
             </div>
             <div class="order-coupon-detail">
-              <img src="../../asset/coupon_dis.png" style="width: 20px;height: 20px">
+              <img src="../../asset/coupon_dis.png" style="width: 15px;height: 15px">
               <van-cell title="其他优惠" :value="orderInfo.couponAmount" />
             </div>
             <div class="order-total-info">
@@ -33,13 +33,13 @@
             <div class="order-need-info">
               <van-cell title="需付" :value="orderInfo.needPayAmount" />
             </div>
-            <div class="merchant-contact-info">
+            <div class="merchant-contact-info" @click="callCustomerPhone">
               <van-cell icon="phone-o" title="联系客服">
               </van-cell>
             </div>
           </div>
 
-        <div>
+        <div style="font-size: 14px;padding: 10px 15px;">
           配送信息
         </div>
         <div class="order-deliver-info">
@@ -49,7 +49,7 @@
             <van-cell title="配送服务" :value="deliverDesc" />
           </van-cell-group>
         </div>
-        <div>
+        <div style="font-size: 14px;padding: 10px 15px;">
           订单信息
         </div>
         <div class="order-order-info">
@@ -178,6 +178,12 @@
         )
       },
 
+      callCustomerPhone() {
+        wx.makePhoneCall({
+          phoneNumber: '13817409664'
+        })
+      },
+
       getOrderDetail(params) {
         request(
           GET_ORDER_DETAIL,
@@ -218,7 +224,7 @@
       let pages = getCurrentPages();
       console.log("pageUrl", pages);
       let prePage = pages[pages.length - 2];
-      if (prePage.route == 'pages/ordersubmit/main') {
+      if (prePage.route === 'pages/ordersubmit/main') {
         wx.switchTab({
           url: '/pages/cart/main'
         })
@@ -248,6 +254,10 @@
   }
   .order-order-info {
     padding-bottom: 100px;
+  }
+  .merchant-contact-info {
+    display: flex;
+    justify-content: center;
   }
 
 </style>

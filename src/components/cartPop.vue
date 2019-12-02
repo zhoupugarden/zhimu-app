@@ -16,28 +16,34 @@
           </div>
           <div class="van-popup__panel_extro">
             <div class="van-popup__panel_extro__item">
-              <van-icon name="fire-o"/>
+              <img src="../asset/size.png" style="width: 20px; height: 20px; ">
               <span>{{chooseSKU.cakeSize}}</span>
             </div>
             <div class="van-popup__panel_extro__item">
-              <van-icon name="fire-o"/>
+              <img src="../asset/people.png" style="width: 20px; height: 20px; ">
               <span>{{chooseSKU.capacity}}</span>
             </div>
             <div class="van-popup__panel_extro__item">
-              <van-icon name="fire-o"/>
+              <img src="../asset/time.png" style="width: 20px; height: 20px; ">
               <span>{{chooseSKU.copies}}</span>
             </div>
             <div class="van-popup__panel_extro__item">
-              <van-icon name="fire-o"/>
+              <img src="../asset/cutlery.png" style="width: 20px; height: 20px; ">
               <span>{{chooseSKU.cutlery}}</span>
             </div>
           </div>
           <div style="font-family: 'Microsoft YaHei'; font-size: 14px;padding:10px 0px;">规格</div>
           <div class="van-popup__panel_attribute">
           <span v-for="(item, index) in productSKUs.pmsProductSkuList" :key="index">
-              <van-button :id="item.skuId"
-                          :type="item.skuId === chooseSKU.skuId ? 'primary' : 'default'"
-                          size="mini" @click="selectedSKU">{{item.attributeName}}</van-button>
+                <!--<van-button :id="item.skuId"-->
+                            <!--:type="item.skuId === chooseSKU.skuId ? 'primary' : 'default'"-->
+                            <!--size="mini" @click="selectedSKU">{{item.attributeName}}</van-button>-->
+                <check-box
+                  :id="item.skuId"
+                  :name="item.attributeName"
+                  :type="item.skuId === chooseSKU.skuId ? 'selected' : 'default'"
+                  @selectedSKU="selectedSKU"
+                ></check-box>
             </span>
           </div>
         </div>
@@ -52,8 +58,13 @@
 </template>
 
 <script>
-export default {
+  import CheckBox from '@/components/CheckBox';
+
+  export default {
   name: 'cart-pop',
+    components: {
+      CheckBox
+    },
   props: {
     popShow: Boolean,
     productSKUs: Object,
@@ -84,7 +95,7 @@ export default {
     selectedSKU(event) {
       console.log("event", event);
       this.chooseSKU = this.productSKUs.pmsProductSkuList.find(
-        sku => sku.skuId === parseInt(event.mp.target.id)
+        sku => sku.skuId === event
       );
       console.log("this.chooseSku", this.chooseSKU)
     }
@@ -127,6 +138,11 @@ export default {
     font-family: "Microsoft YaHei";
     font-weight: bold;
   }
+
+  .van-popup__panel_attribute {
+    display: flex;
+  }
+
   .van-popup__panel_price:before {
     content:'￥';
   }

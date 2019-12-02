@@ -159,29 +159,36 @@
         </div>
         <div class="van-popup__panel_extro">
           <div class="van-popup__panel_extro_item">
-            <van-icon name="fire-o"/>
+            <img src="../../asset/size.png" style="width: 20px; height: 20px; ">
             <span>{{chooseSKU.cakeSize}}</span>
           </div>
           <div class="van-popup__panel_extro_item">
-            <van-icon name="fire-o"/>
+            <img src="../../asset/people.png" style="width: 20px; height: 20px; ">
             <span>{{chooseSKU.capacity}}</span>
           </div>
           <div class="van-popup__panel_extro_item">
-            <van-icon name="fire-o"/>
+            <img src="../../asset/time.png" style="width: 20px; height: 20px; ">
             <span>{{chooseSKU.copies}}</span>
           </div>
           <div class="van-popup__panel_extro_item">
-            <van-icon name="fire-o"/>
+            <img src="../../asset/cutlery.png" style="width: 20px; height: 20px; ">
             <span>{{chooseSKU.cutlery}}</span>
           </div>
         </div>
+        <div style="font-size: 12px">规格</div>
         <div class="van-popup__panel_attribute">
-          <div style="font-size: 12px">规格</div>
           <span v-for="(item, index) in productSKUs" :key="index">
-              <van-button :id="item.id"
-                          :type="item.id === chooseSKU.id ? 'primary' : 'default'"
-                          size="mini" @click="selectedSKU">{{item.attributeName}}</van-button>
-            </span>
+              <!--<van-button :id="item.id"-->
+                          <!--:type="item.id === chooseSKU.id ? 'primary' : 'default'"-->
+                          <!--size="mini" @click="selectedSKU">{{item.attributeName}}</van-button>-->
+          <check-box
+            :id="item.skuId"
+            :name="item.attributeName"
+            :type="item.skuId === chooseSKU.skuId ? 'selected' : 'default'"
+            @selectedSKU="selectedSKU"
+          ></check-box>
+
+          </span>
         </div>
         <div v-if= "popupText === '加入购物车' " class="van-popup__panel_shopcart">
           <van-goods-action>
@@ -209,7 +216,6 @@
       position="bottom"
       custom-style="height: 100%;"
       :close="outShowClose">
-
       <div class="productNotice">
         <div >
           <van-icon @click="outShowClose" name="cross" />
@@ -245,13 +251,17 @@
 </template>
 
 <script>
-
   import {GET_PRODUCT_DETAIL_BY_ID, PRODUCT_NOTICE, GET_PRODUCT_SKU_DETAIL_BY_ID, GET_STAR_COMMENT } from '@/utils/api';
   import {request} from "@/utils/request";
   import { mapGetters, mapActions } from 'vuex';
   import { ADD_PRODUCT_TO_CART } from '@/store/mutation-types';
+  import CheckBox from '@/components/CheckBox';
   import {toast} from '../../utils/toast';
   export default {
+
+    components: {
+      CheckBox
+    },
   data() {
     return {
       active: 0,
@@ -276,17 +286,15 @@
         'addProductToCart'
       ]
     ),
-    selectedSKU(item) {
-      console.log("selectedSKU: ", item);
-      let id = parseInt(item.mp.currentTarget.id);
-      console.log("id", id);
+    selectedSKU(id) {
+      console.log("selectedSKU: ", id);
       this.chooseSKU = this.productSKUs.find(
         function (sku) {
-          console.log("sku.id", sku.id, "id", id);
-          return sku.id === id;
+          return sku.skuId === id;
         }
       );
       console.log("this.chooseSKU :", this.chooseSKU);
+      console.log("this.productSKUs :", this.productSKUs);
     },
 
     addCart() {
@@ -491,6 +499,9 @@
     padding: 5px 5px;
     font-size: 16px;
     font-family: "Microsoft YaHei";
+  }
+  .van-popup__panel_attribute {
+    display: flex;
   }
 
   .zm-goods__review_detail {

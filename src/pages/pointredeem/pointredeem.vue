@@ -4,7 +4,7 @@
     <div class="redeem-header">
       <div class="redeem-header-total">
         <div style="color: #CDA65B">
-          {{pointTotal}}
+          {{userInfo.pointAmount}}
         </div>
         <div style="color: #ACC0D8; font-size: 14px">
           可用积分
@@ -33,7 +33,7 @@
 
 <script>
   import RedeemItem from '@/components/RedeemItem';
-  import {POINT_REDEEM} from '@/utils/api';
+  import {POINT_REDEEM, MY_USER_INFO } from '@/utils/api';
   import { mapGetters} from 'vuex';
   import {request} from "@/utils/request";
 
@@ -47,6 +47,7 @@
           total: 798
         },
         pointTotal:0,
+        userInfo: {},
 
         redeemItems:[
           {
@@ -95,6 +96,22 @@
         });
       },
 
+      getUserInfo(token) {
+        let params = {};
+        params.token = token;
+        request(
+          MY_USER_INFO,
+          'GET',
+          params
+        ).then(
+          response => {
+            //将userID放在存储中
+            console.log("response",response)
+            this.userInfo = response;
+          }
+        )
+      },
+
       pointRedeem(data) {
         console.log("pointRedeem", data)
         let param = {};
@@ -109,8 +126,8 @@
           (response) => {
             this.pointTotal = response.point;
             wx.showModal({
-              title: "提示",
-              content: '优惠券兑换成功!',
+              title: "兑换成功",
+              content: '点击下方【查看】可以看到已兑换优惠券',
               confirmText: '去看看',
               showCancel: true,
               success(res) {
@@ -127,15 +144,28 @@
         )
       }
 
-
-
     },
     computed: {
       ...mapGetters(
         [
-          'userId'
+          'userId', 'token'
         ]
       )
+    },
+    onShow() {
+     this.getUserInfo(this.token);
+    },
+
+    onUnload() {
+      let pages = getCurrentPages();
+      let prePage = pages[pages.length -2];
+      let preUrl = prePage.route;
+      if (preUrl === "pages/login/main") {
+        wx.switchTab({
+            url : "/pages/my/main"
+          }
+        )
+      }
     }
 
 

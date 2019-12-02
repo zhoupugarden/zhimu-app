@@ -36,6 +36,7 @@ export default {
       if (state.cartList.length === 0) {
         return 0
       } else {
+        console.log("cartTotalPrice ");
         return state.cartList.reduce(
           (total, cartListItem) => {
             return total + cartListItem.salePrice * cartListItem.quantity

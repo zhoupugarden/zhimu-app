@@ -54,7 +54,6 @@
           label="生日"
           placeholder="请输入生日信息，保存后不可修改"
           :value="currentDate"
-          @change="inputChange"
         />
       </van-cell-group>
     </div>

@@ -291,7 +291,7 @@
           )
 
         }else {
-          wx.navigateTo(
+          wx.redirectTo(
             {
               url: '/' + route
             }

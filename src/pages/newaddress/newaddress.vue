@@ -107,7 +107,7 @@
               }
             )
           } else {
-            wx.navigateTo({
+            wx.navigateBack({
               url
             });
           }
@@ -173,6 +173,26 @@
       console.log(event)
 
     },
+    getDistance(lat2, lng2) {
+
+      let lat1 = 31.11661;
+      let lng1 = 121.59008;
+      let dis = 0;
+      let radLat1 = toRadians(lat1);
+      let radLat2 = toRadians(lat2);
+      let deltaLat = radLat1 - radLat2;
+      let deltaLng = toRadians(lng1) - toRadians(lng2);
+      dis = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(deltaLat / 2), 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(deltaLng / 2), 2)));
+      let distance = dis * 6378137;
+      console.log("距离为：", distance);
+      return distance.toFixed(2);
+
+    function toRadians(d) {  return d * Math.PI / 180;}
+  },
+
+
+
+
     clickChooseLocation() {
       let that = this;
       console.log("clickChooseLocation")
@@ -228,10 +248,23 @@
                 let addressName = resChoose.name
                 console.log(addressName)
 
-                that.address.roadName = resChoose.address
-                that.address.addressName = resChoose.name
-                that.address.latitude = resChoose.latitude
-                that.address.longitude = resChoose.longitude
+                that.address.roadName = resChoose.address;
+                that.address.addressName = resChoose.name;
+                that.address.latitude = resChoose.latitude;
+                that.address.longitude = resChoose.longitude;
+
+                let distance = that.getDistance(that.address.latitude, that.address.longitude);
+
+                if (distance > 3000) {
+                //  大于3公里配送范围
+                  wx.showModal(
+                    {
+                      title: '提示',
+                      content: "当前配送地址不在可配送区域,您可以到店自提，或先下单后，联系客服确定配送费用",
+                      showCancel: false
+                    }
+                  )
+                }
               }
             })
           }
@@ -258,6 +291,10 @@
         this.addressId = params.addressId;
         this.getAddressById(params.addressId);
         this.$root.$mp.query = "";
+        wx.setNavigationBarTitle({
+          title:"修改地址"
+
+        })
       }
 
     },

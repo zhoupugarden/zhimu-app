@@ -35,14 +35,18 @@
         <van-button size="small" type="primary" @click="navigateToEvaluation">评价得积分</van-button>
       </div>
     </div>
+
+    <van-dialog id="van-dialog" />
+
   </div>
 
 </template>
 
 <script>
 
-  import {CANCEL_ORDER,PAY_ORDER} from '@/utils/api';
+  import {CANCEL_ORDER,MOCK_WX_PAY, PAY_ORDER} from '@/utils/api';
   import {request} from "@/utils/request";
+  import Dialog from '../../static/vant/dialog/dialog';
   export default {
     props: {
       orderInfo:Object
@@ -92,7 +96,28 @@
           },
         });
       },
+
+      mockWxPay(data) {
+        let that = this;
+        request(
+          MOCK_WX_PAY,
+          'POST',
+          data
+        ).then(
+          response => {
+            console.log("this response", response);
+            //  微信支付成功后，跳转到myvip页面
+            let params = {};
+            params.orderNo = this.orderNo;
+            that.orderInfo.orderStatus = 2;
+            that.orderInfo.orderStatusDesc = "已支付";
+          }
+        )
+      },
+
+
       payOrder() {
+        let that = this;
         let orderNo = this.orderInfo.orderNo;
         let data = {};
         data.orderNo = orderNo;
@@ -104,6 +129,25 @@
           response => {
             console.log("支付订单响应：", response);
           //  在这里需要调用微信支付
+            let params = {};
+            params.unifiedOrderNo = response.unifiedOrderNo;
+            params.orderNo = response.orderNo;
+            params.amount = that.orderInfo.totalAmount;
+
+            let data = {};
+            data.out_trade_no = params.orderNo;
+            data.transaction_id = params.unifiedOrderNo;
+            data.total_fee = params.amount;
+            Dialog.confirm({
+              title: '确认支付'
+            }).then(() => {
+              that.mockWxPay(data);
+            }).catch(() => {
+              // on cancel
+              console.log("取消微信支付")
+            });
+
+            that.mockWxPay(data);
           }
         )
       }

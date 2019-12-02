@@ -37,7 +37,6 @@
       }
     },
     methods: {
-
       balanceDetailList() {
         let params = {};
         params.userId = this.userId;
@@ -68,6 +67,17 @@
         wx.navigateTo(
           {
             url:'/pages/login/main'
+          }
+        )
+      }
+    },
+    onUnload() {
+      let pages = getCurrentPages();
+      let prePage = pages[pages.length -2];
+      let preUrl = prePage.route;
+      if (preUrl === "pages/login/main") {
+        wx.switchTab({
+            url : "/pages/my/main"
           }
         )
       }

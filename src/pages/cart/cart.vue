@@ -11,6 +11,7 @@
             @increItem="increItem"
             @decreItem="decreItem"
             @removeItem="removeItem"
+            :quantity="item.quantity"
             :cardItem="item"></cart-card>
         </div>
       </div>
@@ -38,7 +39,7 @@
         </div>
         <div class="cart-container__bottom--total">
           <div>
-            总计：￥{{cartTotalPrice}}
+            总计：￥{{cartTotalPrice}} {{totalPrice}}
           </div>
           <div v-show="cartTotalPrice < 100" class="cart-container__bottom--fee">
             <span>另需配送费</span>
@@ -72,7 +73,7 @@
           </div>
         </div>
       </van-popup>
-      <van-dialog id="van-dialog" />
+
     </div>
   </div>
 </template>
@@ -111,13 +112,25 @@
 
   data() {
     return {
-      totalAmount: 1000,
       popShow:false,
       payGood: [],
-      birthNum:"",
-      remark:""
+      birthNum: "",
+      totalPrice: 0,
+      remark:"",
+      totalCartList:[]
     }
   },
+
+    watch: {
+      totalCartList: {
+        handler(val, oldVal) {
+          console.log("val : ", val);
+          console.log("oldVal : ", oldVal);
+        },
+        deep:true
+      }
+    },
+
   computed: {
     ...mapGetters(
       [
@@ -127,6 +140,7 @@
         'userId'
       ]
     ),
+
     cartList() {
       return this.$store.getters.cartList;
       this.$forceUpdate()
@@ -240,16 +254,18 @@
       });
     },
     removeItem(data) {
-      console.log(data);
-      Dialog.confirm({
-        title: '删除确认'
-      }).then(() => {
-        this.delProductFromCart(data);
-      }).catch(() => {
-        // on cancel
+      let that = this;
+      wx.showActionSheet({
+        itemList:["删除"],
+        success: function(res) {
+          if(res.tapIndex === 0){
+            that.delProductFromCart(data);
+            that.calcTotalPrice();
+          }
+        },
       });
-    },
 
+    },
     removeFreeItem(data) {
       console.log("removeFreeItem", data);
       this.delFreeFromCart(data);
@@ -259,22 +275,45 @@
       let productName = data.productName;
       let value = data.value;
       let freeItem = this.$store.state.freeList.find(i => i.productName === productName);
-
       this.updateFreeFromCart(data);
     },
 
+    calcTotalPrice() {
+      this.totalCartList = this.cartList;
+      if (this.totalCartList.length === 0) {
+        this.totalPrice = 0;
+      } else {
+        console.log("cartTotalPrice ");
+        console.log("totalCartList ", this.totalCartList);
+        let tmpTotalPrice = 0;
+        for (let index in this.totalCartList) {
+          console.log("item", this.totalCartList[index]);
+          let item = this.totalCartList[index];
+          let itemPrice = item.salePrice * item.quantity;
+          console.log("itemPrice", itemPrice);
+          tmpTotalPrice = tmpTotalPrice + itemPrice;
+        }
+        this.totalPrice = tmpTotalPrice;
+        console.log("this.totalPrice", this.totalPrice)
+      }
+    },
+
     increItem(data) {
-      console.log(data)
-      this.incrementInventory(data)
+      console.log(data);
+      this.incrementInventory(data);
+      console.log("this.cartList", this.cartList);
+      this.calcTotalPrice();
     },
     decreItem(data) {
-      console.log(data)
-      this.decrementInventory(data)
+      console.log(data);
+      this.decrementInventory(data);
+      this.calcTotalPrice();
     },
     addGoodToCart(data) {
       console.log("Card good",data);
       this.popShow = false;
       this.addProductToCart(data);
+      this.calcTotalPrice();
     },
     addChocolate() {
       let data = {};
@@ -297,7 +336,10 @@
 
   },
   onShow() {
-    console.log("需要检查库存")
+    console.log("onLoad")
+    this.totalPrice = this.cartTotalPrice;
+    console.log("this.cartTotalPrice this.totalPrice ", this.cartTotalPrice, this.totalPrice)
+
   }
 }
 </script>

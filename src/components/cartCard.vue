@@ -32,7 +32,7 @@
             <van-stepper
               @plus="increInventory"
               @minus="decreInventory"
-              :value="cardItem.quantity"></van-stepper>
+              :value="quantity"></van-stepper>
           </div>
         </div>
       </div>
@@ -43,7 +43,8 @@
 <script>
   export default {
     props: {
-      cardItem: Object
+      cardItem: Object,
+      quantity: Number
     },
     methods: {
       removeProduct() {

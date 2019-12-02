@@ -88,9 +88,9 @@ VantComponent({
             this.onChange('plus');
         },
         triggerInput(value) {
-            this.set({
-                value: this.data.asyncChange ? this.data.value : value
-            });
+            // this.set({
+            //     value: this.data.asyncChange ? this.data.value : value
+            // });
             this.$emit('change', value);
         }
     }

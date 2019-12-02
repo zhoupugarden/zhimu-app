@@ -62,12 +62,9 @@
 
     <div class="my-operation">
       <van-cell-group>
-        <van-cell title="收货地址管理" icon="location-o" is-link link-type="navigateTo"
-                  url="/pages/myaddress/main"/>
-        <van-cell title="积分兑换" icon="points" is-link link-type="navigateTo"
-                  url="/pages/pointredeem/main"/>
-        <van-cell title="我的会员卡" icon="idcard" is-link link-type="navigateTo"
-                  url="/pages/myvip/main"/>
+        <van-cell title="收货地址管理" icon="location-o" is-link @click="navigateMyAddress"/>
+        <van-cell title="积分兑换" icon="points" is-link  @click="navigatePointRedeem"/>
+        <van-cell title="我的会员卡" icon="idcard" is-link @click="navigateToMyVip"/>
         <van-cell title="帮助中心" icon="question-o" is-link link-type="navigateTo"
                   url="/pages/help/main"/>
       </van-cell-group>
@@ -144,25 +141,124 @@
       }
     },
     navigateToPoint() {
-      let url = "../point/main" ;
-      console.log("url",url)
-      wx.navigateTo({
-        url
-      });
+      if (!this.isLogin) {
+        let url = "../login/main";
+        console.log("当前用户没有登录");
+        let pages = getCurrentPages(); 				//前两句不要忘记写
+        let currentPage = pages[pages.length - 1]; 	//前两句不要忘记写
+        currentPage.route = "pages/point/main";
+        console.log(pages);
+        wx.navigateTo({
+          url
+        });
+      } else {
+        let url = "../point/main" ;
+        console.log("url",url);
+        wx.navigateTo({
+          url
+        });
+      }
     },
-    navigateToBalance() {
-      let url = "../balance/main" ;
-      console.log("url",url)
+
+
+    navigateMyAddress() {
+      if (!this.isLogin) {
+        let url = "../login/main";
+        console.log("当前用户没有登录");
+        let pages = getCurrentPages(); 				//前两句不要忘记写
+        let currentPage = pages[pages.length - 1]; 	//前两句不要忘记写
+        currentPage.route = "pages/myaddress/main";
+        console.log(pages);
+        wx.navigateTo({
+          url
+        });
+      } else {
+        let url = "../myaddress/main" ;
+        console.log("url",url);
+        wx.navigateTo({
+          url
+        });
+      }
+    },
+
+    navigatePointRedeem() {
+    if (!this.isLogin) {
+      let url = "../login/main";
+      console.log("当前用户没有登录");
+      let pages = getCurrentPages(); 				//前两句不要忘记写
+      let currentPage = pages[pages.length - 1]; 	//前两句不要忘记写
+      currentPage.route = "pages/pointredeem/main";
+      console.log(pages);
       wx.navigateTo({
         url
       });
+    } else {
+      let url = "../pointredeem/main" ;
+      console.log("url",url);
+      wx.navigateTo({
+        url
+      });
+    }
+  },
+    navigateToMyVip() {
+    if (!this.isLogin) {
+      let url = "../login/main";
+      console.log("当前用户没有登录");
+      let pages = getCurrentPages(); 				//前两句不要忘记写
+      let currentPage = pages[pages.length - 1]; 	//前两句不要忘记写
+      currentPage.route = "pages/myvip/main";
+      console.log(pages);
+      wx.navigateTo({
+        url
+      });
+    } else {
+      let url = "../myvip/main" ;
+      console.log("url",url);
+      wx.navigateTo({
+        url
+      });
+    }
+  },
+
+    navigateToBalance() {
+      if (!this.isLogin) {
+        let url = "../login/main";
+        console.log("当前用户没有登录");
+        let pages = getCurrentPages(); 				//前两句不要忘记写
+        let currentPage = pages[pages.length - 1]; 	//前两句不要忘记写
+        currentPage.route = "pages/balance/main";
+        console.log(pages);
+        wx.navigateTo({
+          url
+        });
+      } else {
+        let url = "../balance/main" ;
+        console.log("url",url);
+        wx.navigateTo({
+          url
+        });
+      }
+
     },
     navigateToCoupon() {
-      let url = "../coupon/main?userId=" + this.userId ;
-      console.log("url",url)
-      wx.navigateTo({
-        url
-      });
+      if (!this.isLogin) {
+        let url = "../login/main";
+        console.log("当前用户没有登录");
+        let pages = getCurrentPages(); 				//前两句不要忘记写
+        let currentPage = pages[pages.length - 1]; 	//前两句不要忘记写
+        currentPage.route = "pages/coupon/main";
+        console.log(pages);
+        wx.navigateTo({
+          url
+        });
+      } else {
+        let url = "../coupon/main";
+        console.log("url",url);
+        wx.navigateTo({
+          url
+        });
+      }
+
     },
     navigateToMission() {
       let url = "../mission/main" ;
