@@ -16,13 +16,21 @@
             <img src="../../asset/share.png" style="width: 20px;height: 20px">
           </div>
           <div style="font-size: 12px; color: #CFD4DA">
-            <button open-type='share'>分享</button>
+            <button size="mini"  open-type='share'>分享</button>
           </div>
         </div>
       </div>
-        <van-cell custom-class="demo"
-                  :title="vipTip" link-type="navigateTo"
-                  url="/pages/myvip/main" is-link value="立即开通" />
+      <div @click="navigateToBuyVip" class="vip_tip_class">
+        <div>
+          {{vipTip}}
+        </div>
+        <div>
+          <span>立即开通</span>
+          <span>
+            <van-icon name="arrow" />
+          </span>
+        </div>
+      </div>
     </div>
     <div class="zm-goods__extroInfo">
       <div class="choose-attribute">
@@ -30,20 +38,36 @@
       </div>
       <div class="attribute-extro-info">
         <div class="extro-info__item">
-          <van-icon name="fire-o"/>
-          <span>{{chooseSKU.cakeSize}}</span>
+          <div style="display: flex">
+            <img src="../../asset/size.png" style="width: 20px; height: 20px; ">
+            <span class="font_setting">{{chooseSKU.cakeSize}}</span>
+          </div>
         </div>
         <div class="extro-info__item">
-          <van-icon name="fire-o"/>
-          <span>{{chooseSKU.capacity}}</span>
+          <div style="display: flex">
+            <img src="../../asset/people.png" style="width: 20px; height: 20px; ">
+            <span class="font_setting">{{chooseSKU.capacity}}</span>
+          </div>
         </div>
         <div class="extro-info__item">
-          <van-icon name="fire-o"/>
-          <span>{{chooseSKU.copies}}</span>
+          <div style="display: flex">
+            <img src="../../asset/people.png" style="width: 20px; height: 20px; ">
+            <span class="font_setting">{{chooseSKU.copies}}</span>
+          </div>
         </div>
         <div class="extro-info__item">
-          <van-icon name="fire-o"/>
-          <span>{{chooseSKU.cutlery}}</span>
+          <div style="display: flex">
+            <img src="../../asset/cutlery.png" style="width: 20px; height: 20px; ">
+            <span class="font_setting">{{chooseSKU.cutlery}}</span>
+          </div>
+
+        </div>
+        <div class="extro-info__item">
+          <div style="display: flex">
+            <img src="../../asset/time.png" style="width: 20px; height: 20px; ">
+            <span class="font_setting">{{deliverTime}}</span>
+          </div>
+
         </div>
       </div>
       <div class="product-extro-info">
@@ -113,7 +137,7 @@
       <div v-if="comment.content !== null" class="zm-goods__review_detail">
         <img :src="comment.avatarUrl" class="avatar-img">
         <div style="width: 60%;">
-          <div style="background-color: #CFD4DA">
+          <div class="star_comment">
             {{comment.content}}
           </div>
         </div>
@@ -123,7 +147,6 @@
       </div>
     </div>
     <div class="zm-goods__actions">
-
       <van-goods-action>
         <van-goods-action-icon
           icon="cart-o"
@@ -158,30 +181,43 @@
         <div class="van-popup__panel_line">
         </div>
         <div class="van-popup__panel_extro">
-          <div class="van-popup__panel_extro_item">
-            <img src="../../asset/size.png" style="width: 20px; height: 20px; ">
-            <span>{{chooseSKU.cakeSize}}</span>
+          <div class="van-popup__panel_extro__item">
+            <div style="display: flex">
+              <img src="../../asset/size.png" style="width: 20px; height: 20px; ">
+              <span class="font_setting">{{chooseSKU.cakeSize}}</span>
+            </div>
           </div>
-          <div class="van-popup__panel_extro_item">
-            <img src="../../asset/people.png" style="width: 20px; height: 20px; ">
-            <span>{{chooseSKU.capacity}}</span>
+          <div class="van-popup__panel_extro__item">
+            <div style="display: flex">
+              <img src="../../asset/people.png" style="width: 20px; height: 20px; ">
+              <span class="font_setting">{{chooseSKU.capacity}}</span>
+            </div>
           </div>
-          <div class="van-popup__panel_extro_item">
-            <img src="../../asset/time.png" style="width: 20px; height: 20px; ">
-            <span>{{chooseSKU.copies}}</span>
+          <div class="van-popup__panel_extro__item">
+            <div style="display: flex">
+              <img src="../../asset/time.png" style="width: 20px; height: 20px; ">
+              <span class="font_setting">{{chooseSKU.copies}}</span>
+            </div>
           </div>
-          <div class="van-popup__panel_extro_item">
-            <img src="../../asset/cutlery.png" style="width: 20px; height: 20px; ">
-            <span>{{chooseSKU.cutlery}}</span>
+          <div class="van-popup__panel_extro__item">
+            <div style="display: flex">
+              <img src="../../asset/cutlery.png" style="width: 20px; height: 20px; ">
+              <span class="font_setting">{{chooseSKU.cutlery}}</span>
+            </div>
+          </div>
+
+          <div class="van-popup__panel_extro__item">
+            <div style="display: flex">
+              <img src="../../asset/cutlery.png" style="width: 20px; height: 20px; ">
+              <span class="font_setting">{{deliverTime}}</span>
+            </div>
+
           </div>
         </div>
-        <div style="font-size: 12px">规格</div>
+        <div style="font-family: 'Microsoft YaHei'; font-size: 14px;">规格</div>
         <div class="van-popup__panel_attribute">
           <span v-for="(item, index) in productSKUs" :key="index">
-              <!--<van-button :id="item.id"-->
-                          <!--:type="item.id === chooseSKU.id ? 'primary' : 'default'"-->
-                          <!--size="mini" @click="selectedSKU">{{item.attributeName}}</van-button>-->
-          <check-box
+           <check-box
             :id="item.skuId"
             :name="item.attributeName"
             :type="item.skuId === chooseSKU.skuId ? 'selected' : 'default'"
@@ -191,26 +227,17 @@
           </span>
         </div>
         <div v-if= "popupText === '加入购物车' " class="van-popup__panel_shopcart">
-          <van-goods-action>
-            <van-goods-action-button
-              :text="popupText"
-              type="warning"
-              @click="addCart"
-            />
-          </van-goods-action>
+          <van-button custom-class= "button-custom" type="warning" @click="addToCart">
+            {{popupText}}
+          </van-button>
         </div>
         <div v-else class="van-popup__panel_shopcart">
-          <van-goods-action>
-            <van-goods-action-button
-              :text="popupText"
-              type="warning"
-              @click="addToBuy"
-            />
-          </van-goods-action>
+          <van-button custom-class= "button-custom" type="warning" @click="addToCart">
+            {{popupText}}
+          </van-button>
         </div>
       </div>
     </van-popup>
-
     <van-popup
       :show="outShowUp"
       position="bottom"
@@ -258,7 +285,6 @@
   import CheckBox from '@/components/CheckBox';
   import {toast} from '../../utils/toast';
   export default {
-
     components: {
       CheckBox
     },
@@ -342,6 +368,13 @@
           url
         });
       }
+    },
+    navigateToBuyVip() {
+      var url = "/pages/buyvip/main";
+      console.log("url",url)
+      wx.navigateTo({
+        url
+      });
     },
 
     onBuyClickButton() {
@@ -469,6 +502,17 @@
           return "您希望在" + this.good.name + "有货时收到通知么?";
         }
       },
+        deliverTime() {
+          if (this.chooseSKU.deliverTime === 1) {
+
+            return "现货下单立即配送"
+          }
+          if (this.chooseSKU.deliverTime === 2) {
+            return "最早今天19:00配送"
+          }
+
+        },
+
 
       ...mapGetters(
         [
@@ -482,7 +526,27 @@
 
 
 <style lang="scss" scoped>
+  .font_setting {
+    font-size: 14px;
+    font-family: 'Microsoft YaHei';
+    padding-left: 5px;
+  }
 
+
+  .star_comment {
+    background-color: #CFD4DA;
+    width: 200px;
+    border-radius: 5px;
+    font-size: 13px;
+    padding: 10px;
+  }
+  .van-popup__panel_extro__item {
+    box-sizing: border-box;
+    flex: 0 0 50%;
+    padding: 5px 5px;
+    font-size: 16px;
+    font-family: "Microsoft YaHei";
+  }
 
 
   .zm-goods__detail {
@@ -508,12 +572,22 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    margin: 10px;
+    padding-bottom: 10px;
   }
   .avatar-img {
     display: block;
     width: 60px;
     height: 60px;
     border-radius: 30px;
+  }
+  .vip_tip_class {
+    display: flex;
+    justify-content: space-around;
+    font-size: 13px;
+    background-color: yellow;
+    margin: 10px;
+    padding: 5px 0px;
   }
 
   .attribute-extro-info {
@@ -572,7 +646,7 @@
   .zm-goods__container {
     position: relative;
     overflow: hidden;
-    padding-bottom:60px;
+    padding-bottom:50px;
   .zm-goods__head {
     position: relative;
   .zm-goods__name {
@@ -600,8 +674,7 @@
     position:relative;
   .zm-goods__ingredients {
     position:relative;
-    width:80px;
-    margin:80px;
+
   .zm-goods__ingredients__content {
     position: absolute;
     width: 80px;
@@ -613,8 +686,12 @@
   }
 </style>
 <style lang="scss">
-
-
+  .button-custom {
+    width: 100%;
+  }
+  .zm-goods__review {
+    background-color: white;
+  }
   .demo {
     background-color: #ffc95f !important;
     font-size: 8px !important;
@@ -622,11 +699,11 @@
   }
   .zm-goods__ingredients {
     position:relative;
-    width:80px;
-    margin:80px;
+    margin:10px;
+
   .zm-goods__ingredients__content {
     position: relative;
-    width: 80px;
+    font-size: 13px;
   }
   }
   .zm-goods__review_value {
@@ -656,10 +733,18 @@
     height: 100%;
     background-color:#F4F4F4 !important;
   }
+  btn1::after {
+    border: 0;
+  }
 </style>
 
 <style lang="scss">
   .cell-custom-class {
     background-color: #E8EDF5 !important;
   }
+
+  btn1::after {
+    border: 0;
+  }
+
 </style>

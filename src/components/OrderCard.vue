@@ -31,7 +31,7 @@
        <div v-show="orderInfo.orderStatus === 1">
          <van-button size="small" type="primary" @click="payOrder">马上付款</van-button>
        </div>
-      <div v-show="orderInfo.orderStatus === 2 && orderInfo.isComment === 0">
+      <div v-show="orderInfo.orderStatus === 5 && orderInfo.isComment === 0">
         <van-button size="small" type="primary" @click="navigateToEvaluation">评价得积分</van-button>
       </div>
     </div>
@@ -115,7 +115,6 @@
         )
       },
 
-
       payOrder() {
         let that = this;
         let orderNo = this.orderInfo.orderNo;
@@ -133,21 +132,19 @@
             params.unifiedOrderNo = response.unifiedOrderNo;
             params.orderNo = response.orderNo;
             params.amount = that.orderInfo.totalAmount;
-
             let data = {};
             data.out_trade_no = params.orderNo;
             data.transaction_id = params.unifiedOrderNo;
             data.total_fee = params.amount;
             Dialog.confirm({
-              title: '确认支付'
+              title: '微信支付',
+              message:'确认支付' + params.amount + '元'
             }).then(() => {
               that.mockWxPay(data);
             }).catch(() => {
               // on cancel
               console.log("取消微信支付")
             });
-
-            that.mockWxPay(data);
           }
         )
       }

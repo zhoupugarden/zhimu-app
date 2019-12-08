@@ -70,9 +70,12 @@
     /*color: @text-color;*/
     color: #34495e;
     /*background-color: @background-color-light;*/
-    background-color: #fafafa;
+    background-color: white;
     box-sizing: border-box;
+    margin: 10px;
+    border-radius: 5px;
     display:flex;
+
 
   &__thumb {
      position: relative;

@@ -21,6 +21,7 @@
         <div class="cart-container__fitting--nav">
           <van-button size="small" @click="addFire">数字蜡烛</van-button>
           <van-button size="small" @click="addChocolate">巧克力牌</van-button>
+          <van-button size="small" @click="addHat">生日帽</van-button>
           <van-button size="small" @click="popUpShow">配件饰品</van-button>
         </div>
         <div class="cart-container__fitting--detail">
@@ -38,10 +39,10 @@
         <div class="cart-container__bottom--line">
         </div>
         <div class="cart-container__bottom--total">
-          <div>
-            总计：￥{{cartTotalPrice}} {{totalPrice}}
+          <div style="padding: 0px 15px;">
+            总计：￥{{totalPrice}}
           </div>
-          <div v-show="cartTotalPrice < 100" class="cart-container__bottom--fee">
+          <div v-if="cartTotalPrice < 100" class="cart-container__bottom--fee">
             <span>另需配送费</span>
             <span>{{deliverFee}}元,</span>
             <span>再买</span>
@@ -49,6 +50,9 @@
             <span>可减</span>
             <span style="color: red">{{freeFee}}元</span>
             <span>配送费</span>
+          </div>
+          <div v-else style="font-size: 10px;">
+            <span>免配送费</span>
           </div>
         </div>
 
@@ -102,6 +106,11 @@
       productName:"数字蜡烛",
       attributeName:"1个",
       holdValue:"请输入年龄",
+    },
+    {
+      url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
+      productName:"生日帽",
+      attributeName:"1个"
     }
   ];
 
@@ -324,6 +333,14 @@
       data.value = this.remark;
       this.addFreeCart(data);
     },
+    addHat() {
+      let data = {};
+      data.id = 3;
+      data.url = freeGood[2].url;
+      data.productName = freeGood[2].productName;
+      data.value = this.remark;
+      this.addFreeCart(data);
+    },
     addFire() {
       let data = {};
       data.id = 2;
@@ -336,8 +353,8 @@
 
   },
   onShow() {
-    console.log("onLoad")
-    this.totalPrice = this.cartTotalPrice;
+    console.log("onLoad");
+    this.calcTotalPrice();
     console.log("this.cartTotalPrice this.totalPrice ", this.cartTotalPrice, this.totalPrice)
 
   }
@@ -389,7 +406,7 @@
     border-top: solid #ACC0D8 1px;
   }
   .cart-container__bottom--fee {
-    font-size: 50%;
+    font-size: 10px;
     padding-left: 10px;
   }
   .cart-container__bottom--total {

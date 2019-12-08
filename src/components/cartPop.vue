@@ -3,11 +3,11 @@
     <van-popup :position="position"
                :show="popShow"
                z-index="200"
-               custom-style="left:10%"
+               custom-style="left:5%; top:30%; width:90%"
                @close="popUpClose"
                >
       <div class="van-popup__panel">
-        <div style="padding-left: 10%">
+        <div style="padding-left: 10%; padding-bottom:10px;">
           <div style="display: flex;align-items: center">
             <div class="van-popup__panel_price">
               {{chooseSKU.salePrice}}
@@ -16,20 +16,36 @@
           </div>
           <div class="van-popup__panel_extro">
             <div class="van-popup__panel_extro__item">
-              <img src="../asset/size.png" style="width: 20px; height: 20px; ">
-              <span>{{chooseSKU.cakeSize}}</span>
+              <div style="display: flex">
+                <img src="../asset/size.png" style="width: 20px; height: 20px; ">
+                <span class="font_setting">{{chooseSKU.cakeSize}}</span>
+              </div>
             </div>
             <div class="van-popup__panel_extro__item">
-              <img src="../asset/people.png" style="width: 20px; height: 20px; ">
-              <span>{{chooseSKU.capacity}}</span>
+              <div style="display: flex">
+                <img src="../asset/people.png" style="width: 20px; height: 20px; ">
+                <span class="font_setting">{{chooseSKU.capacity}}</span>
+              </div>
             </div>
             <div class="van-popup__panel_extro__item">
-              <img src="../asset/time.png" style="width: 20px; height: 20px; ">
-              <span>{{chooseSKU.copies}}</span>
+              <div style="display: flex">
+                <img src="../asset/time.png" style="width: 20px; height: 20px; ">
+                <span class="font_setting">{{chooseSKU.copies}}</span>
+              </div>
             </div>
             <div class="van-popup__panel_extro__item">
-              <img src="../asset/cutlery.png" style="width: 20px; height: 20px; ">
-              <span>{{chooseSKU.cutlery}}</span>
+              <div style="display: flex">
+                <img src="../asset/cutlery.png" style="width: 20px; height: 20px; ">
+                <span class="font_setting">{{chooseSKU.cutlery}}</span>
+              </div>
+            </div>
+
+            <div class="van-popup__panel_extro__item">
+              <div style="display: flex">
+                <img src="../asset/cutlery.png" style="width: 20px; height: 20px; ">
+                <span class="font_setting">{{deliverTime}}</span>
+              </div>
+
             </div>
           </div>
           <div style="font-family: 'Microsoft YaHei'; font-size: 14px;padding:10px 0px;">规格</div>
@@ -59,7 +75,6 @@
 
 <script>
   import CheckBox from '@/components/CheckBox';
-
   export default {
   name: 'cart-pop',
     components: {
@@ -110,27 +125,38 @@
       );
       console.log("this.chooseSKU", this.chooseSKU)
     }
-  }
+  },
 
-  // computed: {
-  //   chooseSKU() {
-  //     this.productSKUs.pmsProductSkuList.find(
-  //       function (sku) {
-  //         return sku.isPrime === true;
-  //       }
-  //     );
-  //   }
-  // }
+  computed: {
+    deliverTime() {
+      if (this.chooseSKU.deliverTime === 1) {
+
+        return "现货下单立即配送"
+      }
+      if (this.chooseSKU.deliverTime === 2) {
+        return "最早今天19:00配送"
+      }
+
+    }
+  }
 
 }
 </script>
 
 <style lang="scss" scoped>
+
+  .font_setting {
+    font-size: 14px;
+    font-family: 'Microsoft YaHei';
+    padding-left: 5px;
+  }
+
+
   .cart-pop-container {
     position: relative;
   .van-popup__panel {
-    height: 240px;
-    width: 280px;
+    height: 100%;
+    width: 100%;
   .van-popup__panel_price {
     padding-bottom: 10px;
     padding-top: 10px;
@@ -176,9 +202,7 @@
     }
   }
   .van-popup__panel_shopcart {
-    position: absolute;
-    bottom:0;
-    width: 280px;
+    width: 100%;
   }
   }
   }

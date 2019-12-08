@@ -74,7 +74,8 @@
             data.total_fee = 50000;
 
             Dialog.confirm({
-              title: '删除确认'
+              title: '微信支付',
+              message:'确认支付' + data.total_fee + '元'
             }).then(() => {
               that.mockWxPay(data);
             }).catch(() => {

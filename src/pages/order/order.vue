@@ -42,6 +42,17 @@
     </div>
     <van-dialog id="van-dialog" />
 
+
+    <div v-show="hasNoOrder" style="position: absolute; top: 30%; left:40%;">
+      <div >
+        <img src="../../asset/order_2.png" style="width: 40px; height: 40px; padding-left: 10px; ">
+      </div>
+      <div style="color: #b2b2b2;">
+        暂无订单
+      </div>
+    </div>
+
+
   </div>
 
 </template>
@@ -63,17 +74,15 @@
     return {
       active:0,
       isLogin:false,
-      orderItems:{},
-      waitCommentItems:{},
-      waitPayItems:{}
+      orderItems:[],
+      waitCommentItems:[],
+      waitPayItems:[]
     }
 
   },
   methods: {
     onChange(event) {
-      let a= "";
-      if (a = "yangyu") {}
-      console.log(event)
+      this.active = event.mp.detail.index;
     },
 
     mockWxPay(data) {
@@ -93,25 +102,6 @@
         }
       )
     },
-
-    payOrder(params) {
-      console.log("unifiedOrderNo : ", params);
-      let that = this;
-
-      let data = {};
-      data.out_trade_no = params.orderNo;
-      data.transaction_id = params.unifiedOrderNo;
-      data.total_fee = params.amount;
-      Dialog.confirm({
-        title: '确认支付'
-      }).then(() => {
-        that.mockWxPay(data);
-      }).catch(() => {
-        // on cancel
-        console.log("取消微信支付")
-      });
-    },
-
 
     navigateToLogin() {
       var url = "../login/main";
@@ -141,13 +131,33 @@
     onReachBottom() {
       console.log("到达底部")
     },
-
     computed: {
       ...mapGetters(
         [
           'userId','token'
         ]
-      )
+      ),
+      hasNoOrder() {
+
+        if (this.orderItems.length == 0) {
+          return true;
+        }
+
+        if(this.waitCommentItems == 0 && this.active == 1) {
+          return true;
+        }
+        if(this.waitPayItems == 0 && this.active == 2) {
+          return true;
+        }
+
+        return false;
+
+      }
+
+
+
+
+
     },
     onShow() {
     if (this.token) {

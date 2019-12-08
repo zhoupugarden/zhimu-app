@@ -16,17 +16,17 @@
             点击添加地址
           </div>
           <div v-else>
-            <div>
+            <div style="font-size: 14px;padding: 10px 15px;">
               <van-icon name="phone-o"></van-icon>
               {{currentAddress.receiverName}} {{currentAddress.receiverPhone}}
             </div>
-            <div>
+            <div style="font-size: 14px;padding: 10px 15px;">
               <van-icon name="location-o"></van-icon>
               {{currentAddress.addressName}} {{currentAddress.roadDetail}}
             </div>
           </div>
         </div>
-        <div>
+        <div style="padding-right: 10px;">
           <van-icon name="arrow"></van-icon>
         </div>
       </div>
@@ -35,7 +35,7 @@
       </div>
 
     </div>
-    <div style="font-weight: bolder">配送时间</div>
+    <div style="font-weight: bolder;font-size: 14px;padding: 10px 15px;">配送时间</div>
     <div class="order-submit-time">
       <div style="width: 50%">
         <van-cell title="日期" :value="currentDate" custom-class="custome-cell-time" is-link arrow-direction="down" @click="datePop"/>
@@ -46,7 +46,7 @@
     </div>
     <div style="display: flex;">
 
-    <div style="font-weight: bolder">
+    <div style="font-weight: bolder;font-size: 14px;padding: 10px 15px;">
       优惠券
     </div>
     <div>
@@ -59,7 +59,7 @@
     <div class="order-submit-coupon">
       <van-cell :title="chooseCouponTip" custom-class="custome-cell" is-link arrow-direction="down" @click="couponPop"/>
     </div>
-    <div style="font-weight: bolder">
+    <div style="font-weight: bolder;font-size: 14px;padding: 10px 15px;">
       余额
     </div>
     <div class="order-submit-balance">
@@ -479,7 +479,6 @@
 
       userBalanceAmount() {
         console.log("balanceMount, cartTotalPrice", this.userInfo.balanceAmount , this.cartTotalPrice)
-
         if (this.userInfo.balanceAmount >= this.cartTotalPrice) {
           return this.cartTotalPrice - this.couponValue;
         } else {
@@ -488,7 +487,13 @@
       },
 
       restWxPayAmount() {
-        return this.cartTotalPrice + this.deliverValue - this.couponValue - this.userBalanceAmount;
+        let needPayAmount = this.cartTotalPrice + this.deliverValue - this.couponValue;
+        console.log("needPayAmount: this.userBalanceAmount", needPayAmount, this.userBalanceAmount)
+        if (needPayAmount > this.userInfo.balanceAmount) {
+          return (needPayAmount - this.userInfo.balanceAmount).toFixed(2);
+        }else {
+          return 0;
+        }
       },
 
       orderSubmitSwitchDeliver() {
@@ -556,6 +561,7 @@
 <style lang="scss" scoped>
 
   .order-submit-switch {
+    margin: 0px 10px;
     width: 100px;
     height: 30px;
     border-radius: 20px;
@@ -592,6 +598,9 @@
     font-family: "Microsoft YaHei";
     line-height: 25px;
 
+  }
+  .order-submit-address {
+    padding: 10px 0px;
   }
   .order-submit-address__deliver {
     display: flex;

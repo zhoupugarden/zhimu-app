@@ -24,8 +24,8 @@
               </div>
             </div>
             <div class="order-coupon-detail">
-              <img src="../../asset/coupon_dis.png" style="width: 15px;height: 15px">
-              <van-cell title="其他优惠" :value="orderInfo.couponAmount" />
+              <van-cell :title="orderInfo.couponDesc" icon="coupon" :value="orderInfo.couponAmount" />
+              </van-cell>
             </div>
             <div class="order-total-info">
               <van-cell title="总计" :value="orderInfo.totalAmount" />
@@ -38,7 +38,6 @@
               </van-cell>
             </div>
           </div>
-
         <div style="font-size: 14px;padding: 10px 15px;">
           配送信息
         </div>
@@ -134,7 +133,8 @@
             data.transaction_id = response.unifiedOrderNo;
             data.total_fee = response.amount;
             Dialog.confirm({
-              title: '确认支付'
+              title: '微信支付',
+              message:'确认支付' + data.total_fee + '元'
             }).then(() => {
               that.mockWxPay(data);
             }).catch(() => {
