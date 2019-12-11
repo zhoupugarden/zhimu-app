@@ -161,7 +161,7 @@
         .zm-detail__icon {
           position: absolute;
           top:10px;
-          left: 200px;
+          right: 60px;
           .choose_attribute {
             width: 50px;
             height: 20px;

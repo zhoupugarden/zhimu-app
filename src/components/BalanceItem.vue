@@ -11,7 +11,7 @@
     </div>
 
     <div
-      style="padding-right: 10px;"
+      style="padding-right: 10px; font-size: 12px;"
       :style="{color : activeColor}">
       {{flag}}{{balanceDetailItem.changeAmount}}
     </div>
@@ -59,6 +59,13 @@
   }
   .redActive {
     color: red;
+  }
+  .balanceitem-type{
+    font-size: 12px;
+  }
+  .balanceitem-time {
+    font-size: 10px;
+    color: #b2b2b2;
   }
 
 </style>

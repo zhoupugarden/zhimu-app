@@ -9,7 +9,7 @@
       </div>
     </div>
     <div
-      style="padding-right: 10px;"
+      style="padding-right: 10px; font-size: 12px;"
       :style="{color : activeColor}">
       {{flag + pointDetailItem.changeAmount}}
     </div>
@@ -50,6 +50,14 @@
   }
   .redActive {
     color: red;
+  }
+  .pointitem-type{
+    font-size: 12px;
+    padding: 5px 0px;
+  }
+  .pointitem-time{
+    font-size: 10px;
+    color: #b2b2b2;
   }
 
 </style>

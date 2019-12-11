@@ -43,7 +43,7 @@
     <van-dialog id="van-dialog" />
 
 
-    <div v-show="hasNoOrder" style="position: absolute; top: 30%; left:40%;">
+    <div v-show="hasNoOrder && isLogin" style="position: absolute; top: 30%; left:40%;">
       <div >
         <img src="../../asset/order_2.png" style="width: 40px; height: 40px; padding-left: 10px; ">
       </div>

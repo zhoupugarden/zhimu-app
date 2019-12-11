@@ -162,6 +162,7 @@
     display: flex;
     justify-content: space-between;
     height: 30px;
+    align-items: center;
   }
 
   .order-card__detail {

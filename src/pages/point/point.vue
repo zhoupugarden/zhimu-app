@@ -3,7 +3,7 @@
 
     <div class="point-summary">
       <div class="point-summary__title">
-        <div style="color: #999999">
+        <div style="color: #b2b2b2; padding: 10px;">
           当前积分
         </div>
         <div style="color: green">
@@ -17,12 +17,14 @@
 
       </div>
       <div class="point-summary__total">
-        {{pointRecords.totalAmount}}
+        <div>
+          {{pointRecords.totalAmount}}
+        </div>
         <div style="font-size: 12px">分</div>
       </div>
     </div>
 
-    <div style="font-size: 14px; padding-top: 10px;padding-bottom: 10px">
+    <div style="font-size: 12px; padding:10px;">
       积分记录
     </div>
 
@@ -123,6 +125,7 @@
     color: green;
     display: flex;
     justify-content: center;
+    align-items: center;
   }
 </style>
 

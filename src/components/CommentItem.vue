@@ -19,32 +19,36 @@
       </div>
     </div>
 
-
     <div class="product-star">
-      <van-rate :value="detail.overAllScore"/>
+      <van-rate
+        size="10"
+        :value="detail.overallScore"/>
     </div>
-    <div>
-      <van-icon name="bookmark-o" color="E0E0E0" />
-      {{detail.tags}}
+    <div style="display: flex;">
+    <van-icon name="bookmark-o" color="E0E0E0" />
+    <div style="font-size: 10px;">
+      {{detail.contentTags}}
     </div>
+  </div>
     <div class="comment-date">
-      {{detail.commentDate}}
+      {{formatTime}}
     </div>
     <div class="user-comment">
       {{detail.content}}
+    </div>
 
-    </div>
-    <div v-show="detail.reply" class="merchant-feed-back">
-      {{detail.reply}}
-    </div>
     <div class="feedback-pics">
-      <div  v-for="(src,index) in detail.picUrls" :key="index">
+      <div  v-for="(src,index) in contentUrls" :key="index">
         <img  :src="src" :style="{'width':width || '120rpx','height':height || '120rpx'}" class="img" @click="previewImage(src)">
       </div>
     </div>
 
+    <div v-show="detail.reply" class="merchant-feed-back">
+      {{detail.reply}}
+    </div>
+
   </div>
-  
+
 </template>
 
 <script>
@@ -67,43 +71,72 @@
             urls:[data]
           }
         )
+      },
+      formatTime(val) {
+        let newVal = new Date(val).toLocaleDateString();
+        console.log("newVal", newVal)
+      }
+
+
+    },
+
+    computed: {
+      contentUrls() {
+        console.log("this.detail.picUrls", this.detail.contentUrls)
+        return this.detail.contentUrls.split(',');
+      },
+      formatTime() {
+        return new Date(this.detail.commentDate).toLocaleDateString();
       }
     }
+
+
   }
 </script>
 
 <style lang="scss" scoped>
+  .user-comment {
+    word-wrap:break-word;
+    word-break:break-all;
+    font-size: 13px;
+    margin-right: 10px;
+  }
   .comment-item-container {
     position: relative;
     padding-left: 80px;
-    margin-top: 15px;
-    padding-bottom: 30px;
-    border-bottom: 1px solid #e0e0e0;
-    margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f2f2f2;
+    background-color: white;
   }
   .avatar-url {
     position: absolute;
-    left: 0;
-    top: 0;
+    left: 20px;
+    top: 10px;
     width: 60px;
     height: 60px;
   }
   .avatar-img {
     display: block;
-    width: 100%;
-    height: 100%;
+    width: 60%;
+    height: 60%;
     border-radius: 50%;
   }
   .comment-date {
     position: absolute;
-    right: 0;
-    top: 0;
-    width: 100px;
+    right: 10px;
+    top: 10px;
     height: 20px;
-    font-size: 14px;
+    font-size: 12px;
+    color: #b2b2b2;
   }
   .merchant-feed-back {
-    background-color: #CFD4DA;
+    background-color: #f2f2f2;
+    font-size: 12px;
+    padding: 5px;
+    word-wrap:break-word;
+    word-break:break-all;
+    margin-right: 10px;
   }
   .feedback-pics {
     display: flex;

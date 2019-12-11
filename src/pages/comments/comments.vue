@@ -2,38 +2,46 @@
   <div class="comments-container">
     <div class="comments-header">
       <div class="comment-overall">
-        <div>
+        <div style="font-size: 30px; color: gold;">
           {{comments.totalScore}}
         </div>
-        <div>
+        <div style="font-size: 12px;">
           综合评价
         </div>
       </div>
       <div class="comment-detail-rate">
         <div class="comment-favor">
-          <div>
+          <div style="font-size: 12px;">
             口味
           </div>
-          <van-rate size="12" value="3"></van-rate>
-          <div>
+          <van-rate size="10"
+                    allow-half
+                    void-color="#eee"
+                    void-icon="star"
+                    :value="comments.tasteScore"></van-rate>
+          <div style="color: gold;padding: 0px 10px;">
             {{comments.tasteScore}}
           </div>
         </div>
         <div class="comment-pack">
-          <div>
+          <div style="font-size: 12px;">
             包装
           </div>
-          <van-rate size="12" value="3"></van-rate>
-          <div>
+          <van-rate size="10"
+                    allow-half
+                    void-color="#eee"
+                    void-icon="star"
+                    :value="comments.packageScore"></van-rate>
+          <div style="color: gold;padding: 0px 10px;">
             {{comments.packageScore}}
           </div>
         </div>
       </div>
       <div class="comment-delivery-rate">
-        <div>
+        <div style="color: #b2b2b2; font-size: 20px;">
           {{comments.deliverScore}}
         </div>
-        <div>
+        <div style="font-size: 12px; color: #b2b2b2">
             配送评分
         </div>
       </div>
@@ -58,6 +66,7 @@
     <div v-for= "(item, index) in commentItemList" :key="index" class="comment-detail">
       <comment-item :detail="item"></comment-item>
     </div>
+    <van-toast  id="van-toast"/>
   </div>
 </template>
 
@@ -65,7 +74,7 @@
   import CommentItem from '@/components/CommentItem';
   import {GET_PRODUCT_COMMENT, GET_PRODUCT_COMMENT_LIST } from '@/utils/api';
   import {request} from "@/utils/request";
-
+  import {toast} from '../../utils/toast';
   export default {
     components: {
       CommentItem
@@ -79,6 +88,7 @@
         picFlag: null,
         pageSize:10,
         pageNum:1,
+        totalPage:1,
         level:null
       }
     },
@@ -104,6 +114,7 @@
           (response) => {
             console.log("this.good response", response);
             this.commentItemList = response.list;
+            this.totalPage = response.totalPage;
           }
         )
       },
@@ -122,8 +133,6 @@
         )
       },
 
-
-
       activeTag0() {
         //全部评价
         this.active = 0;
@@ -135,7 +144,8 @@
         params.productId = this.productId;
         params.pageSize = this.pageSize;
         params.pageNum = this.pageNum;
-        this.commentItemList = this.getProductCommentList(params);
+
+        this.getProductCommentList(params);
       },
       activeTag1() {
         //有图评价
@@ -147,7 +157,7 @@
         params.productId = this.productId;
         params.pageSize = this.pageSize;
         params.pageNum = this.pageNum;
-        this.commentItemList = this.getProductCommentList(params);
+        this.getProductCommentList(params);
 
       },
       activeTag2() {
@@ -160,7 +170,7 @@
         params.productId = this.productId;
         params.pageSize = this.pageSize;
         params.pageNum = this.pageNum;
-        this.commentItemList = this.getProductCommentList(params);
+        this.getProductCommentList(params);
       },
       activeTag3() {
         //中评
@@ -172,7 +182,7 @@
         params.productId = this.productId;
         params.pageSize = this.pageSize;
         params.pageNum = this.pageNum;
-        this.commentItemList = this.getProductCommentList(params);
+        this.getProductCommentList(params);
       },
       activeTag4() {
         //差评
@@ -184,7 +194,7 @@
         params.productId = this.productId;
         params.pageSize = this.pageSize;
         params.pageNum = this.pageNum;
-        this.commentItemList = this.getProductCommentList(params);
+        this.getProductCommentList(params);
       }
     },
     computed: {
@@ -207,6 +217,14 @@
     onReachBottom() {
       //要做个判断， 如果size已经小于10， 则不再分页查询
       console.log("到达底部");
+
+      if (this.pageNum === this.totalPage) {
+        console.log("this.pageNum, this.totalPage", this.pageNum, this.totalPage);
+
+        toast("没有更多评论");
+        return;
+      }
+
       let params = {};
       params.productId = this.productId;
       params.pageSize = this.pageSize;
@@ -236,10 +254,15 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    border-bottom: 1px solid #b2b2b2;
+    background-color: white;
+    padding: 10px 0px;
   }
   .comments-tag {
     display: flex;
     flex-flow: row wrap;
+    padding: 10px 0px;
+    background-color: white;
   }
   .comment-favor {
     display: flex;
@@ -251,26 +274,26 @@
   }
   .comment-tag-style {
     font-family: "Microsoft YaHei";
-    font-size: 14px;
+    font-size: 12px;
     height: 25px;
     border-radius: 15px;
     border: 1px solid #CFD4DA;
     text-align: center;
     line-height: 25px;
-    padding: 0px 5px;
+    padding: 1px 10px;
     margin: 5px 5px;
   }
   .comment-active-tag-style {
     font-family: "Microsoft YaHei";
-    font-size: 14px;
+    font-size: 12px;
     height: 25px;
     border-radius: 15px;
-    background-color: #ffc95f;
+    background-color: #f2f2f2;
     border: 1px solid #F39B00;
     color: #F39B00;
     text-align: center;
     line-height: 25px;
-    padding: 0px 5px;
+    padding: 1px 10px;
     margin: 5px 5px;
   }
 

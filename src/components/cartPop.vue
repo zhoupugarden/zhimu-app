@@ -17,7 +17,7 @@
           <div class="van-popup__panel_extro">
             <div class="van-popup__panel_extro__item">
               <div style="display: flex">
-                <img src="../asset/size.png" style="width: 20px; height: 20px; ">
+                <img src="../asset/cake_2.png" style="width: 20px; height: 20px; ">
                 <span class="font_setting">{{chooseSKU.cakeSize}}</span>
               </div>
             </div>
@@ -48,12 +48,9 @@
 
             </div>
           </div>
-          <div style="font-family: 'Microsoft YaHei'; font-size: 14px;padding:10px 0px;">规格</div>
+          <div style="font-family: 'Microsoft YaHei'; font-size: 12px;padding:10px 0px;">规格</div>
           <div class="van-popup__panel_attribute">
           <span v-for="(item, index) in productSKUs.pmsProductSkuList" :key="index">
-                <!--<van-button :id="item.skuId"-->
-                            <!--:type="item.skuId === chooseSKU.skuId ? 'primary' : 'default'"-->
-                            <!--size="mini" @click="selectedSKU">{{item.attributeName}}</van-button>-->
                 <check-box
                   :id="item.skuId"
                   :name="item.attributeName"
@@ -146,11 +143,11 @@
 <style lang="scss" scoped>
 
   .font_setting {
-    font-size: 14px;
+    font-size: 13px;
     font-family: 'Microsoft YaHei';
     padding-left: 5px;
+    color: #888888;
   }
-
 
   .cart-pop-container {
     position: relative;
@@ -213,4 +210,5 @@
   .button-custom {
     width: 100%;
   }
+
 </style>

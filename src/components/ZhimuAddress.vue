@@ -13,10 +13,10 @@
     </div>
     <div class="address-operation">
       <div class="address-operation_edit" @click="updateAddress">
-        <van-icon name="edit" />
+        <van-icon color="#b2b2b2" size="20px" name="edit" />
       </div>
       <div class="address-operation_remove" @click="removeAddress">
-        <van-icon name="delete" />
+        <van-icon color="#b2b2b2" size="20px" name="delete" />
       </div>
     </div>
   </div>
@@ -77,6 +77,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
+    padding: 0px 15px;
   }
   .address-operation {
     display: flex;

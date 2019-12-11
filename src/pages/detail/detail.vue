@@ -2,7 +2,7 @@
   <div class="zm-goods__container">
     <div class="zm-goods__head">
       <img :src="good.headPicUrl" mode="scaleToFill" style="width: 100%; height: 300px">
-      <div style="position: relative">
+      <div style="position: relative; padding-left: 10px;">
         <div class="zm-goods__name">{{good.name}}</div>
         <div class="zm-goods__price">
           <span class="zm-goods__price-value">{{good.salePrice}}</span>
@@ -21,11 +21,11 @@
         </div>
       </div>
       <div @click="navigateToBuyVip" class="vip_tip_class">
-        <div>
+        <div style="font-size: 12px;">
           {{vipTip}}
         </div>
-        <div>
-          <span>立即开通</span>
+        <div style="display: flex;">
+          <span style="font-size: 12px;">立即开通</span>
           <span>
             <van-icon name="arrow" />
           </span>
@@ -34,36 +34,36 @@
     </div>
     <div class="zm-goods__extroInfo">
       <div class="choose-attribute">
-        <van-cell :title="attribute" custom-class="cell-custom-class" is-link @click="chooseAttributes" />
+        <van-cell :title="attribute" title-class="cell-title-class" is-link @click="chooseAttributes" />
       </div>
       <div class="attribute-extro-info">
         <div class="extro-info__item">
-          <div style="display: flex">
-            <img src="../../asset/size.png" style="width: 20px; height: 20px; ">
+          <div class="extro-info__item_i">
+            <img src="../../asset/cake_2.png" style="width: 20px; height: 20px; ">
             <span class="font_setting">{{chooseSKU.cakeSize}}</span>
           </div>
         </div>
         <div class="extro-info__item">
-          <div style="display: flex">
+          <div class="extro-info__item_i">
             <img src="../../asset/people.png" style="width: 20px; height: 20px; ">
             <span class="font_setting">{{chooseSKU.capacity}}</span>
           </div>
         </div>
         <div class="extro-info__item">
-          <div style="display: flex">
+          <div class="extro-info__item_i">
             <img src="../../asset/people.png" style="width: 20px; height: 20px; ">
             <span class="font_setting">{{chooseSKU.copies}}</span>
           </div>
         </div>
         <div class="extro-info__item">
-          <div style="display: flex">
+          <div class="extro-info__item_i">
             <img src="../../asset/cutlery.png" style="width: 20px; height: 20px; ">
             <span class="font_setting">{{chooseSKU.cutlery}}</span>
           </div>
 
         </div>
         <div class="extro-info__item">
-          <div style="display: flex">
+          <div class="extro-info__item_i">
             <img src="../../asset/time.png" style="width: 20px; height: 20px; ">
             <span class="font_setting">{{deliverTime}}</span>
           </div>
@@ -73,11 +73,13 @@
       <div class="product-extro-info">
         <van-cell>
           <div class="zm-goods__sweet">
-            <span style="float: left">参考甜度：</span>
+            <span style="float: left; font-size: 12px;">参考甜度：</span>
             <span style="float: left">
               <van-rate name="甜度"
                         readonly
-                        size="15"
+                        size="10"
+                        allow-half
+                        void-color="#eee"
                         icon="like"
                         void-icon="like-o"
                         :value="good.sweetLevel"
@@ -87,8 +89,8 @@
         </van-cell>
         <van-cell>
           <div class="zm-goods__fresh">
-            <span style="float: left">保鲜条件：</span>
-            <span style="float: left">{{good.freshCondition}}</span>
+            <span style="float: left; font-size: 12px;">保鲜条件：</span>
+            <span style="float: left; font-size: 12px;">{{good.freshCondition}}</span>
           </div>
         </van-cell>
       </div>
@@ -123,7 +125,57 @@
         </van-tab>
         <van-tab title="须知">
           <div class="zm-goods__notice">
-            注意事项
+            <div style="font-weight: bold; font-size: 13px; padding: 10px 0px;">
+              请至少5小时预订
+            </div>
+            <div style="font-size: 12px;">
+              为确保蛋糕的健康新鲜，以及送达您手中时处于最佳使用状态，每一个蛋糕均严格按照配送时间新鲜现做，
+              及时送达，绝无库存，请提前4-6小时预订
+            </div>
+            <div style="font-weight: bold; font-size: 13px; padding: 10px 0px;">
+              订购流程
+            </div>
+            <div style="display: flex;justify-content: space-around;align-items: center;">
+              <div>
+                <img src="../../asset/detail/phone.png" style="width: 20px; height: 20px;padding-left: 15px ">
+                <div style="font-size: 12px;">顾客下单</div>
+              </div>
+              <van-icon name="arrow" />
+              <div>
+                <img src="../../asset/detail/customer.png" style="width: 20px; height: 20px;padding-left: 15px ">
+                <div style="font-size: 12px;">客服接单</div>
+              </div>
+              <van-icon name="arrow" />
+              <div>
+                <img src="../../asset/detail/make.png" style="width: 20px; height: 20px;padding-left: 15px ">
+                <div style="font-size: 12px;">按单鲜制</div>
+              </div>
+              <van-icon name="arrow" />
+              <div>
+                <img src="../../asset/detail/deliver.png" style="width: 20px; height: 20px; padding-left: 15px">
+                <div style="font-size: 12px;">冷链配送</div>
+              </div>
+            </div>
+            <div style="font-weight: bold; font-size: 13px; padding: 10px 0px;">
+              订单签收
+            </div>
+            <div style="font-size: 12px;">
+              请您确认蛋糕款式、尺寸无误，且蛋糕完好后签收，如有疑问或损失请当场与配送员核实，并联系我们，
+              订单一经签收即表示您对产品信息及完整性确认无误，如有疑问请联系 138-1740-9664。
+            </div>
+            <div style="font-weight: bold; font-size: 13px; padding: 10px 0px;">
+              投诉建议
+            </div>
+            <div style="font-size: 12px;">
+              如有任何投诉建议，承诺24小时内进行回复及处理。以下情况，不作为投诉处理：
+              <ul>
+                <li>1. 因个人主观喜欢或口感对产品有异议造成的投诉；</li>
+                <li>2. 因顾客签收后产品发生破损、融化等相关问题；</li>
+                <li>3. 因不可抗拒因素造成的配送延误问题；</li>
+              </ul>
+              （高峰时段的交通堵塞，大雨大雪等恶劣天气）
+            </div>
+
           </div>
         </van-tab>
       </van-tabs>
@@ -142,7 +194,7 @@
           </div>
         </div>
       </div>
-      <div v-else style="background-color: white; text-align: center;">
+      <div v-else style="background-color: white; text-align: center; font-size: 12px; padding: 10px;">
         暂无评价
       </div>
     </div>
@@ -168,13 +220,18 @@
     <van-popup position="bottom"
                :show="popShow"
                z-index="200"
-               custom-style=" top:60%;"
+               custom-style=" top:50%;"
                @close="popUpClose"
                :overlay="true">
       <div class="van-popup__panel">
         <div style="display: flex; align-items: center; padding: 10px">
           <div class="van-popup__panel_price">
-            ￥{{chooseSKU.salePrice}}
+            <span>
+              ￥
+            </span>
+            <span style="font-size: 30px;">
+              {{chooseSKU.salePrice}}
+            </span>
           </div>
           <span v-if="good.stock <= 5" style="color: red; padding-left: 10px;">少量库存</span>
         </div>
@@ -182,39 +239,39 @@
         </div>
         <div class="van-popup__panel_extro">
           <div class="van-popup__panel_extro__item">
-            <div style="display: flex">
+            <div class="extro-info__item_i">
               <img src="../../asset/size.png" style="width: 20px; height: 20px; ">
               <span class="font_setting">{{chooseSKU.cakeSize}}</span>
             </div>
           </div>
           <div class="van-popup__panel_extro__item">
-            <div style="display: flex">
+            <div class="extro-info__item_i">
               <img src="../../asset/people.png" style="width: 20px; height: 20px; ">
               <span class="font_setting">{{chooseSKU.capacity}}</span>
             </div>
           </div>
           <div class="van-popup__panel_extro__item">
-            <div style="display: flex">
+            <div class="extro-info__item_i">
               <img src="../../asset/time.png" style="width: 20px; height: 20px; ">
               <span class="font_setting">{{chooseSKU.copies}}</span>
             </div>
           </div>
           <div class="van-popup__panel_extro__item">
-            <div style="display: flex">
+            <div class="extro-info__item_i">
               <img src="../../asset/cutlery.png" style="width: 20px; height: 20px; ">
               <span class="font_setting">{{chooseSKU.cutlery}}</span>
             </div>
           </div>
 
           <div class="van-popup__panel_extro__item">
-            <div style="display: flex">
+            <div class="extro-info__item_i">
               <img src="../../asset/cutlery.png" style="width: 20px; height: 20px; ">
               <span class="font_setting">{{deliverTime}}</span>
             </div>
 
           </div>
         </div>
-        <div style="font-family: 'Microsoft YaHei'; font-size: 14px;">规格</div>
+        <div style="font-family: 'Microsoft YaHei'; font-size: 12px;padding: 0px 20px">规格</div>
         <div class="van-popup__panel_attribute">
           <span v-for="(item, index) in productSKUs" :key="index">
            <check-box
@@ -227,52 +284,63 @@
           </span>
         </div>
         <div v-if= "popupText === '加入购物车' " class="van-popup__panel_shopcart">
-          <van-button custom-class= "button-custom" type="warning" @click="addToCart">
-            {{popupText}}
-          </van-button>
+          <van-goods-action>
+            <van-goods-action-button
+              :text="popupText"
+              type="warning"
+              @click="addCart"
+            />
+          </van-goods-action>
         </div>
         <div v-else class="van-popup__panel_shopcart">
-          <van-button custom-class= "button-custom" type="warning" @click="addToCart">
-            {{popupText}}
-          </van-button>
+          <van-goods-action>
+            <van-goods-action-button
+              :text="popupText"
+              type="warning"
+              @click="addToBuy"
+            />
+          </van-goods-action>
         </div>
       </div>
     </van-popup>
-    <van-popup
-      :show="outShowUp"
-      position="bottom"
-      custom-style="height: 100%;"
-      :close="outShowClose">
-      <div class="productNotice">
-        <div >
-          <van-icon @click="outShowClose" name="cross" />
-        </div>
-        <div>
-          {{content}}
-        </div>
-        <div v-show="!isNoticed">
-          <van-cell-group>
-            <van-field
-              :value="phoneNo"
-              center
-              clearable
-              label="手机号码"
-              placeholder="请输入手机号码"
-              border="false"
-              @change="phoneNoChange"
-              use-button-slot
-            >
-              <van-button slot="button"
-                          @click="addProductNotice"
-                          size="small" type="primary">下一步</van-button>
-            </van-field>
-          </van-cell-group>
-        </div>
-        <div>
-          <img :src="good.shareUrl" class="img-class">
-        </div>
-      </div>
-      </van-popup>
+
+
+    <!--手机短信通知的逻辑-->
+    <!--<van-popup-->
+      <!--:show="outShowUp"-->
+      <!--position="bottom"-->
+      <!--custom-style="height: 100%;"-->
+      <!--:close="outShowClose">-->
+      <!--<div class="productNotice">-->
+        <!--<div >-->
+          <!--<van-icon @click="outShowClose" name="cross" />-->
+        <!--</div>-->
+        <!--<div>-->
+          <!--{{content}}-->
+        <!--</div>-->
+        <!--<div v-show="!isNoticed">-->
+          <!--<van-cell-group>-->
+            <!--<van-field-->
+              <!--:value="phoneNo"-->
+              <!--center-->
+              <!--clearable-->
+              <!--label="手机号码"-->
+              <!--placeholder="请输入手机号码"-->
+              <!--border="false"-->
+              <!--@change="phoneNoChange"-->
+              <!--use-button-slot-->
+            <!--&gt;-->
+              <!--<van-button slot="button"-->
+                          <!--@click="addProductNotice"-->
+                          <!--size="small" type="primary">下一步</van-button>-->
+            <!--</van-field>-->
+          <!--</van-cell-group>-->
+        <!--</div>-->
+        <!--<div>-->
+          <!--<img :src="good.shareUrl" class="img-class">-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--</van-popup>-->
     <van-toast  id="van-toast"/>
   </div>
 </template>
@@ -324,12 +392,20 @@
     },
 
     addCart() {
-      if (this.good.onlineStatus === 1003) {
-        return;
-      }else if (this.good.onlineStatus === 1004)  {
-        //   弹起到货提醒的页面
-        this.popShow = false;
-        this.outShowUp = true;
+      let that = this;
+      if (this.good.onlineStatus === 1003 || this.good.onlineStatus === 1004) {
+        //   弹起到货提醒的订阅
+        wx.requestSubscribeMessage({
+          tmplIds: ['By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0'],
+          success (res) {
+            //订阅成功
+            that.addProductNotice();
+            console.log("requestSubscribeMessage res", res)
+          },
+          complete(res) {
+            console.log("requestSubscribeMessage res", res)
+          }
+        })
       }else {
         this.addProductToCart(this.chooseSKU);
         this.popShow = false;
@@ -344,22 +420,29 @@
       });
     },
     onAddCartButton() {
-      if (this.good.onlineStatus === 1003) {
-        this.popupText = "今日售完，请明日再来";
-      }else if (this.good.onlineStatus === 1004)  {
+      if (this.good.onlineStatus === 1003 || this.good.onlineStatus === 1004) {
         this.popupText = "到货通知";
-      }else {
+     }else {
         this.popupText = "加入购物车";
       }
       this.popShow = true;
     },
     addToBuy() {
-      if (this.good.onlineStatus === 1003) {
-        return;
-      }else if (this.good.onlineStatus === 1004)  {
+      let that = this;
+      if (this.good.onlineStatus === 1003 || this.good.onlineStatus === 1004)  {
       //   弹起到货提醒的页面
-        this.popShow = false;
-        this.outShowUp = true;
+        wx.requestSubscribeMessage({
+          tmplIds: ['By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0'],
+          success (res) {
+            //订阅成功
+            that.addProductNotice();
+            console.log("requestSubscribeMessage res", res)
+          },
+          complete(res) {
+            console.log("requestSubscribeMessage res", res)
+          }
+        })
+
       }else {
         this.addProductToCart(this.chooseSKU);
         this.popShow = false;
@@ -379,7 +462,7 @@
 
     onBuyClickButton() {
       if (this.good.onlineStatus === 1003) {
-        this.popupText = "今日售完，请明日再来";
+        this.popupText = "到货通知";
       }else if (this.good.onlineStatus === 1004)  {
         this.popupText = "到货通知";
       }else {
@@ -444,7 +527,7 @@
     addProductNotice() {
       let params = {};
       params.productId = this.good.id;
-      params.phoneNo = this.phoneNo;
+      params.userId = this.userId;
       request(
         PRODUCT_NOTICE,
         'POST',
@@ -452,9 +535,10 @@
       ).then(
         (response) => {
           if (response.isRepeated === 1) {
-            toast("您已订阅, 有货时我们将为您发送短信通知", 3000)
+            toast("您已订阅, 有货时我们将为您发送到货提醒通知", 3000)
           } else {
             this.isNoticed = true;
+            toast("商品到货提醒订阅成功");
           }
         }
       )
@@ -484,7 +568,6 @@
       this.outShowUp = false;
       this.phoneNo = "";
       this.isNoticed = false;
-
 
       },
     computed: {
@@ -516,7 +599,7 @@
 
       ...mapGetters(
         [
-          'cartTotalCount'
+          'cartTotalCount','userId'
         ]
       )
 
@@ -527,9 +610,10 @@
 
 <style lang="scss" scoped>
   .font_setting {
-    font-size: 14px;
+    font-size: 12px;
     font-family: 'Microsoft YaHei';
     padding-left: 5px;
+    /*color: #888888;*/
   }
 
 
@@ -546,6 +630,9 @@
     padding: 5px 5px;
     font-size: 16px;
     font-family: "Microsoft YaHei";
+  }
+  .zm-goods__notice {
+    margin: 20px;
   }
 
 
@@ -566,6 +653,14 @@
   }
   .van-popup__panel_attribute {
     display: flex;
+    padding: 10px 15px;
+  }
+  .extro-info__item_i {
+    display: flex;
+    align-items: center;
+  }
+  .van-popup__panel_price{
+    padding: 0px 10px;
   }
 
   .zm-goods__review_detail {
@@ -585,7 +680,7 @@
     display: flex;
     justify-content: space-around;
     font-size: 13px;
-    background-color: yellow;
+    background-color: #fde3ca;
     margin: 10px;
     padding: 5px 0px;
   }
@@ -595,6 +690,7 @@
     flex-flow: row wrap;
     align-content: flex-start;
     background-color:white;
+    padding:10px 15px;
   .extro-info__item {
     box-sizing: border-box;
     flex: 0 0 50%;
@@ -615,7 +711,7 @@
     display: flex;
     flex-flow: row wrap;
     align-content: flex-start;
-    padding: 10px;
+    padding: 10px 15px;
   }
 
   .zm-goods__extroInfo {
@@ -658,6 +754,7 @@
     position: absolute;
     right: 10px;
     top: 0px;
+    text-align: center;
   }
   .zm-goods__price {
     margin: 5px 0;
@@ -684,8 +781,20 @@
   }
 
   }
+  button {
+    font-size: 10px;
+    background-color: #F4F4F4;
+    color: #888888;
+  }
+  button::after {
+    border: none;
+  }
 </style>
 <style lang="scss">
+  .cell-title-class {
+    font-size: 12px;
+  }
+
   .button-custom {
     width: 100%;
   }
@@ -733,18 +842,5 @@
     height: 100%;
     background-color:#F4F4F4 !important;
   }
-  btn1::after {
-    border: 0;
-  }
 </style>
 
-<style lang="scss">
-  .cell-custom-class {
-    background-color: #E8EDF5 !important;
-  }
-
-  btn1::after {
-    border: 0;
-  }
-
-</style>

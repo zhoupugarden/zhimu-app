@@ -3,17 +3,19 @@
 
     <div class="balance-summary">
       <div class="balance-summary__title">
-        <div style="color: #999999">
+        <div style="color: #b2b2b2;padding: 10px;">
           当前余额
         </div>
       </div>
       <div class="balance-summary__total">
-        {{balanceRecords.totalAmount}}
+        <div>
+          {{balanceRecords.totalAmount}}
+        </div>
         <div style="font-size: 12px">元</div>
       </div>
     </div>
 
-    <div style="font-size: 14px; padding-top: 10px;padding-bottom: 10px">
+    <div style="font-size: 12px; padding:10px;">
       交易明细
     </div>
     <div v-for="(item, index) in balanceRecords.items" :key="index" class="balance-detail">
@@ -101,6 +103,7 @@
     color: green;
     display: flex;
     justify-content: center;
+    align-items: center;
   }
 </style>
 

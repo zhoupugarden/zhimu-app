@@ -10,7 +10,7 @@
     </div>
 
     <div @click="popBountyLog" class="detail-container">
-      <div style="padding: 3px">
+      <div style="padding: 5px">
         <van-icon color="orange"  name="bars" />
       </div>
       <div style="color: orange; font-size: 16px; padding: 3px">明细</div>
@@ -32,10 +32,10 @@
 
     </div>
     <div @click="popTip" class="sign-rule">
-      <div style="padding: 1px">
-        <van-icon  name="question-o" />
+      <div style="padding: 0px 1px;">
+        <van-icon size="10px" color="#b2b2b2" name="question-o" />
       </div>
-      <div>
+      <div style="font-size: 10px; color: #b2b2b2;">
         签到规则
       </div>
     </div>
@@ -101,18 +101,18 @@
 
     <van-popup
       :show="popLogShow"
-      custom-style="height: 40%;width: 60%;border-radius: 10px;top:30%;"
+      custom-style="height: 40%;width: 70%;border-radius: 10px;top:30%;"
       position="center"
       @close="onPopupLogClose"
       close-on-click-overlay
     >
-      <div style="font-size: 18px; font-weight: bold; text-align: center">
+      <div style="font-size: 14px; font-weight: bold; text-align: center; padding: 10px;">
         奖励金记录
       </div>
-      <div style="margin: 0px 10px" v-for="(item, index) in signDetailList" :key="index">
+      <div style="margin: 0px 10px; text-align: center;" v-for="(item, index) in signDetailList" :key="index">
         <span style="font-size: 12px;">{{item.id}}.</span>
         <span style="font-size: 12px; padding: 5px">{{item.desc}}</span>
-        <span style="font-size: 10px; font-weight: lighter">{{item.signDate}}</span>
+        <span style="font-size: 12px; color: #b2b2b2;">{{item.signDate}}</span>
       </div>
     </van-popup>
 
@@ -125,6 +125,8 @@
   import {ADD_SIGN,SIGN_INDEX,BOUNTY_REDEEM,SIGN_DETAIL } from '@/utils/api';
   import {request} from "@/utils/request";
   import { mapGetters} from 'vuex';
+  import {toast} from '../../utils/toast';
+
 
   const coupons = [
     {
@@ -221,8 +223,10 @@
             this.daysCount = response.daysCount;
             this.sign = true;
             wx.requestSubscribeMessage({
-              tmplIds: ['By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0'],
+              tmplIds: ['NiwQZaKrzNmkRIpsgDpHNX_T0_16WD3bn9N5etwFAmA'],
               success (res) {
+                //订阅成功
+                toast("提醒订阅成功");
                 console.log("requestSubscribeMessage res", res)
               },
               complete(res) {
@@ -349,7 +353,7 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    font-size: 10px;
+    align-items: center;
   }
 
   .mission-container {
@@ -361,7 +365,7 @@
     color: white;
     background-color: orange;
     padding: 20px;
-    height: 100px;
+    height: 50px;
     z-index: -1;
     display: flex;
     flex-direction: column;
@@ -389,12 +393,13 @@
 
 <style lang="scss">
 
-  .van-step__title {
-    font-size: 8px !important;
-  }
-  .van-step--horizontal {
-    font-size: 8px !important;
-  }
+  /*.van-step__title {*/
+    /*font-size: 8px !important;*/
+  /*}*/
+  /*.van-step--horizontal {*/
+    /*font-size: 8px !important;*/
+  /*}*/
+
 
 </style>
 

@@ -133,7 +133,7 @@
             showCancel: false,
             success(res) {
               if(res.confirm) {
-                wx.navigateTo(
+                wx.navigateBack(
                   {
                     url:'/pages/help/main'
                   }
