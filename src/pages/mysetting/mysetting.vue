@@ -2,24 +2,24 @@
   <div class="mysetting-container">
     <div class="mysetting-header">
       <div>
-        <img :src="basicInfo.avatar" class="circleImg">
+        <img :src="basicInfo.avatarUrl" class="circleImg">
       </div>
-      <div>{{basicInfo.name}}</div>
+      <div>{{basicInfo.nickName}}</div>
     </div>
 
     <div class="mysetting-detail">
 
       <van-cell-group>
         <van-field
-          :value="basicInfo.name"
-          required
+          :value="basicInfo.nickName"
+          readonly
           clearable
           label="用户名"
           bind:click-icon="onClickIcon"
         />
         <van-field
-          :value="basicInfo.phoneno"
-          required
+          :value="basicInfo.phoneNo"
+          readonly
           clearable
           label="手机号"
         />
@@ -33,28 +33,28 @@
            />
          </div>
           <div>
-            <van-radio-group :value="basicInfo.sex"
-                             data-key="basicInfo.sex"
+            <van-radio-group :value="valueSex"
                              @change="onChangeSex">
-              <div class="radio-flex">
-                <div>
-                  <van-radio icon-class="small-radio-icon" checked-color="black" name="1">男</van-radio>
-                </div>
-                <div>
-                  <van-radio icon-class="small-radio-icon" checked-color="black" name="2">女</van-radio>
-                </div>
-              </div>
+       <div style="display: flex">
+         <div style="margin: 0px 15px;">
+           <van-radio icon-class="small-radio-icon" checked-color="black" name="1">男</van-radio>
+         </div>
+         <div>
+           <van-radio icon-class="small-radio-icon" checked-color="black" name="2">女</van-radio>
+         </div>
+       </div>
             </van-radio-group>
           </div>
         </div>
+        <div @click="chooseBirthDay">
+          <van-field
+            readonly
+            label="生日"
+            placeholder="请输入生日信息，保存后不可修改"
+            :value="basicInfo.birthDate"
+          />
+        </div>
 
-        <van-field
-          clearable
-          @focus="chooseBirthDay"
-          label="生日"
-          placeholder="请输入生日信息，保存后不可修改"
-          :value="currentDate"
-        />
       </van-cell-group>
     </div>
 
@@ -64,7 +64,6 @@
           type="date"
           date-type="date"
           :value="currentDate"
-          @input="onInput"
           @cancel="cancelPopup"
           @confirm="confirmPopup"
           :min-date="minDate"
@@ -75,83 +74,129 @@
     <div style="padding-top: 100px;display: flex;justify-content: center">
       <van-button round
                   custom-class="custom-button"
+                  @click="updateUserInfo"
                   type="primary">保存</van-button>
     </div>
   </div>
-
 </template>
 
 <script>
 
-export default {
+  import {UPDATE_USER_INFO, MY_USER_INFO} from '@/utils/api';
+  import {request} from "@/utils/request";
+  import { mapGetters} from 'vuex';
+  import {formatYMD} from "@/utils/dateUtil";
 
-  components: {
-  },
-
+  export default {
   data() {
     return {
       basicInfo: {
-        avatar:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-        name:"宇",
-        level:"新朋友",
-        phoneno:13817409664,
-        sex:"1"
+        avatarUrl:'',
+        gender:'',
+        birthDate:''
       },
-
-      walletInfo : {
-        balance: 100,
-        coupon:2,
-        point : 100
-      },
+      valueSex:'',
       currentDate: new Date().getTime(),
-      minDate: new Date().getTime(),
-      formatter(type, value) {
-        if (type === 'year') {
-          return `${value}年`;
-        } else if (type === 'month') {
-          return `${value}月`;
-        }
-        return value;
-      },
+      minDate: new Date('1900-01-01').getTime(),
       popupShow:false,
       datePopShow:false,
-      currentDate:''
+      birthDate:'',
+      disabled:true
     }
-
   },
 
+
   methods: {
-
-    inputChange(event) {
-      console.log("event", event);
-    },
-
     onInput(event) {
-      this.currentDate = event.detail
+      console.log("onInput event", event);
+      this.birthDate = formatYMD(event.mp.detail);
+      this.currentDate = new Date(event.mp.detail).getTime();
     },
     onChangeSex(event) {
-      this.basicInfo.sex = event.detail;
+      console.log("this.valueSex", this.valueSex)
+      console.log("event", event);
+      this.valueSex = event.mp.detail;
     },
     chooseBirthDay() {
-      console.log("chooseBirthDay", this.datePopShow)
-      this.datePopShow=true;
+      console.log("chooseBirthDay", this.datePopShow);
+      if (!this.disabled) {
+        this.datePopShow=true;
+      }else {
+        return;
+      }
     },
     confirmPopup(event) {
-      console.log("val", event)
+      console.log("val", event);
       const {detail, currentTarget} = event.mp;
       if (!isNaN(detail)) {
-        const date = new Date(detail);
-        this.currentDate = date.toLocaleDateString();
+        this.currentDate = detail;
+        this.basicInfo.birthDate = formatYMD(this.currentDate);
+        console.log("this.birthDate", this.birthDate)
         this.datePopShow = false;
       }else {
         this.datePopShow = false;
-
       }
     },
     cancelPopup() {
       this.datePopShow = false;
+    },
+    updateUserInfo() {
+      let params = {};
+      params.userId = this.userId;
+      params.birthDate = new Date(this.basicInfo.birthDate);
+      params.gender = this.valueSex;
+      request(
+        UPDATE_USER_INFO,
+        'POST',
+        params
+      ).then(
+        response => {
+          console.log(response)
+          wx.switchTab({
+            url:"/pages/my/main"
+          })
+        }
+      )
+
+    },
+    getUserInfo() {
+      let params = {};
+      params.token = this.token;
+      request(
+        MY_USER_INFO,
+        'GET',
+        params
+      ).then(
+        response => {
+          this.basicInfo = response;
+          console.log("===response", response, this.basicInfo);
+          this.valueSex = this.basicInfo.gender.toString();
+          if (!this.basicInfo.birthDate) {
+            this.birthDate = '';
+            this.disabled = false;
+          }else {
+            this.birthDate = formatYMD(this.basicInfo.birthDate);
+            this.disabled = true;
+          }
+        }
+      )
     }
+  },
+  computed: {
+    formatBirthDate() {
+      let timestamp = new Date(this.basicInfo.birthDate).getTime();
+      return formatYMD(timestamp)
+    },
+    ...mapGetters(
+      [
+        'cartTotalCount','userId','token'
+      ]
+    )
+  },
+    mounted() {
+    this.getUserInfo();
   }
+
 }
 </script>
 

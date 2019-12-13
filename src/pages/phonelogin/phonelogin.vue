@@ -89,11 +89,10 @@
       ),
 
       getCode(){
-        console.log("this.phoneNo", this.phoneNo)
+        console.log("this.phoneNo", this.phoneNo);
         if (this.validPhoneNo(this.phoneNo)) {
           const TIME_COUNT = 60;
           if (!this.timer) {
-
             this.sendVerifyCode(this.phoneNo);
             this.count = TIME_COUNT;
             this.show = false;
@@ -111,6 +110,7 @@
       },
 
       validPhoneNo(num) {
+        console.log("phoneNo", num);
         let valid = true;
         if (null === num || '' === num) {
           this.errorMessage = '手机号码不能为空';
@@ -125,15 +125,11 @@
       //mpvue不支持小程序原生组件的双向绑定。
       inputChange(event) {
         this.phoneNo = event.mp.detail;
-        if ('' !== this.errorMessage)  {
-          this.errorMessage = '';
-        }
+
       },
       inputCodeChange(event) {
         this.verifyCode = event.mp.detail;
-        if ('' !== this.errorCodeMessage)  {
-          this.errorCodeMessage = '';
-        }
+
       },
 
       sendVerifyCode(phoneNo) {
@@ -149,20 +145,6 @@
           }
         )
       },
-      // verifySmsCode(data) {
-      //   request(
-      //     MY_PHONE_LOGIN,
-      //     'post',
-      //     data
-      //   ).then(
-      //     response => {
-      //       if (response.token) {
-      //         this.storeToken(response.token);
-      //         this.backToPage();
-      //       }
-      //     }
-      //   )
-      // },
 
       verifyLoginCode(data) {
         let that = this;
@@ -174,21 +156,16 @@
           response => {
             if (response === "成功") {
               that.login();
-
             }
           }
         )
       },
 
       verifyAndLogin() {
-        if (this.phoneNo === '' || this.verifyCode === '') {
-          this.errorMessage = "不能为空";
-        } else {
           let verifySmsCodeBo = {};
           verifySmsCodeBo.phoneNo = this.phoneNo;
           verifySmsCodeBo.code = this.verifyCode;
           this.verifyLoginCode(verifySmsCodeBo);
-        }
       },
 
       myPhoneLogin(data) {

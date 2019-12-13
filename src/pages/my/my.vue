@@ -315,19 +315,6 @@
         }
       })
 
-
-
-
-      // wx.login({
-      //   success (resss) {
-      //     if (resss) {
-      //       //发起网络请求
-      //       console.log("resss", resss)
-      //     } else {
-      //       console.log('登录失败！' + res.errMsg)
-      //     }
-      //   }
-      // })
     },
     getPhoneNumber(e) {
       console.log("获取手机号",e)
@@ -360,7 +347,6 @@
   },
 
   onShow() {
-
     if (this.token) {
       this.isLogin = true;
       this.getUserInfo(this.token);

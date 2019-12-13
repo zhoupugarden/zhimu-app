@@ -12,7 +12,7 @@
         <van-cell title="应付金额" value="￥500"  />
       </van-cell-group>
     </div>
-    <div class="buy-vip-button">
+    <div v-show="!isVip" class="buy-vip-button">
       <van-button type="primary" size="large" @click="charge">立即支付</van-button>
     </div>
     <van-dialog id="van-dialog" />

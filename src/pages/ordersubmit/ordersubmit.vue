@@ -12,7 +12,7 @@
     <div class="order-submit-address">
       <div v-if="switchValue === 1" class="order-submit-address__deliver" @click="navigateToChooseAddress">
         <div class="order-submit-address__deliver-info">
-          <div v-if="addressArray.length === 0">
+          <div v-if="addressArray.length === 0" style="padding: 10px 15px; font-size: 14px;">
             点击添加地址
           </div>
           <div v-else>
@@ -38,23 +38,22 @@
     <div style="font-weight: bolder;font-size: 14px;padding: 10px 15px;">配送时间</div>
     <div class="order-submit-time">
       <div style="width: 50%">
-        <van-cell title="日期" :value="currentDate" custom-class="custome-cell-time" is-link arrow-direction="down" @click="datePop"/>
+        <van-cell title="日期" :value="formatDate" custom-class="custome-cell-time" is-link arrow-direction="down" @click="datePop"/>
       </div>
       <div style="width: 50%">
         <van-cell title="时间" :value="currentTime" custom-class="custome-cell-time" is-link arrow-direction="down" @click="timePop"/>
       </div>
     </div>
-    <div style="display: flex;">
-
+    <div style="display: flex; align-items: center;">
     <div style="font-weight: bolder;font-size: 14px;padding: 10px 15px;">
-      优惠券
+      优惠券      {{couponCanUseList}}
     </div>
-    <div>
-      <span style="background-color: #230000; border: 1px solid black; color: white; font-size: 12px">VIP</span>
+
+    <div @click="navigateToBuyVip">
+      <span class="vip_tip_2">VIP</span>
       <span class="vip_tip">{{vipTip}}</span>
     </div>
     </div>
-
 
     <div class="order-submit-coupon">
       <van-cell :title="chooseCouponTip" custom-class="custome-cell" is-link arrow-direction="down" @click="couponPop"/>
@@ -77,6 +76,7 @@
           <van-cell title="配送费" :value= "flag + deliverValue" />
         </van-cell-group>
     </div>
+    {{cartList}}
 
     <div class="order-submit-button">
       <van-button custom-class="custom-button"
@@ -106,9 +106,11 @@
 
       <van-popup :show="couponPopShow"
                  custom-style="height:80%"
+                 @enter="enterCouponPop"
                  @close="closeCouponPopup"
                  position="bottom">
 
+        {{couponCanUseList}}
         <div style="position: relative; height: 100%">
           <div style="padding-bottom: 10px; position: relative; height: 100%">
             <div style="padding-bottom: 50px;">
@@ -133,6 +135,7 @@
                custom-style="height:80%"
                @close="closeProductPopup"
                position="bottom">
+      {{cartList}}
           <div v-for="item in cartList" :key="index">
             <product-item :productItemInfo="item"></product-item>
           </div>
@@ -172,7 +175,8 @@
         timePopShow:false,
         couponPopShow:false,
         productPopShow:false,
-        currentDate: null,
+        currentDate: new Date().getTime(),
+        formatDate: "",
         currentTime: null,
         minDate: new Date(2018, 0, 1).getTime(),
         timeColumns:['10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00'],
@@ -207,6 +211,19 @@
           url
         });
       },
+      navigateToBuyVip() {
+        var url = "../buyvip/main";
+        console.log("url",url)
+        wx.navigateTo({
+          url
+        });
+      },
+
+      enterCouponPop() {
+        console.log("====enterCouponPop=====");
+        this.getCoupon();
+      },
+
 
       datePop() {
         this.datePopShow = true;
@@ -233,9 +250,9 @@
         console.log("val", event)
         const {detail, currentTarget} = event.mp;
         if (!isNaN(detail)) {
-          const date = new Date(detail);
          console.log(formatYMD(detail));
-          this.currentDate = formatYMD(detail);
+          this.formatDate = formatYMD(detail);
+          this.currentDate = detail;
           this.datePopShow = false;
         }else {
           this.datePopShow = false;
@@ -283,7 +300,7 @@
         ).then(
           response => {
             this.addressArray = response;
-            console.log("this response", response);
+            console.log("this response====", response);
           }
         )
       },
@@ -360,7 +377,8 @@
         )
       },
       validParams() {
-        if (this.switchValue === 1 & this.addressId === 0) {
+        console.log("this.switchValue , this.addressId", this.switchValue, this.addressId)
+        if (this.switchValue === 1 && this.addressId === 0) {
           wx.showModal({
             title: "错误",
             content: '亲,请先选择收货地址',
@@ -385,7 +403,7 @@
         let params = {};
         params.userId = this.userId;
         params.addressId = this.addressId;
-        params.deliverDate = this.currentDate;
+        params.deliverDate = this.formatDate;
         params.deliverTime = this.currentTime;
 
         if (this.restWxPayAmount === 0) {
@@ -438,6 +456,7 @@
            'cartList','freeCartList', 'cartTotalCount','cartTotalPrice','cartProductListName','token','userId'
         ]
       ),
+
       vipTip() {
         if (this.cartTotalPrice <= 80) {
           return "加入会员可得免邮卡本次省8元";
@@ -458,12 +477,15 @@
         }
       },
       currentAddress() {
-
         if (this.switchValue === -1) {
           return "";
         }
         if (this.addressArray.length === 0) {
           return "";
+        }
+
+        if(this.addressId !== 0 && this.addressArray.length === 0) {
+          this.addressId = 0;
         }
 
         if(this.addressId === 0 && this.addressArray.length > 0) {
@@ -531,8 +553,12 @@
 
     },
     onLoad() {
-      this.currentDate = "2019-10-10";
+      this.currentDate = new Date().getTime();
+      this.formatDate = formatYMD(this.currentDate);
       this.currentTime = "10:00-11:00";
+
+      this.getUserInfo();
+
     },
     onShow() {
       console.log("this.addressId", this.addressId);
@@ -543,11 +569,13 @@
         if (null != params.addressId) {
           this.addressId = params.addressId;
         }
-        this.listUserAddress();
         this.getCoupon();
-        this.getUserInfo();
+        this.listUserAddress();
+    }
 
-    },
+
+
+
     // onUnload() {
     //   console.log("onUnload");
     //   let url = "/pages/cart/main";
@@ -585,11 +613,18 @@
   .vip_tip {
     background-color: #F39B00;
     color: white;
-    border: 1px solid black;
     font-size: 12px;
-    border-bottom-right-radius: 5px;
-    border-top-right-radius: 5px;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 2px 10px 2px 2px;
   }
+  .vip_tip_2 {
+    background-color: #230000;
+    padding: 2px;
+    color: white;
+    font-size: 12px;
+  }
+
   .un-switch-style {
     font-size: 14px;
     width: 40px;

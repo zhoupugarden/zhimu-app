@@ -53,7 +53,13 @@
     <div v-else>
         会员截止日期：{{userInfo.vipValidEndTime}}
     </div>
-    <van-popup :show="popShow">
+    <van-popup
+      :show="popShow"
+      positon="center"
+      closeable
+      close-icon="close"
+      custom-style="border-radius:10px"
+      round>
       <div class="popshow-container">
         <div style="font-size: 18px; font-weight: bold">
           {{popContent.title}}
@@ -63,6 +69,7 @@
         </div>
         <div>
           <van-button type="primary"
+                      custom-class="custom-button"
                       @click="popupClose"
                       size="small">确定</van-button>
         </div>
@@ -245,7 +252,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 200px;
+    width: 280px;
     height: 180px;
     justify-content: space-around;
   }
@@ -253,3 +260,10 @@
 
 </style>
 
+<style lang="wxss">
+  .custom-button {
+    width: 180px;
+  }
+
+
+</style>

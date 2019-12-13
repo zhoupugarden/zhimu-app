@@ -304,43 +304,6 @@
       </div>
     </van-popup>
 
-
-    <!--手机短信通知的逻辑-->
-    <!--<van-popup-->
-      <!--:show="outShowUp"-->
-      <!--position="bottom"-->
-      <!--custom-style="height: 100%;"-->
-      <!--:close="outShowClose">-->
-      <!--<div class="productNotice">-->
-        <!--<div >-->
-          <!--<van-icon @click="outShowClose" name="cross" />-->
-        <!--</div>-->
-        <!--<div>-->
-          <!--{{content}}-->
-        <!--</div>-->
-        <!--<div v-show="!isNoticed">-->
-          <!--<van-cell-group>-->
-            <!--<van-field-->
-              <!--:value="phoneNo"-->
-              <!--center-->
-              <!--clearable-->
-              <!--label="手机号码"-->
-              <!--placeholder="请输入手机号码"-->
-              <!--border="false"-->
-              <!--@change="phoneNoChange"-->
-              <!--use-button-slot-->
-            <!--&gt;-->
-              <!--<van-button slot="button"-->
-                          <!--@click="addProductNotice"-->
-                          <!--size="small" type="primary">下一步</van-button>-->
-            <!--</van-field>-->
-          <!--</van-cell-group>-->
-        <!--</div>-->
-        <!--<div>-->
-          <!--<img :src="good.shareUrl" class="img-class">-->
-        <!--</div>-->
-      <!--</div>-->
-      <!--</van-popup>-->
     <van-toast  id="van-toast"/>
   </div>
 </template>

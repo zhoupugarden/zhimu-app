@@ -9,7 +9,7 @@
     "van-button": "/static/vant/button/index",
     "van-cell": "/static/vant/cell/index"
   },
-  "navigationBarTitleText": "设置"
+  "navigationBarTitleText": "用户设置"
 }
 
 
