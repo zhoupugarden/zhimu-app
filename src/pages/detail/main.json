@@ -1,7 +1,5 @@
 {
   "usingComponents": {
-    "van-badge": "/static/vant/badge/index",
-    "van-badge-group": "/static/vant/badge-group/index",
     "van-cell-group": "/static/vant/cell-group/index",
     "van-cell": "/static/vant/cell/index",
     "van-action-sheet": "/static/vant/action-sheet/index",

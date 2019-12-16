@@ -23,15 +23,29 @@
                 </div>
               </div>
             </div>
-            <div class="order-coupon-detail">
-              <van-cell :title="orderInfo.couponDesc" icon="coupon" :value="orderInfo.couponAmount" />
-              </van-cell>
+
+            <div v-show = "orderInfo.couponAmount > 0" class="order-deliver-info">
+              <van-cell title="配送费" :value="flag + orderInfo.deliverAmount" />
             </div>
+
             <div class="order-total-info">
-              <van-cell title="总计" :value="orderInfo.totalAmount" />
+              <van-cell title="总计" :value="flag + orderInfo.totalAmount" />
             </div>
+            <div v-if="orderInfo.couponAmount > 0" class="order-coupon-detail">
+              <div style="display: flex;align-items: center;">
+                <img src="../../asset/coupon_dis.png" class="coupon-img">
+                <div>
+                  {{orderInfo.couponDesc}}
+                </div>
+              </div>
+              <div style="color: #969799;">
+                {{ '-' + flag + orderInfo.couponAmount}}
+              </div>
+            </div>
+
+
             <div class="order-need-info">
-              <van-cell title="需付" :value="orderInfo.needPayAmount" />
+              <van-cell value-class = "order-need-info_value_class" title="需付" :value="flag + orderInfo.needPayAmount" />
             </div>
             <div class="merchant-contact-info" @click="callCustomerPhone">
               <van-cell icon="phone-o" title="联系客服">
@@ -95,6 +109,7 @@
 
     data() {
       return {
+        flag: '￥',
         active:0,
         orderInfo: {},
         orderProductDetailList: {},
@@ -242,6 +257,14 @@
     font-size: 12px;
     padding: 0 10px;
   }
+  .order-coupon-detail {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    padding: 10px 16px 10px 0px;
+    border-bottom: 1px solid #f2f2f2;
+    margin-left: 16px;
+  }
 
   .order-submit-button {
     position: fixed;
@@ -259,6 +282,11 @@
     display: flex;
     justify-content: center;
   }
+  .coupon-img {
+    height: 14px;
+    width: 14px;
+    padding-right: 10px;
+  }
 
 </style>
 
@@ -275,4 +303,9 @@
   .custom-button {
     width: 300px;
   }
+
+  .order-need-info_value_class {
+    color: #ff4444 !important;
+  }
+
 </style>

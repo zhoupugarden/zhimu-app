@@ -36,12 +36,13 @@ export default {
       if (state.cartList.length === 0) {
         return 0
       } else {
-        console.log("cartTotalPrice ");
-        return state.cartList.reduce(
+        let totalPrice = state.cartList.reduce(
           (total, cartListItem) => {
             return total + cartListItem.salePrice * cartListItem.quantity
           }, 0
-        )
+        );
+        console.log("cartTotalPrice ", totalPrice);
+        return totalPrice;
       }
     },
     productCartList: state => state.cartList.filter(

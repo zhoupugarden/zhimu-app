@@ -49,12 +49,17 @@
     data() {
       return {
         couponList:[],
-        balanceRecords: {
-          total: 798
-        }
+        active:0
       }
     },
     methods: {
+
+      onChange(event) {
+        console.log("event", event);
+        this.active = event.mp.detail.index;
+      },
+
+
       navgateToPointRedeem() {
         var url = "/pages/pointredeem/main";
         console.log("url",url)
@@ -105,6 +110,8 @@
     },
 
     onUnload() {
+      this.active = 0;
+      this.couponList = [];
       let pages = getCurrentPages();
       let prePage = pages[pages.length -2];
       let preUrl = prePage.route;

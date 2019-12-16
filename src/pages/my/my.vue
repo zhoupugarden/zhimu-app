@@ -8,13 +8,17 @@
         </div>
 
         <div v-if="isLogin" class="my-basic-info__content">
-          <div>{{basicInfo.nickName}}</div>
-          <van-tag color="black">{{basicInfo.phoneNo}}</van-tag>
-          <div @click="navigateToMission">
-            <van-tag color="green">签到有奖</van-tag>
+          <div style="display: flex;">
+            <div style="padding-right: 10px;">{{basicInfo.nickName}}</div>
+            <div @click="navigateToMission">
+              <van-button plain type="info" color="black" size="mini">每日签到</van-button>
+            </div>
           </div>
+
+          <div style="font-size: 12px;">{{basicInfo.phoneNo}}</div>
           <div v-if="basicInfo.level === 0" @click="navigateToMyVip">
-            <van-tag color="gold">加入会员享受VIP福利</van-tag>
+            <span class="vip_tip_2">VIP</span>
+            <span class="vip_tip">加入会员享受VIP福利</span>
           </div>
           <div v-else>
             <van-tag color="gold">VIP用户</van-tag>
@@ -32,13 +36,6 @@
           </div>
         </div>
 
-
-        <div class="my-basic-info__go">
-          <van-button round color="grey"
-                      custom-class="mini-button"
-                      @click="navigateToLogin"
-                      size="mini">开通星球会员></van-button>
-        </div>
       </div>
       <div class="my-wallet-info">
 
@@ -367,6 +364,22 @@
     border-radius: 30px;
     width:60px;
     height:60px;
+  }
+  .vip_tip {
+    background-color: #D9C49A;
+    color: black;
+    font-size: 12px;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 2px 10px 2px 2px;
+    font-weight: bold;
+  }
+  .vip_tip_2 {
+    background-color: #230000;
+    padding: 2px;
+    color: #D9C49A;
+    font-size: 12px;
+    font-weight: bold;
   }
 
   .my-profile {

@@ -171,7 +171,6 @@
 
 
     },
-    //create 只执行一次
     onShow() {
       this.indexList();
       // this.getCategoryAndProductBrief();

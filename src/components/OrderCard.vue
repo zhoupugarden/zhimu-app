@@ -1,10 +1,10 @@
 <template>
   <div class="order-card-container">
     <div class="order-card__status">
-      <div style="font-size: small;font-weight: lighter">
+      <div style="font-size: 12px;">
         {{orderInfo.orderNo}}
       </div>
-      <div style="font-size: small; font-weight: bold">
+      <div style="font-size: 12px; ">
         {{orderInfo.orderStatusDesc}}
       </div>
     </div>
@@ -13,13 +13,13 @@
         <img :src="orderInfo.showPicUrl" style="width: 80px;height: 80px;">
       </div>
       <div class="order-card__detail-info">
-        <div style="color: red; font-size: small">
+        <div style="color: red; font-size: 12px">
           ￥{{orderInfo.totalAmount}}
         </div>
-        <div style="font-size: small; font-weight: lighter">
+        <div style="font-size: 12px; font-weight: lighter">
           {{orderInfo.orderDateTime}}
         </div>
-        <div style="font-size: small;font-weight: lighter;width: 200px;">
+        <div style="font-size: 12px;width: 200px;">
           {{orderInfo.productListName}}
         </div>
       </div>

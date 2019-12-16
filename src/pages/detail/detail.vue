@@ -34,7 +34,7 @@
     </div>
     <div class="zm-goods__extroInfo">
       <div class="choose-attribute">
-        <van-cell :title="attribute" title-class="cell-title-class" is-link @click="chooseAttributes" />
+        <van-cell :title="attribute" custom-class ="choose-attribute-class" title-class="cell-title-class" is-link @click="chooseAttributes" />
       </div>
       <div class="attribute-extro-info">
         <div class="extro-info__item">
@@ -77,7 +77,7 @@
             <span style="float: left">
               <van-rate name="甜度"
                         readonly
-                        size="10"
+                        size="12"
                         allow-half
                         void-color="#eee"
                         icon="like"
@@ -357,16 +357,18 @@
     addCart() {
       let that = this;
       if (this.good.onlineStatus === 1003 || this.good.onlineStatus === 1004) {
+        this.popShow = false;
         //   弹起到货提醒的订阅
         wx.requestSubscribeMessage({
           tmplIds: ['By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0'],
           success (res) {
-            //订阅成功
-            that.addProductNotice();
-            console.log("requestSubscribeMessage res", res)
-          },
-          complete(res) {
-            console.log("requestSubscribeMessage res", res)
+            if (res.By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0 === 'accept') {
+              //订阅成功
+              that.addProductNotice();
+              console.log("订阅成功", res)
+            }else {
+              console.log("拒绝订阅", res)
+            }
           }
         })
       }else {
@@ -391,18 +393,20 @@
       this.popShow = true;
     },
     addToBuy() {
+      this.popShow = false;
       let that = this;
       if (this.good.onlineStatus === 1003 || this.good.onlineStatus === 1004)  {
       //   弹起到货提醒的页面
         wx.requestSubscribeMessage({
           tmplIds: ['By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0'],
           success (res) {
-            //订阅成功
-            that.addProductNotice();
-            console.log("requestSubscribeMessage res", res)
-          },
-          complete(res) {
-            console.log("requestSubscribeMessage res", res)
+            if (res.By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0 === 'accept') {
+              //订阅成功
+              that.addProductNotice();
+              console.log("订阅成功", res)
+            }else {
+              console.log("拒绝订阅", res)
+            }
           }
         })
 
@@ -666,8 +670,8 @@
     content:" ";
     display:block;
     margin:5px auto 0;
-    width:90%;
-    border-bottom:2px solid #F39B00;
+    width:100%;
+    border-bottom:1px solid #f2f2f2;
     transition:width .4s ease-in-out;
   }
   .van-popup__panel_extro {
@@ -708,6 +712,8 @@
     padding-bottom:50px;
   .zm-goods__head {
     position: relative;
+    padding-bottom: 10px;
+    background-color: white;
   .zm-goods__name {
     font-size: 16px;
     margin: 5px 0;
@@ -755,7 +761,10 @@
 </style>
 <style lang="scss">
   .cell-title-class {
-    font-size: 12px;
+    font-size: 12px !important;
+  }
+  .choose-attribute-class {
+    background-color: #f2f2f2 !important;
   }
 
   .button-custom {

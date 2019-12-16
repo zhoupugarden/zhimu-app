@@ -163,8 +163,8 @@
       let cake = this.$store.getters.cartList.find(
         i => i.type === 1
       );
-      console.log("cake", cake)
       if (cake) {
+        console.log("cake", cake);
         return true;
       } else {
         return false;
@@ -290,7 +290,7 @@
     calcTotalPrice() {
       this.totalCartList = this.cartList;
       if (this.totalCartList.length === 0) {
-        this.totalPrice = 0;
+        this.totalPrice = 0.00;
       } else {
         console.log("cartTotalPrice ");
         console.log("totalCartList ", this.totalCartList);
@@ -302,7 +302,7 @@
           console.log("itemPrice", itemPrice);
           tmpTotalPrice = tmpTotalPrice + itemPrice;
         }
-        this.totalPrice = tmpTotalPrice;
+        this.totalPrice = tmpTotalPrice.toFixed(2);
         console.log("this.totalPrice", this.totalPrice)
       }
     },

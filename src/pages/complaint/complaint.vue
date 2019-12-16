@@ -144,7 +144,17 @@
         }
       )
     }
+  },
+  onUnload() {
+    this.active = 0;
+    this.complaintType = "请选择";
+    this.content = "";
+    this.contactName = "";
+    this.contactPhoneNo = "";
   }
+
+
+
 
 }
 </script>

@@ -46,7 +46,7 @@
     </div>
     <div style="display: flex; align-items: center;">
     <div style="font-weight: bolder;font-size: 14px;padding: 10px 15px;">
-      优惠券      {{couponCanUseList}}
+      优惠券
     </div>
 
     <div @click="navigateToBuyVip">
@@ -62,28 +62,39 @@
       余额
     </div>
     <div class="order-submit-balance">
-      <van-cell :title=" '' + userBalanceAmount" custom-class="custome-cell"/>
+      <van-cell :title=" '' + useBalanceAmount" custom-class="custome-cell"/>
     </div>
     <div class="order-submit-product">
-      <van-cell title="商品" :value= "'￥' + cartTotalPrice" title-class="product-title-class" value-class="product-value-class"/>
+      <van-cell title="商品" :value= "'￥' + totalProductPrice" title-class="product-title-class" value-class="product-value-class"/>
       <van-cell :title="cartProductListName" custom-class="custome-cell" is-link arrow-direction="down" @click="productPop"/>
     </div>
     <div class="order-submit-summary">
         <van-cell-group>
-          <van-cell :title="cartTotalCount + '件商品'" :value= "'￥' + cartTotalPrice" />
-          <van-cell title="余额" :value= "flag + userBalanceAmount" />
-          <van-cell title="优惠券" :value= "flag + couponValue" />
+          <van-cell :title="cartTotalCount + '件商品'" :value= " flag + totalProductPrice" />
+          <van-cell title="余额" :value= " '-' + flag + useBalanceAmount" />
+          <van-cell title="优惠券" :value= " '-' + flag + couponValue" />
           <van-cell title="配送费" :value= "flag + deliverValue" />
         </van-cell-group>
     </div>
-    {{cartList}}
 
     <div class="order-submit-button">
       <van-button custom-class="custom-button"
                   @click="orderSubmit"
                   type="primary"
-      >微信付款{{restWxPayAmount}}</van-button>
+      >微信付款{{flag + restWxPayAmount}}</van-button>
     </div>
+
+
+    <van-popup :show="timePopShow" position="bottom">
+      <van-picker show-toolbar
+                  overlay="true"
+                  @cancel="cancelTimePop"
+                  @confirm="confirmTimePop"
+                  :columns="timeColumns" />
+    </van-popup>
+
+
+
 
     <van-popup :show="datePopShow" position="bottom">
       <van-datetime-picker
@@ -110,7 +121,6 @@
                  @close="closeCouponPopup"
                  position="bottom">
 
-        {{couponCanUseList}}
         <div style="position: relative; height: 100%">
           <div style="padding-bottom: 10px; position: relative; height: 100%">
             <div style="padding-bottom: 50px;">
@@ -135,7 +145,6 @@
                custom-style="height:80%"
                @close="closeProductPopup"
                position="bottom">
-      {{cartList}}
           <div v-for="item in cartList" :key="index">
             <product-item :productItemInfo="item"></product-item>
           </div>
@@ -180,10 +189,16 @@
         currentTime: null,
         minDate: new Date(2018, 0, 1).getTime(),
         timeColumns:['10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00'],
-        totalProductPrice:"133.00",
         balanceValue:"0",
+        userInfo:{},
+        vipTip:"",
+
+        totalProductPrice:0,
         couponValue: 0,
-        userInfo:{}
+        balanceAmount:0,
+        // useBalanceAmount:0,
+        // restWxPayAmount:0,
+        deliverValue:0
       }
     },
     methods: {
@@ -314,6 +329,7 @@
         ).then(
           response => {
             this.userInfo = response;
+            this.balanceAmount = this.userInfo.balanceAmount;
             console.log("this response", response);
           }
         )
@@ -380,7 +396,7 @@
         console.log("this.switchValue , this.addressId", this.switchValue, this.addressId)
         if (this.switchValue === 1 && this.addressId === 0) {
           wx.showModal({
-            title: "错误",
+            title: "提示",
             content: '亲,请先选择收货地址',
             confirmText: '确定',
             showCancel: false,
@@ -396,6 +412,28 @@
         }
       },
 
+      calcTotalPrice() {
+        this.totalCartList = this.cartList;
+        if (this.totalCartList.length === 0) {
+          this.totalPrice = 0.00;
+        } else {
+          console.log("cartTotalPrice ");
+          console.log("totalCartList ", this.totalCartList);
+          let tmpTotalPrice = 0;
+          for (let index in this.totalCartList) {
+            console.log("item", this.totalCartList[index]);
+            let item = this.totalCartList[index];
+            let itemPrice = item.salePrice * item.quantity;
+            console.log("itemPrice", itemPrice);
+            tmpTotalPrice = tmpTotalPrice + itemPrice;
+          }
+          this.totalProductPrice = tmpTotalPrice.toFixed(2);
+          console.log("this.totalPrice", this.totalPrice)
+        }
+      },
+
+
+
       orderSubmit() {
         if (!this.validParams()) {
           return;
@@ -408,7 +446,7 @@
 
         if (this.restWxPayAmount === 0) {
           params.payType = 2;
-        }else if (this.userBalanceAmount === 0) {
+        }else if (this.useBalanceAmount === 0) {
           params.payType = 1;
         }else {
           params.payType = 3;
@@ -457,25 +495,6 @@
         ]
       ),
 
-      vipTip() {
-        if (this.cartTotalPrice <= 80) {
-          return "加入会员可得免邮卡本次省8元";
-        } else {
-          return "加入会员可得5张9折卡本次省" + (this.cartTotalPrice * 0.1).toFixed(2) + "元";
-        }
-      },
-
-      deliverValue() {
-        if(this.cartTotalPrice < 30) {
-          return 8;
-        }
-        if (this.cartTotalPrice >=30 && this.cartTotalPrice < 100) {
-          return 5;
-        }
-        if (this.cartTotalPrice >= 100) {
-          return 0;
-        }
-      },
       currentAddress() {
         if (this.switchValue === -1) {
           return "";
@@ -483,11 +502,9 @@
         if (this.addressArray.length === 0) {
           return "";
         }
-
         if(this.addressId !== 0 && this.addressArray.length === 0) {
           this.addressId = 0;
         }
-
         if(this.addressId === 0 && this.addressArray.length > 0) {
           //取最新添加的地址
           let addressItem =  this.addressArray[this.addressArray.length - 1];
@@ -499,20 +516,20 @@
         }
       },
 
-      userBalanceAmount() {
-        console.log("balanceMount, cartTotalPrice", this.userInfo.balanceAmount , this.cartTotalPrice)
-        if (this.userInfo.balanceAmount >= this.cartTotalPrice) {
-          return this.cartTotalPrice - this.couponValue;
+      useBalanceAmount() {
+        console.log("balanceMount, cartTotalPrice", this.balanceAmount , this.totalProductPrice)
+        if (this.balanceAmount >= this.totalProductPrice) {
+          return this.totalProductPrice - this.couponValue;
         } else {
-          return this.userInfo.balanceAmount;
+          return this.balanceAmount;
         }
       },
 
       restWxPayAmount() {
-        let needPayAmount = this.cartTotalPrice + this.deliverValue - this.couponValue;
-        console.log("needPayAmount: this.userBalanceAmount", needPayAmount, this.userBalanceAmount)
-        if (needPayAmount > this.userInfo.balanceAmount) {
-          return (needPayAmount - this.userInfo.balanceAmount).toFixed(2);
+        let needPayAmount = this.totalProductPrice + this.deliverValue - this.couponValue;
+        console.log("needPayAmount: this.useBalanceAmount", needPayAmount, this.useBalanceAmount)
+        if (needPayAmount > this.balanceAmount) {
+          return (needPayAmount - this.balanceAmount).toFixed(2);
         }else {
           return 0;
         }
@@ -552,15 +569,31 @@
       }
 
     },
+
     onLoad() {
       this.currentDate = new Date().getTime();
       this.formatDate = formatYMD(this.currentDate);
       this.currentTime = "10:00-11:00";
 
-      this.getUserInfo();
-
     },
     onShow() {
+      this.calcTotalPrice();
+
+      if (this.totalProductPrice < 30) {
+        this.deliverValue = 8;
+        this.vipTip = "加入会员可得免邮卡本次省8元";
+      } else if (this.totalProductPrice >=30 && this.totalProductPrice < 80) {
+        this.vipTip = "加入会员可得免邮卡本次省8元";
+        this.deliverValue = 5;
+      } else if (this.totalProductPrice >=80 && this.totalProductPrice < 100) {
+        this.vipTip = "加入会员可得5张9折卡本次省" + (this.totalProductPrice * 0.1).toFixed(2) + "元";
+        this.deliverValue = 5;
+      }else {
+        this.vipTip = "加入会员可得5张9折卡本次省" + (this.totalProductPrice * 0.1).toFixed(2) + "元";
+        this.deliverValue = 0;
+      }
+
+      console.log("totalProductPrice", this.totalProductPrice);
       console.log("this.addressId", this.addressId);
         //要把原有已选的值清空
         let params = this.$root.$mp.query;
@@ -569,20 +602,11 @@
         if (null != params.addressId) {
           this.addressId = params.addressId;
         }
-        this.getCoupon();
-        this.listUserAddress();
+      this.getUserInfo();
+      this.listUserAddress();
+      this.getCoupon();
     }
 
-
-
-
-    // onUnload() {
-    //   console.log("onUnload");
-    //   let url = "/pages/cart/main";
-    //   wx.switchTab({
-    //     url: url
-    //   });
-    // }
   }
 </script>
 
@@ -611,18 +635,20 @@
     padding: 0px 5px;
   }
   .vip_tip {
-    background-color: #F39B00;
-    color: white;
+    background-color: #D9C49A;
+    color: black;
     font-size: 12px;
     border-bottom-right-radius: 10px;
     border-top-right-radius: 10px;
     padding: 2px 10px 2px 2px;
+    font-weight: bold;
   }
   .vip_tip_2 {
     background-color: #230000;
     padding: 2px;
-    color: white;
+    color: #D9C49A;
     font-size: 12px;
+    font-weight: bold;
   }
 
   .un-switch-style {
