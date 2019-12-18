@@ -36,6 +36,14 @@
           </div>
         </div>
 
+        <div class="my-basic-info__go">
+          <van-button round color="grey"
+                      custom-class="mini-button"
+                      @click="navigateToLogin"
+                      size="mini">开通星球会员></van-button>
+        </div>
+
+
       </div>
       <div class="my-wallet-info">
 
@@ -265,7 +273,7 @@
       });
     },
     navigateToLogin() {
-      let url = "/pages/login/main" ;
+      let url = "/pages/demo/main" ;
       console.log("url",url)
       wx.navigateTo({
         url
@@ -366,7 +374,7 @@
     height:60px;
   }
   .vip_tip {
-    background-color: #D9C49A;
+    background-image: linear-gradient(#847048, #D9C49A);
     color: black;
     font-size: 12px;
     border-bottom-right-radius: 10px;

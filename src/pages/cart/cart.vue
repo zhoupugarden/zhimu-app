@@ -429,7 +429,7 @@
   }
   .cart-container__fitting {
     padding-top: 10px;
-    padding-bottom: 100px;
+    margin-bottom: 200px;
 
   }
 

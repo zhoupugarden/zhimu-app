@@ -137,6 +137,7 @@
          this.itemHeight = itemHeight;
       },
       onPopCart(data) {
+        this.popCartActive = false;
         console.log("data",data);
         // this.getProductSkuDetail(data);
         let productId = data.productId;
@@ -154,8 +155,8 @@
       addToCart(data) {
         console.log("addTocart", data)
         this.addProductToCart(data);
-        //加些过渡动画
-        this.popCartActive = false;
+        // //加些过渡动画
+        // this.popCartActive = false;
       },
       indexList() {
         request(

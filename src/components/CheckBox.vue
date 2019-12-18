@@ -1,5 +1,5 @@
 <template>
-  <div style="position: relative; height: 22px; width: 60px; padding: 5px;">
+  <div style="position: relative; height: 22px; width: 60px; padding-right: 5px;">
       <img v-show="type === 'selected'" src="../asset/Check.png" style="width: 12px; z-index: 1;height: 12px; position: absolute;">
     <div class="box_container" :style="selectedObject" @click="selectedSKU">
       <div style="font-size: 13px;">

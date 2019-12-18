@@ -28,7 +28,9 @@
     "pages/phonelogin/main",
     "pages/comments/main",
     "pages/setting/main",
-    "pages/evaluation/main"
+    "pages/evaluation/main",
+    "pages/demo/main"
+
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",

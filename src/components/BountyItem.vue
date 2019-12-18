@@ -1,19 +1,22 @@
 <template>
   <div class="bounty-container">
     <div class="bounty-coupon">
-      <div style="color: white; font-size: 12px; padding: 5px;">
+      <div style="color: white; font-size: 14px; font-weight: bold; padding: 5px;">
         优惠券 ￥{{item.couponValue}}
       </div>
-      <div style="color: white; font-size: 8px;padding-bottom: 5px">
+      <div style="color: white; font-size: 12px;padding-bottom: 5px">
         满100可用
       </div>
     </div>
     <div class="bounty-redeem">
-      <div style="font-size: 10px; padding: 5px">
+      <div style="font-size: 12px; padding: 5px">
           需{{item.needBounty}}元奖励金
       </div>
       <div>
-        <van-button round size="mini" @click="bountyRedeem" type="warning">立即兑换</van-button>
+
+        <div @click="bountyRedeem" class="self-button_class">
+          立即兑换
+        </div>
       </div>
     </div>
   </div>
@@ -49,6 +52,17 @@
 </script>
 
 <style lang="scss" scoped>
+
+  .self-button_class {
+    background-image:linear-gradient(#ff976a, #E8EDF5);
+    width: 60px;
+    height: 20px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: white;
+    padding: 1px 10px;
+  }
+
   .bounty-container {
     background-color: white;
     border-radius: 5px;

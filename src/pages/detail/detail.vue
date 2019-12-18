@@ -15,7 +15,7 @@
           <div>
             <img src="../../asset/share.png" style="width: 20px;height: 20px">
           </div>
-          <div style="font-size: 12px; color: #CFD4DA">
+          <div style="font-size: 12px; color: white">
             <button size="mini"  open-type='share'>分享</button>
           </div>
         </div>
@@ -58,7 +58,7 @@
         <div class="extro-info__item">
           <div class="extro-info__item_i">
             <img src="../../asset/cutlery.png" style="width: 20px; height: 20px; ">
-            <span class="font_setting">{{chooseSKU.cutlery}}</span>
+            <span class="font_setting">{{cutlery}}</span>
           </div>
 
         </div>
@@ -259,7 +259,7 @@
           <div class="van-popup__panel_extro__item">
             <div class="extro-info__item_i">
               <img src="../../asset/cutlery.png" style="width: 20px; height: 20px; ">
-              <span class="font_setting">{{chooseSKU.cutlery}}</span>
+              <span class="font_setting">{{cutlery}}</span>
             </div>
           </div>
 
@@ -552,16 +552,29 @@
           return "您希望在" + this.good.name + "有货时收到通知么?";
         }
       },
-        deliverTime() {
-          if (this.chooseSKU.deliverTime === 1) {
-
-            return "现货下单立即配送"
+      deliverTime() {
+        let hour = this.chooseSKU.deliverTime;
+        if (this.chooseSKU.deliverTime === 1) {
+          return "现货下单立即配送";
+        } else {
+          // 如果跨夜统一为第二天营业时间配送
+          let nowDate = new Date();
+          let delt = nowDate.getHours() + hour;
+          console.log("delt", delt);
+          if (delt > 20) {
+            return "最早明天10点可配送";
+          } else {
+            let delt_f = delt + ":00";
+            return "最早今天"+ delt_f + "可配送";
           }
-          if (this.chooseSKU.deliverTime === 2) {
-            return "最早今天19:00配送"
-          }
+        };
+      },
+      cutlery() {
 
-        },
+        return "含" + this.chooseSKU.cutlery + "套餐具";
+
+
+      },
 
 
       ...mapGetters(
@@ -752,7 +765,7 @@
   }
   button {
     font-size: 10px;
-    background-color: #F4F4F4;
+    background-color: #FFFFFF;
     color: #888888;
   }
   button::after {
@@ -764,7 +777,7 @@
     font-size: 12px !important;
   }
   .choose-attribute-class {
-    background-color: #f2f2f2 !important;
+    background-color: #e2e2e2 !important;
   }
 
   .button-custom {
@@ -812,7 +825,7 @@
 <style lang="wxss">
   page{
     height: 100%;
-    background-color:#F4F4F4 !important;
+    background-color:#f2f2f2 !important;
   }
 </style>
 

@@ -5,7 +5,8 @@
         我的奖励金
       </div>
       <div>
-        ￥{{bounty}}
+        <span>$</span>
+        <span style="font-size: 40px; font-weight: bold;">{{bounty}}</span>
       </div>
     </div>
 
@@ -22,7 +23,7 @@
       已连续签到
       </div>
       <div>
-        <span style="color: red; font-size: 18px">
+        <span style="color: red; font-size: 30px">
       {{daysCount}}
         </span>
         <span>
@@ -33,9 +34,9 @@
     </div>
     <div @click="popTip" class="sign-rule">
       <div style="padding: 0px 1px;">
-        <van-icon size="10px" color="#b2b2b2" name="question-o" />
+        <van-icon size="12px" color="#b2b2b2" name="question-o" />
       </div>
-      <div style="font-size: 10px; color: #b2b2b2;">
+      <div style="font-size: 12px; color: #b2b2b2;">
         签到规则
       </div>
     </div>
@@ -76,24 +77,24 @@
 
     <van-popup
       :show="popShow"
-      custom-style="height: 40%;width: 60%;border-radius: 10px;top:30%;"
+      custom-style="height: 50%;width: 70%;border-radius: 10px;top: 40%;border-radius: 10px;"
       position="center"
       @close="onPopupClose"
       close-on-click-overlay
       >
-      <div style="font-size: 18px; font-weight: bold; text-align: center">
+      <div style="font-size: 18px; font-weight: bold;padding: 20px; text-align: center">
         签到规则
       </div>
-      <div style="font-size: 16px;">
+      <div style="font-size: 14px; padding: 5px 10px;">
         1、签到获取的奖励金可累计用于兑换优惠券
       </div>
-      <div style="font-size: 16px;">
+      <div style="font-size: 14px; padding: 5px 10px;">
         2、签到要连续，断签需从第一天重新开始
       </div>
-      <div style="font-size: 16px;">
+      <div style="font-size: 14px; padding: 5px 10px;">
         3、七天循环一次，第八天从第一天重新开始
       </div>
-      <div style="font-size: 16px;">
+      <div style="font-size: 14px; padding: 5px 10px;">
         4、每日0点刷新，可进行新一天的签到
       </div>
 
@@ -365,7 +366,7 @@
     color: white;
     background-color: orange;
     padding: 20px;
-    height: 50px;
+    height: 100px;
     z-index: -1;
     display: flex;
     flex-direction: column;

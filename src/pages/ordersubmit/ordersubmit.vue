@@ -94,8 +94,6 @@
     </van-popup>
 
 
-
-
     <van-popup :show="datePopShow" position="bottom">
       <van-datetime-picker
         type="date"
@@ -164,7 +162,8 @@
   import {request} from "@/utils/request";
   import {formatYMD} from "@/utils/dateUtil";
 
-
+  const timeColumnArray = ['10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00',
+    '15:00-16:00', '16:00-17:00', '17:00-18:00', '18:00-19:00', '19:00-20:00'];
   export default {
     components: {
       CouponItem, ProductItem, CouponItemc
@@ -187,8 +186,7 @@
         currentDate: new Date().getTime(),
         formatDate: "",
         currentTime: null,
-        minDate: new Date(2018, 0, 1).getTime(),
-        timeColumns:['10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00'],
+        minDate: new Date().getTime(),
         balanceValue:"0",
         userInfo:{},
         vipTip:"",
@@ -202,6 +200,21 @@
       }
     },
     methods: {
+
+      formatter(type, value) {
+        console.log("type vale: ", type, value);
+        // if (type === 'year') {
+        //   return `${value}年`;
+        // } else if (type === 'month') {
+        //   return `${value}月`;
+        // } else {
+        //   return `${value}日`;
+        // }
+        // return value;
+      },
+
+
+
       ...mapActions(
         [
           'checkoutCartList',
@@ -269,6 +282,10 @@
           this.formatDate = formatYMD(detail);
           this.currentDate = detail;
           this.datePopShow = false;
+          if (detail > new Date().getTime()) {
+            this.currentTime = "10:00-11:00";
+          }
+
         }else {
           this.datePopShow = false;
         }
@@ -284,15 +301,6 @@
         params.totalAmount = this.cartTotalPrice;
         params.productItems = this.convertCartList(this.cartList);
         this.preCheckCoupon(params);
-      },
-
-      formatter(type, value) {
-        if (type === 'year') {
-          return `${value}年`;
-        } else if (type === 'month') {
-          return `${value}月`;
-        }
-        return value;
       },
 
       cancelTimePop() {
@@ -489,6 +497,25 @@
       }
     },
     computed: {
+
+      timeColumns() {
+        const timeColumnArray = ['10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00',
+          '15:00-16:00', '16:00-17:00', '17:00-18:00', '18:00-19:00', '19:00-20:00'];
+        if (this.currentDate > new Date().getTime()) {
+          return timeColumnArray;
+        } else {
+          let hour = new Date().getHours();
+
+          if ((hour - 10) > 0) {
+            return timeColumnArray.slice(hour - 10, timeColumnArray.length);
+          }else {
+            return timeColumnArray;
+          }
+
+        }
+
+      },
+
       ...mapGetters(
         [
            'cartList','freeCartList', 'cartTotalCount','cartTotalPrice','cartProductListName','token','userId'
@@ -560,12 +587,17 @@
           if (this.chosedCoupon.couponType === 2) {
             return this.chosedCoupon.disCount + "折优惠券";
           }
-        }
-        if (this.couponCanUseList.length > 0) {
-          return "未选择：" + this.couponCanUseList.length + "张可用";
+          if (this.chosedCoupon.couponType === 3) {
+            return "免邮券";
+          }
         } else {
-          return "无可用优惠券";
+          if (this.couponCanUseList.length > 0) {
+            return "未选择：" + this.couponCanUseList.length + "张可用";
+          } else {
+            return "无可用优惠券";
+          }
         }
+
       }
 
     },
@@ -574,6 +606,13 @@
       this.currentDate = new Date().getTime();
       this.formatDate = formatYMD(this.currentDate);
       this.currentTime = "10:00-11:00";
+      let nowDate = new Date();
+      let hour = nowDate.getHours();
+      if ((hour - 10) > 10) {
+        this.currentTime = "当日停接单";
+      } else {
+        this.currentTime = timeColumnArray[Math.abs(hour - 10)];
+      }
 
     },
     onShow() {
@@ -635,7 +674,7 @@
     padding: 0px 5px;
   }
   .vip_tip {
-    background-color: #D9C49A;
+    background-image: linear-gradient(#847048, #D9C49A);
     color: black;
     font-size: 12px;
     border-bottom-right-radius: 10px;

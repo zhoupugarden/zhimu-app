@@ -153,9 +153,6 @@
     this.contactPhoneNo = "";
   }
 
-
-
-
 }
 </script>
 
