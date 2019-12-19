@@ -25,7 +25,7 @@
         <div class="index-header" @click="navigateToActivity">
           <image style="width: 100%; height: 100px; " mode="scaleToFill" :src="activityUrl"></image>
         </div>
-        <div class="category_name_class">{{items[mainActiveIndex].name}}</div>
+        <div class="category_name_class">{{titleName}}</div>
         <view v-for="(subItem, index) in subItems"
               :key="index"
               @click="onSelectItem"
@@ -66,6 +66,7 @@
         items:[],
         activeId: '',
         maxHeight: 1000,
+        titleName:"",
         cardInfo: {
         },
         subItems:[],
@@ -123,6 +124,7 @@
         let children  = this.items[this.mainActiveIndex].pmsProductPlusList;
         console.log("children:", children)
         this.updateItemHeight(children);
+        this.titleName = this.items[this.mainActiveIndex].name;
         return this.subItems = children;
       },
       // 更新组件整体高度，根据最大高度和当前组件需要展示的高度来决定
@@ -175,8 +177,12 @@
     onShow() {
       this.indexList();
       // this.getCategoryAndProductBrief();
-      console.log("this.items{}", this.items)
+      console.log("this.items{}", this.items);
+      if (this.popCartActive === true) {
+        this.closeActive();
+      }
     }
+
     }
 
 </script>

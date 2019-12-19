@@ -3,10 +3,10 @@
 
     <div class="myvip-header" >
       <div class="header-round-pic">
-        <img src="../../asset/header.jpg" class="circleImg">
+        <img :src="userInfo.avatarUrl" class="circleImg">
       </div>
       <div style="color: white; font-size: 14px; font-family: 'Microsoft YaHei'">
-        杨宇
+        {{userInfo.nickName}}
       </div>
       <div style="color: white; font-size: 10px; font-family: 'Microsoft YaHei'">
         (使用会员卡年均节省477元)

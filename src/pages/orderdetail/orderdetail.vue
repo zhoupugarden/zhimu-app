@@ -24,13 +24,17 @@
               </div>
             </div>
 
+            <div class="order-total-info">
+              <van-cell title="商品总计" :value="flag + orderInfo.productAmount" />
+            </div>
             <div v-show = "orderInfo.couponAmount > 0" class="order-deliver-info">
               <van-cell title="配送费" :value="flag + orderInfo.deliverAmount" />
             </div>
 
-            <div class="order-total-info">
-              <van-cell title="总计" :value="flag + orderInfo.totalAmount" />
+            <div class="order-deliver-info">
+              <van-cell title="余额抵扣" :value="'-' + flag + orderInfo.balanceAmount" />
             </div>
+
             <div v-if="orderInfo.couponAmount > 0" class="order-coupon-detail">
               <div style="display: flex;align-items: center;">
                 <img src="../../asset/coupon_dis.png" class="coupon-img">
@@ -42,7 +46,6 @@
                 {{ '-' + flag + orderInfo.couponAmount}}
               </div>
             </div>
-
 
             <div class="order-need-info">
               <van-cell value-class = "order-need-info_value_class" title="需付" :value="flag + orderInfo.needPayAmount" />

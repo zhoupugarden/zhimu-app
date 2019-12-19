@@ -191,14 +191,14 @@
   computed: {
 
       transformFront() {
-        if (this.active === 1) {
+        if (this.active === 1 && this.popShow === true) {
           return "transform:" + "rotateY(180deg)";
         } else {
           return "transform:" + "rotateY(0deg)";
         }
       },
       transformBack() {
-        if (this.active === 1) {
+        if (this.active === 1 && this.popShow === true) {
           return "transform:" + "rotateY(0deg)";
         } else {
           return "transform:" + "rotateY(-180deg)";

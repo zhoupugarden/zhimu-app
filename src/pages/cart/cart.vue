@@ -180,30 +180,30 @@
     },
 
     deliverFee() {
-      if (this.cartTotalPrice < 30) {
+      if (this.totalPrice < 30) {
         return 8;
       }
-      else if (this.cartTotalPrice >= 30 && this.cartTotalPrice < 100) {
+      else if (this.totalPrice >= 30 && this.totalPrice < 100) {
         return 5;
       } else {
         return 0
       }
     },
     needAmount() {
-      if (this.cartTotalPrice < 30) {
-        return 30 - this.cartTotalPrice;
+      if (this.totalPrice < 30) {
+        return 30 - this.totalPrice;
       }
-      else if (this.cartTotalPrice >= 30 && this.cartTotalPrice < 100) {
-        return 100 - this.cartTotalPrice;
+      else if (this.totalPrice >= 30 && this.totalPrice < 100) {
+        return 100 - this.totalPrice;
       }else {
         return 0
       }
     },
     freeFee() {
-      if (this.cartTotalPrice < 30) {
+      if (this.totalPrice < 30) {
         return 3;
       }
-      else if (this.cartTotalPrice >= 30 && this.cartTotalPrice < 100) {
+      else if (this.totalPrice >= 30 && this.totalPrice < 100) {
         return 5;
       } else {
         return 0

@@ -49,13 +49,13 @@
       优惠券
     </div>
 
-    <div @click="navigateToBuyVip">
+    <div v-show="isVip !== 1" @click="navigateToBuyVip">
       <span class="vip_tip_2">VIP</span>
       <span class="vip_tip">{{vipTip}}</span>
     </div>
     </div>
 
-    <div class="order-submit-coupon">
+    <div  class="order-submit-coupon">
       <van-cell :title="chooseCouponTip" custom-class="custome-cell" is-link arrow-direction="down" @click="couponPop"/>
     </div>
     <div style="font-weight: bolder;font-size: 14px;padding: 10px 15px;">
@@ -119,7 +119,7 @@
                  @close="closeCouponPopup"
                  position="bottom">
 
-        <div style="position: relative; height: 100%">
+        <div style="position: relative;">
           <div style="padding-bottom: 10px; position: relative; height: 100%">
             <div style="padding-bottom: 50px;">
               <div v-for="(item , index) in couponCanUseList" :key="index" @click="chooseCouponItem(item)" style="margin: 10px">
@@ -127,7 +127,7 @@
               </div>
             </div>
 
-            <div style="background-color: white; width: 100%; position: absolute; bottom: 0; border-top: 1px solid #F4F4F4">
+            <div style="background-color: white; width: 100%; position: fixed; bottom: 0; border-top: 1px solid #F4F4F4">
               <div style="padding-top: 10px;text-align: center;">
                 <van-button type= "primary" @click = "noUseCoupon" custom-class="custom-button">不使用优惠券</van-button>
               </div>
@@ -518,7 +518,7 @@
 
       ...mapGetters(
         [
-           'cartList','freeCartList', 'cartTotalCount','cartTotalPrice','cartProductListName','token','userId'
+           'isVip','cartList','freeCartList', 'cartTotalCount','cartTotalPrice','cartProductListName','token','userId'
         ]
       ),
 

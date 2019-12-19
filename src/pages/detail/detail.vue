@@ -20,7 +20,7 @@
           </div>
         </div>
       </div>
-      <div @click="navigateToBuyVip" class="vip_tip_class">
+      <div @click="navigateToBuyVip" v-if="isVip !== 1" class="vip_tip_class">
         <div style="font-size: 12px;">
           {{vipTip}}
         </div>
@@ -186,11 +186,11 @@
                 :url="commentUrl"
                 value="查看全部"
                 value-class="zm-goods__review_value" />
-      <div v-if="comment.content !== null" class="zm-goods__review_detail">
-        <img :src="comment.avatarUrl" class="avatar-img">
+      <div v-if="commentContent !== null" class="zm-goods__review_detail">
+        <img :src="avatarUrl" class="avatar-img">
         <div style="width: 60%;">
           <div class="star_comment">
-            {{comment.content}}
+            {{commentContent}}
           </div>
         </div>
       </div>
@@ -331,9 +331,11 @@
       chooseSKU :{},
       popupText: "加入购物车",
       comment: null,
+      commentContent:"",
       commentUrl:"",
       phoneNo:"",
-      isNoticed:false
+      isNoticed:false,
+      avatarUrl:""
     }
   },
   //如何支持pathVariable 的请求？？
@@ -484,6 +486,8 @@
         (response) => {
           console.log("this.good response", response);
          this.comment = response;
+         this.commentContent = response.content;
+         this.avatarUrl = response.avatarUrl;
         }
       )
     },
@@ -570,16 +574,11 @@
         };
       },
       cutlery() {
-
         return "含" + this.chooseSKU.cutlery + "套餐具";
-
-
       },
-
-
       ...mapGetters(
         [
-          'cartTotalCount','userId'
+          'cartTotalCount','userId','isVip'
         ]
       )
 

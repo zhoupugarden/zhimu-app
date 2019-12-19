@@ -4,7 +4,8 @@
     "van-tabs": "/static/vant/tabs/index",
     "van-tab": "/static/vant/tab/index",
     "van-icon": "/static/vant/icon/index",
-    "van-dialog": "/static/vant/dialog/index"
+    "van-dialog": "/static/vant/dialog/index",
+    "van-toast": "/static/vant/toast/index"
   },
   "navigationBarTextStyle": "black",
   "navigationBarTitleText": "订单"

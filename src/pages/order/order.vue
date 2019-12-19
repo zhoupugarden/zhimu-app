@@ -28,12 +28,12 @@
           </div>
         </van-tab>
         <van-tab title="待评价">
-          <div v-for="(item, index) in waitCommentItems" :key = "index" class="order-list">
+          <div v-for="(item, index) in orderItems" :key = "index" class="order-list">
             <order-card :orderInfo="item" ></order-card>
           </div>
         </van-tab>
         <van-tab title="待付款">
-          <div v-for="(item, index) in waitPayItems" :key = "index" class="order-list">
+          <div v-for="(item, index) in orderItems" :key = "index" class="order-list">
             <order-card :orderInfo="item" ></order-card>
           </div>
         </van-tab>
@@ -52,7 +52,7 @@
       </div>
     </div>
 
-
+    <van-toast  id="van-toast"/>
   </div>
 
 </template>
@@ -62,6 +62,7 @@
   import {ADD_NEW_ADDRESS,GET_ORDER_LIST,MOCK_WX_PAY} from '@/utils/api';
   import {request} from "@/utils/request";
   import { mapGetters} from 'vuex';
+  import {toast} from '../../utils/toast';
   import Dialog from '../../../static/vant/dialog/dialog';
 
   export default {
@@ -76,15 +77,38 @@
       isLogin:false,
       orderItems:[],
       waitCommentItems:[],
-      waitPayItems:[]
+      waitPayItems:[],
+      pageSize:10,
+      pageNum:1,
+      totalPage:1,
+      orderStatus:"",
     }
 
   },
   methods: {
     onChange(event) {
+      this.pageNum = 1;
       this.active = event.mp.detail.index;
-    },
+      let params = {};
+      params.userId = this.userId;
+      params.pageNum = this.pageNum;
+      params.pageSize = this.pageSize;
+      if (this.active === 0) {
+        this.orderStatus = "";
+        params.orderStatus = this.orderStatus;
+      }
+      if (this.active === 1) {
+        this.orderStatus = 5;
+        params.orderStatus = this.orderStatus;
+      }
+      if (this.active === 2) {
+        this.orderStatus = 1;
+        params.orderStatus = this.orderStatus;
+      }
 
+      this.getOrderListByUserId(params);
+
+    },
     mockWxPay(data) {
       let that = this;
       request(
@@ -110,27 +134,26 @@
         url
       });
     },
-    getOrderListByUserId() {
-      let params = {};
-      params.userId = this.userId;
+    getOrderListByUserId(params) {
       request(
         GET_ORDER_LIST,
         'GET',
         params
       ).then(
         response => {
-          console.log("orderlist", response);
-          this.orderItems = response;
-          this.waitCommentItems = response.filter(item => item.isComment === 0 && item.orderStatus === 4);
-          this.waitPayItems = response.filter(item => item.orderStatus === 1);
+          if (params.pageNum > 1) {
+            console.log("orderlist", response);
+            this.orderItems = this.orderItems.concat(response.list);
+          } else {
+            console.log("orderlist", response);
+            this.orderItems = response.list;
+            this.totalPage = response.totalPage;
+          }
         }
       )
     },
 
   },
-    onReachBottom() {
-      console.log("到达底部")
-    },
     computed: {
       ...mapGetters(
         [
@@ -138,37 +161,56 @@
         ]
       ),
       hasNoOrder() {
-
         if (this.orderItems.length == 0) {
           return true;
         }
-
-        if(this.waitCommentItems == 0 && this.active == 1) {
-          return true;
-        }
-        if(this.waitPayItems == 0 && this.active == 2) {
-          return true;
-        }
-
         return false;
-
       }
-
-
-
-
 
     },
     onShow() {
     if (this.token) {
+      let params = {};
+      params.userId = this.userId;
       this.isLogin = true;
-      this.getOrderListByUserId();
+      this.getOrderListByUserId(params);
+      this.active = 0;
     } else {
       console.log("this.isLogin", this.isLogin);
       this.isLogin = false;
     }
 
-    }
+    },
+    onReachBottom() {
+      //要做个判断， 如果size已经小于10， 则不再分页查询
+      console.log("到达底部");
+      if (this.pageNum === this.totalPage && this.pageNum !== 1) {
+        console.log("this.pageNum, this.totalPage", this.pageNum, this.totalPage);
+
+        toast("没有更多订单");
+        return;
+      }
+      if (this.pageNum === this.totalPage && this.pageNum === 1) {
+        console.log("this.pageNum, this.totalPage", this.pageNum, this.totalPage);
+
+        return;
+      }
+
+      let params = {};
+      params.userId = this.userId;
+      params.pageSize = this.pageSize;
+      params.pageNum = this.pageNum + 1;
+      this.pageNum = this.pageNum + 1;
+      if (null !== this.orderStatus) {
+        params.orderStatus = this.orderStatus;
+      }
+
+      this.getOrderListByUserId(params);
+    },
+
+
+
+
 }
 </script>
 

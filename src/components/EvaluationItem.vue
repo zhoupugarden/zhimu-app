@@ -11,16 +11,16 @@
       custom-class="root-custom-class"
     ></van-card>
 
-    <hr style="border: 1px solid darkgray; margin: 2px 0px" />
+    <hr style="border: 1px solid #f2f2f2; margin: 2px 0px" />
     <div class="evaluation-score">
       <span style="font-size: 12px;">味道</span>
-        <van-rate size="30" :value="rateValue" @change="rateChange" />
+      <van-rate size="12" :value="rateValue" @change="rateChange" />
     </div>
     <div class="evaluation-comment">
       <van-field
         :value="content"
         type="textarea"
-        placeholder="请输入留言"
+        placeholder="亲，蛋糕的味道如何，对包装服务等还满意吗？"
         border="true"
         autosize
         @change="contentChange"
@@ -29,7 +29,7 @@
     </div>
     <upload width="120rpx" height="120rpx" max="3" @choosed="choosedPics" @delete="deleted" :srcs= "srcList"></upload>
   </div>
-  
+
 </template>
 
 <script>
@@ -106,6 +106,7 @@
         let data = {};
         data.productId = this.itemInfo.productId;
         data.content = event.mp.detail;
+        this.content = event.mp.detail;
         this.$emit("fieldChange", data)
       }
     }
@@ -136,6 +137,10 @@
   }
   .evaluation-score {
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
   }
 
 </style>

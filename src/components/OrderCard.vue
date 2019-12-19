@@ -5,7 +5,7 @@
         {{orderInfo.orderNo}}
       </div>
       <div style="font-size: 12px; ">
-        {{orderInfo.orderStatusDesc}}
+        {{orderStatusDesc}}
       </div>
     </div>
     <div class="order-card__detail" @click="navigateToOrderDetail">
@@ -41,7 +41,6 @@
   </div>
 
 </template>
-
 <script>
 
   import {CANCEL_ORDER,MOCK_WX_PAY, PAY_ORDER} from '@/utils/api';
@@ -148,6 +147,28 @@
           }
         )
       }
+    },
+    computed: {
+      orderStatusDesc() {
+        if (this.orderInfo.orderStatus === 1) {
+          return "待支付";
+        }
+        if (this.orderInfo.orderStatus === 2) {
+          return "已支付";
+        }
+        if (this.orderInfo.orderStatus === 5) {
+          return "已配送";
+        }
+        if (this.orderInfo.orderStatus === 99) {
+          return "订单取消";
+        }
+        if (this.orderInfo.orderStatus === 100) {
+          return "订单完成";
+        }
+        if (this.orderInfo.orderStatus === 3 || this.orderInfo.orderStatus === 4) {
+          return "已支付";
+        }
+      }
     }
 
   }
@@ -172,6 +193,10 @@
     padding-top : 5px;
     padding-bottom : 5px;
     box-sizing: border-box;
+    border-bottom: 1px solid #f2f2f2;
+    border-top: 1px solid #f2f2f2;
+    margin: 0px 10px;
+
   .order-card__detail-image {
     box-sizing: border-box;
     padding-right: 8px;
@@ -188,27 +213,27 @@
   }
 
   /*line如何水平居中显示*/
-  .order-card__detail:before {
-    content: "";
-    display: block;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 90%;
-    height: 1px;
-    background: lightgray;
-  }
+  /*.order-card__detail:before {*/
+    /*content: "";*/
+    /*display: block;*/
+    /*position: absolute;*/
+    /*bottom: 0;*/
+    /*left: 0;*/
+    /*width: 90%;*/
+    /*height: 1px;*/
+    /*background: lightgray;*/
+  /*}*/
 
-  .order-card__detail:after {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 90%;
-    height: 1px;
-    background: lightgray;
-  }
+  /*.order-card__detail:after {*/
+    /*content: "";*/
+    /*display: block;*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*width: 90%;*/
+    /*height: 1px;*/
+    /*background: lightgray;*/
+  /*}*/
 
 
   .order-card__operation {

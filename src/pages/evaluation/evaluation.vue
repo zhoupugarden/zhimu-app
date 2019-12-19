@@ -5,14 +5,14 @@
           <div class="deliver-info_user">
             骑手：{{orderInfo.deliverName}}
           </div>
-          <hr style="border: 1px solid darkgray; margin: 2px 0px" />
+          <hr style="border: 1px solid #f2f2f2; margin: 2px 0px" />
           <div class="deliver-info_time">
             配送日期：{{orderInfo.deliverDate}}
             配送时间：{{orderInfo.deliverTime}}
           </div>
         </div>
         <div class="total-score">
-          <van-rate size="30" :value="rateValue" @change="activeTags"/>
+          <van-rate size="30px" :value="rateValue" @change="activeTags"/>
         </div>
         <div v-if="isActive" class="total-tags">
           <div v-for="(item, index) in tagDescs" :key="index" >
@@ -249,7 +249,7 @@
         ]
       ),
     },
-    onShow() {
+    onLoad() {
       console.log("orderNo: ",this.$root.$mp.query);
       let params = this.$root.$mp.query;
       this.orderNo = params.orderNo;
@@ -257,6 +257,7 @@
       this.getOssConfig();
     },
     onUnload() {
+      console.log("evaluation onUnload")
       this.isAnonymous = 0;
       this.isActive = false;
         this.rateValue = 0;

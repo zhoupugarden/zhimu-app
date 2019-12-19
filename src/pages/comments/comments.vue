@@ -149,6 +149,7 @@
       },
       activeTag1() {
         //有图评价
+        this.pageNum = 1;
         this.active = 1;
         this.level = null;
         this.picFlag = 1;
@@ -162,6 +163,7 @@
       },
       activeTag2() {
         //好评
+        this.pageNum = 1;
         this.active = 2;
         this.level = 1;
         this.picFlag = null;
@@ -174,6 +176,7 @@
       },
       activeTag3() {
         //中评
+        this.pageNum = 1;
         this.active = 3;
         this.level = 2;
         this.picFlag = null;
@@ -186,6 +189,7 @@
       },
       activeTag4() {
         //差评
+        this.pageNum = 1;
         this.active = 4;
         this.level = 3;
         this.picFlag = null;
