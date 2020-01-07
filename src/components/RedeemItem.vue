@@ -4,11 +4,11 @@
       <img :src="redeemItem.imgUrl" class="redeem-item-img">
 
     <div class="redeem-item-name">
-        {{redeemItem.itemName}}
+        {{redeemItem.couponName}}
     </div>
 
     <div class="redeem-item-point">
-      {{redeemItem.point}}
+      {{redeemItem.pointCount}}
     </div>
     <span style="font-size: 14px; color: white">积分</span>
 
@@ -30,7 +30,7 @@
         this.$emit('pointRedeem', this.redeemItem);
       },
       navigateToDetail() {
-        var url = "/pages/redeemdetail/main";
+        var url = "/pages/redeemdetail/main?id=" + this.redeemItem.id;
         wx.navigateTo({
           url
         });

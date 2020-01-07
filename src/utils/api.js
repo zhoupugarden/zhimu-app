@@ -94,6 +94,13 @@ export const  SUBMIT_PROBLEM = BASE_API_URL + '/problem/submit';
 
 export const  PRODUCT_NOTICE = BASE_API_URL + '/product/notice';
 
+export const  GET_POINT_MALL = BASE_API_URL + '/pointmall/list';
+
+export const  GET_POINT_MALL_DETAIL = BASE_API_URL + '/pointmall/detail';
+
+export const  GET_BOUNTY_REDEEM_LIST = BASE_API_URL + '/sign/redeem/list';
+
+
 
 
 

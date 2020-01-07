@@ -10,9 +10,12 @@
         <div style="position: relative">
           <div style="padding-left: 10%; padding-bottom:10px;">
             <div style="display: flex;align-items: center">
-              <div class="van-popup__panel_price">
+              <span class="van-popup__panel_price">
                 {{chooseSKU.salePrice}}
-              </div>
+              </span>
+              <span class="zm-goods__price-lineprice">
+                {{chooseSKU.linePrice}}
+              </span>
               <span style="color: red; padding-left: 10px" v-show="productSKUs.stock < 5">少量库存</span>
             </div>
             <div class="van-popup__panel_extro">
@@ -310,6 +313,21 @@
   }
   }
   }
+
+  .zm-goods__price-lineprice {
+    font-family: "Microsoft YaHei";
+    padding-right: 5px;
+    font-size: 10px;
+    color: #CFD4DA;
+    text-decoration:line-through;
+  }
+  .zm-goods__price-lineprice:before {
+    content:'原价 ￥';
+    text-decoration:line-through;
+    font-size: 10px;
+  }
+
+
 
 </style>
 

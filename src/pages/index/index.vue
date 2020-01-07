@@ -334,7 +334,6 @@
     transform: scale(.5);
     border: 0 solid #eee
   }
-
   .van-hairline--top:after {
     border-top-width: 1px
   }
@@ -358,4 +357,8 @@
   .van-hairline--surround:after {
     border-width: 1px
   }
+
+
+
+
 </style>

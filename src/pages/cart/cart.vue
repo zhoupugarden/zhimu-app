@@ -88,7 +88,6 @@
   import PayCard from '@/components/PayCard';
   import { mapGetters, mapActions } from 'vuex';
   import { SET_OPEN_ID } from '@/store/mutation-types';
-  import Dialog from '../../../static/vant/dialog/dialog';
 
   import {PAY_FITTING_LIST} from '@/utils/api';
   import {request} from "@/utils/request";

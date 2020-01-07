@@ -6,21 +6,21 @@
       </div>
       <div class="redeemdetail-header-content">
         <div style=" font-size: 16px;  font-family: 'Microsoft YaHei'">
-          {{redeemItem.itemName}}
+          {{redeemItem.couponName}}
         </div>
         <div style="color: #CDA65B; font-size: 14px; font-weight: bold; font-family: 'Microsoft YaHei'">
-          {{redeemItem.point}}积分
+          {{redeemItem.pointCount}}积分
         </div>
       </div>
     </div>
 
     <div class="redeemdetail-desc">
       <div style="font-size: 18px; font-weight: bold; font-family: 'Microsoft YaHei'">兑换说明</div>
-      {{redeemItem.Desc}}
+      {{redeemItem.redeemDesc}}
     </div>
     <div class="redeemdetail-operation">
       <div style="width: 60%;  ">
-        需{{redeemItem.point}}积分
+        需{{redeemItem.pointCount}}积分
       </div>
       <div style="width: 40%">
         <van-button custom-class = "redeem-detail-class"
@@ -34,36 +34,43 @@
 
 <script>
 
-  import {POINT_REDEEM} from '@/utils/api';
+  import {POINT_REDEEM, GET_POINT_MALL_DETAIL} from '@/utils/api';
   import { mapGetters} from 'vuex';
   import {request} from "@/utils/request";
 
   export default {
 
-    props: {
-      redeemItemDemo:Object
-    },
     data() {
       return {
-        redeemItem:{
-          imgUrl:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-          itemName:"积分商品测试",
-          point:200,
-          Desc:"测试couponRuleId 8",
-          couponRuleId:7
-        },
+        redeemItem:{},
         popShow:false
 
 
       }
     },
     methods: {
+
+      getMallDetail(params) {
+
+        request(
+          GET_POINT_MALL_DETAIL,
+          'GET',
+          params
+        ).then(
+          response => {
+            //将userID放在存储中
+            console.log("response",response)
+            this.redeemItem = response;
+          }
+        )
+
+      },
+
       pointRedeem() {
         console.log("pointRedeem", this.redeemItem)
         let param = {};
         param.userId = this.userId;
-        param.couponRuleId = this.redeemItem.couponRuleId;
-        param.point = this.redeemItem.point;
+        param.pointMallId = this.redeemItem.id;
         request(
           POINT_REDEEM,
           'post',
@@ -95,7 +102,12 @@
           'userId'
         ]
       )
-    }
+    },
+    onShow() {
+      let params = this.$root.$mp.query;
+      console.log(" detail: ", this.$root.$mp.query);
+      this.getMallDetail(params);
+    },
 
   }
 </script>

@@ -1,16 +1,19 @@
 <template>
   <div class="bounty-container">
     <div class="bounty-coupon">
-      <div style="color: white; font-size: 14px; font-weight: bold; padding: 5px;">
-        优惠券 ￥{{item.couponValue}}
+      <div v-if="item.couponRuleType === 1" style="color: white; font-size: 14px; font-weight: bold; padding: 5px;">
+        {{"优惠券￥" + item.couponDisAmountValue + "元"}}
+      </div>
+      <div v-else style="color: white; font-size: 14px; font-weight: bold; padding: 5px;">
+        {{"优惠券" + item.couponDisCountValue + "折"}}
       </div>
       <div style="color: white; font-size: 12px;padding-bottom: 5px">
-        满100可用
+        {{item.couponLimitDesc}}
       </div>
     </div>
     <div class="bounty-redeem">
       <div style="font-size: 12px; padding: 5px">
-          需{{item.needBounty}}元奖励金
+          需{{item.bountyCount}}元奖励金
       </div>
       <div>
 
@@ -35,7 +38,7 @@
         let that = this;
         wx.showModal({
           title: "提示",
-          content: '需要消耗' + that.item.needBounty + '奖励金，确认兑换？',
+          content: '需要消耗' + that.item.bountyCount + '奖励金，确认兑换？',
           confirmText: '兑换',
           confirmColor: "#f44",
           showCancel: true,

@@ -33,7 +33,7 @@
 
 <script>
   import RedeemItem from '@/components/RedeemItem';
-  import {POINT_REDEEM, MY_USER_INFO } from '@/utils/api';
+  import {POINT_REDEEM, MY_USER_INFO, GET_POINT_MALL } from '@/utils/api';
   import { mapGetters} from 'vuex';
   import {request} from "@/utils/request";
 
@@ -49,36 +49,7 @@
         pointTotal:0,
         userInfo: {},
 
-        redeemItems:[
-          {
-            imgUrl:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-            itemName:"积分商品测试",
-            Desc:"测试couponRuleId 3",
-            point:200,
-            couponRuleId:3
-          },
-          {
-            imgUrl:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-            itemName:"积分商品测试",
-            point:200,
-            Desc:"测试couponRuleId 3",
-            couponRuleId:3
-          },
-          {
-            imgUrl:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-            itemName:"积分商品测试",
-            point:200,
-            Desc:"测试couponRuleId 8",
-            couponRuleId:8
-          },
-          {
-            imgUrl:"https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-            itemName:"积分商品测试",
-            point:200,
-            Desc:"测试couponRuleId 8",
-            couponRuleId:7
-          }
-        ]
+        redeemItems:[]
 
       }
     },
@@ -112,12 +83,24 @@
         )
       },
 
+      getPointmallList() {
+        request(
+          GET_POINT_MALL,
+          'GET',
+        ).then(
+          response => {
+            //将userID放在存储中
+            console.log("response",response)
+            this.redeemItems = response;
+          }
+        )
+      },
+
       pointRedeem(data) {
         console.log("pointRedeem", data)
         let param = {};
         param.userId = this.userId;
-        param.couponRuleId = data.couponRuleId;
-        param.point = data.point;
+        param.pointMallId = data.id;
         request(
           POINT_REDEEM,
           'post',
@@ -154,6 +137,7 @@
     },
     onShow() {
      this.getUserInfo(this.token);
+     this.getPointmallList();
     },
 
     onUnload() {

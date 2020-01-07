@@ -123,29 +123,12 @@
 <script>
 
   import BountyItem from '@/components/BountyItem';
-  import {ADD_SIGN,SIGN_INDEX,BOUNTY_REDEEM,SIGN_DETAIL } from '@/utils/api';
+  import {ADD_SIGN,SIGN_INDEX,BOUNTY_REDEEM,SIGN_DETAIL,GET_BOUNTY_REDEEM_LIST } from '@/utils/api';
   import {request} from "@/utils/request";
   import { mapGetters} from 'vuex';
   import {toast} from '../../utils/toast';
 
 
-  const coupons = [
-    {
-      couponRuleId:7,
-      couponValue:5,
-      needBounty:5
-    },
-    {
-      couponRuleId:8,
-      couponValue:10,
-      needBounty:10
-    },
-    {
-      couponRuleId:3,
-      couponValue:20,
-      needBounty:20
-    }
-  ];
 
   export default {
     components: {
@@ -243,8 +226,7 @@
         console.log("redeemCoupon", data)
         let param = {};
         param.userId = this.userId;
-        param.couponRuleId = data.couponRuleId;
-        param.bounty = data.needBounty;
+        param.bountySettingId = data.id;
         request(
           BOUNTY_REDEEM,
           'post',
@@ -290,6 +272,23 @@
           }
         )
       },
+
+      getBountyRedeemItem() {
+        request(
+          GET_BOUNTY_REDEEM_LIST,
+          'get',
+        ).then(
+          (response) => {
+            this.couponItems = response;
+          }
+        )
+      },
+
+
+
+
+
+
       signDetail() {
         let param = {};
         param.userId = this.userId;
@@ -326,10 +325,9 @@
         }
       }
     },
-
     onShow() {
       this.signIndex();
-      this.couponItems = Object.assign([], coupons);
+      this.getBountyRedeemItem();
     }
 
   }

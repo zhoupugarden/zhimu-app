@@ -273,7 +273,7 @@
       });
     },
     navigateToLogin() {
-      let url = "/pages/demo/main" ;
+      let url = "/pages/login/main" ;
       console.log("url",url)
       wx.navigateTo({
         url

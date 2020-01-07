@@ -100,20 +100,8 @@
         <van-tab title="详情">
           <div class="zm-goods__detail">
             <!--如何消除图片与图片间的空隙-->
-            <div>
-              <image :src="urls.firstUrl" mode="widthFix" class="zm-goods__detail-img"></image>
-            </div>
-            <div v-if="urls.secondUrl">
-              <image :src="urls.secondUrl" mode="widthFix" class="zm-goods__detail-img"></image>
-            </div>
-            <div>
-              <image :src="urls.firstUrl" mode="widthFix" class="zm-goods__detail-img"></image>
-            </div>
-            <div>
-              <image :src="urls.firstUrl" mode="widthFix" class="zm-goods__detail-img"></image>
-            </div>
-            <div>
-              <image :src="urls.firstUrl" mode="widthFix" class="zm-goods__detail-img"></image>
+            <div v-for="item in urls">
+              <image :src="item" mode="widthFix" class="zm-goods__detail-img"></image>
             </div>
           </div>
         </van-tab>
@@ -232,6 +220,12 @@
             <span style="font-size: 30px;">
               {{chooseSKU.salePrice}}
             </span>
+
+            <span class="zm-goods__price-lineprice">
+              {{chooseSKU.linePrice}}
+            </span>
+
+
           </div>
           <span v-if="good.stock <= 5" style="color: red; padding-left: 10px;">少量库存</span>
         </div>
@@ -326,7 +320,7 @@
       },
       popShow:false,
       outShowUp:false,
-      urls: {"firstUrl":"http://yangliuyi.oss-cn-shanghai.aliyuncs.com/zhimu/images/20190816/机器猫.jpg"},
+      urls: [],
       productSKUs: [],
       chooseSKU :{},
       popupText: "加入购物车",
@@ -458,7 +452,7 @@
           wx.setNavigationBarTitle({
             title: this.good.name
           });
-          this.urls = JSON.parse(this.good.detailPicUrl)
+          this.urls = this.good.detailPicUrl.split(",");
         }
       )
     },
