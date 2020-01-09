@@ -13,10 +13,10 @@
               <span class="van-popup__panel_price">
                 {{chooseSKU.salePrice}}
               </span>
-              <span class="zm-goods__price-lineprice">
+              <span v-show="chooseSKU.promoteType===1004" class="zm-goods__price-lineprice">
                 {{chooseSKU.linePrice}}
               </span>
-              <span style="color: red; padding-left: 10px" v-show="productSKUs.stock < 5">少量库存</span>
+              <span style="color: red; padding-left: 10px" v-show="chooseSKU.stock <= chooseSKU.warnStock">少量库存</span>
             </div>
             <div class="van-popup__panel_extro">
               <div class="van-popup__panel_extro__item">
@@ -112,7 +112,6 @@
   props: {
     popShow: Boolean,
     productSKUs: Object,
-    productInfo: Object,
     position: {
       type: String
     },
@@ -182,6 +181,8 @@
 
   watch: {
     productSKUs() {
+      console.log("this.productSKUs", this.productSKUs)
+
       this.chooseSKU = this.productSKUs.pmsProductSkuList.find(
         function (sku) {
           return sku.isPrime === true;

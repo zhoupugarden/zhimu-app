@@ -86,6 +86,19 @@ const mutations = {
     },
   [types.IS_VIP](state, level) {
     state.isVip = level;
+  },
+
+  [types.ADD_MERCHANT_INFO](state, info) {
+      state.merchantInfo = info;
+  },
+
+  [types.ADD_DELIVER_CONFIG](state, config) {
+    state.deliverConfig = config;
+  },
+
+  [types.ADD_AD_SETTINGS](state, settings) {
+    state.adSettings = settings;
   }
+
 }
 export default mutations;

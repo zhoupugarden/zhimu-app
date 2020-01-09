@@ -1,8 +1,10 @@
 <template>
   <div class="index-container">
     <van-notice-bar
+      v-show="merchantInfo.status === 1004"
       left-icon="../../asset/notify.png"
-      text="足协杯战线连续第2年上演广州德比战，上赛季半决赛上恒大以两回合5-3的总比分淘汰富力。"
+      mode="link"
+      :text="merchantInfo.noticeContent"
     />
     <div class="van-tree-select" :style="setMainHeight">
       <scroll-view scroll-y class="van-tree-select__nav">
@@ -22,8 +24,8 @@
         class="van-tree-select__content"
         :style="setItemHeight"
       >
-        <div class="index-header" @click="navigateToActivity">
-          <image style="width: 100%; height: 100px; " mode="scaleToFill" :src="activityUrl"></image>
+        <div v-show="headAdSetting.status" class="index-header" @click="navigateToActivity">
+          <image style="width: 100%; height: 100px; " mode="scaleToFill" :src="headAdSetting.imgUrl"></image>
         </div>
         <div class="category_name_class">{{titleName}}</div>
         <view v-for="(subItem, index) in subItems"
@@ -35,6 +37,9 @@
           ></card>
         </view>
       </scroll-view>
+    </div>
+    <div v-show= "merchantInfo.status === 1003 || merchantInfo.status === 1004" class="rest_notice">
+      {{restNotice}}
     </div>
 
     <div>
@@ -48,13 +53,25 @@
 </template>
 <script>
   import {GET_PRODUCT_CATEGORY_URL,GET_CATEGORY_AND_PRODUCT_BRIEF,GET_PRODUCT_SKU_DETAIL_BY_ID,
-    GET_PRODUCT_BY_CATEGORY_ID, INDEX_LIST} from '@/utils/api';
+    GET_PRODUCT_BY_CATEGORY_ID, INDEX_LIST, INDEX_INFO} from '@/utils/api';
   import {request} from "@/utils/request";
   import card from '@/components/card';
   import cartPop from '@/components/cartPop';
-  import {  mapActions } from 'vuex';
+  import {  mapActions, mapGetters } from 'vuex';
 
   const ITEM_HEIGHT = 360;
+
+  const tabUrls = [
+    '/pages/my/main',
+    '/pages/cart/main',
+    '/pages/order/main',
+    '/pages/index/main'
+  ];
+
+  const defaultAdSetting = {
+    imgUrl:"",
+    adUrl:""
+  }
 
   export default{
     components: {
@@ -76,10 +93,26 @@
         isActive:true,
         mainActiveIndex:0,
         popCartActive: false,
-        productSKUs:[]
+        productSKUs:[],
+        adSettings:[],
+        popAdSetting:Object.assign({}, defaultAdSetting),
+        headAdSetting:Object.assign({}, defaultAdSetting),
+        merchantInfo:{}
       }
     },
     computed: {
+
+      restNotice() {
+       if (this.merchantInfo.status === 1003) {
+         return "休息中，" + "营业时间 " + this.merchantInfo.openTime + "-" + this.merchantInfo.closeTime
+       }
+        if (this.merchantInfo.status === 1004) {
+          return "休假中，" + "休假时间 " + this.merchantInfo.restStartDate + "到" + this.merchantInfo.restEndDate
+        }
+
+      },
+
+
       setMainHeight() {
         return "height:" + this.mainHeight + "px";
       },
@@ -104,7 +137,7 @@
 
       ...mapActions(
         [
-          'addProductToCart'
+          'addProductToCart', 'addMerchantInfo', 'addDeliverConfig', 'addAdSettings'
         ]
 
       ),
@@ -160,6 +193,29 @@
         // //加些过渡动画
         // this.popCartActive = false;
       },
+
+      navigateToActivity() {
+        let url = this.headAdSetting.adUrl;
+
+        if (tabUrls.indexOf(url) > -1) {
+          wx.switchTab(
+            {
+              url: url
+            }
+          )
+
+        }else {
+          wx.navigateTo(
+            {
+              url: url
+            }
+          )
+
+        }
+
+      },
+
+
       indexList() {
         request(
           INDEX_LIST,
@@ -168,6 +224,29 @@
           response => {
             this.items = response;
             console.log("this response", response);
+          }
+        )
+      },
+      indexInfo() {
+        request(
+          INDEX_INFO,
+          'GET'
+        ).then(
+          response => {
+            console.log("this response", response);
+            let config = response.zmDeliverConfig;
+            let settings = response.adSettings;
+            this.adSettings = response.adSettings;
+            if (this.adSettings.find(a => a.adType === 1002)) {
+              this.headAdSetting = this.adSettings.find(a => a.adType === 1002);
+            }
+            console.log("this.headAdSetting", this.headAdSetting);
+            this.popAdSetting = this.adSettings.find(a => a.adType === 1001);
+            let merchantInfo = response.zmMerchant;
+            this.merchantInfo = response.zmMerchant;
+            this.addMerchantInfo(merchantInfo);
+            this.addAdSettings(settings);
+            this.addDeliverConfig(config);
           }
         )
       }
@@ -181,6 +260,9 @@
       if (this.popCartActive === true) {
         this.closeActive();
       }
+    },
+    onLoad() {
+      this.indexInfo();
     }
 
     }
@@ -356,6 +438,17 @@
 
   .van-hairline--surround:after {
     border-width: 1px
+  }
+
+  .rest_notice {
+    position: fixed;
+    bottom: 0px;
+    background-color: black;
+    color: white;
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
   }
 
 

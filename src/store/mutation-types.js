@@ -16,3 +16,9 @@ export const LOG_OUT = 'LOG_OUT';
 export const USER_ID = 'USER_ID';
 export const IS_VIP = 'IS_VIP';
 
+
+
+export  const ADD_MERCHANT_INFO = 'ADD_MERCHANT_INFO';
+export  const ADD_AD_SETTINGS = 'ADD_AD_SETTINGS';
+export  const ADD_DELIVER_CONFIG = 'ADD_DELIVER_CONFIG';
+

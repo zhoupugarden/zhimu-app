@@ -12,8 +12,8 @@
           <span>{{cardInfo.name}}</span>
         </div>
         <div class="zm-card__detail__price">
-          <span :style="{color:cardInfo.linePrice?'red':'black'}">￥{{cardInfo.salePrice}}</span>
-          <span v-if="cardInfo.linePrice" class="zm-card__detail__line_price">￥{{cardInfo.linePrice}}</span>
+          <span :style="{color:cardInfo.promoteType===1004?'red':'black'}">￥{{cardInfo.salePrice}}</span>
+          <span v-if="cardInfo.promoteType===1004" class="zm-card__detail__line_price">￥{{cardInfo.linePrice}}</span>
         </div>
 
         <div v-show= "cardInfo.onlineStatus === 1001 || cardInfo.onlineStatus === 1002" @click="popCart" class="zm-detail__icon">

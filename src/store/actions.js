@@ -67,5 +67,16 @@ export default {
     commit(types.CHECK_OUT_FREE_CART)
   },
 
+  addMerchantInfo:({state, commit}, data) => {
+    commit(types.ADD_MERCHANT_INFO, data)
+  },
+
+  addDeliverConfig:({state, commit}, data) => {
+    commit(types.ADD_DELIVER_CONFIG, data)
+  },
+
+  addAdSettings:({state, commit}, data) => {
+    commit(types.ADD_AD_SETTINGS, data)
+  },
 
 }

@@ -5,9 +5,9 @@
       <div style="position: relative; padding-left: 10px;">
         <div class="zm-goods__name">{{good.name}}</div>
         <div class="zm-goods__price">
-          <span class="zm-goods__price-value">{{good.salePrice}}</span>
-          <span class="zm-goods__price-lineprice">{{good.linePrice}}</span>
-          <span class="zm-goods__price-tag">
+          <span class="zm-goods__price-value">{{chooseSKU.salePrice}}</span>
+          <span v-show="chooseSKU.promoteType===1004" class="zm-goods__price-lineprice">{{chooseSKU.linePrice}}</span>
+          <span v-show="chooseSKU.promoteType===1004" class="zm-goods__price-tag">
             <van-tag type="success">限时折扣</van-tag>
           </span>
         </div>
@@ -221,13 +221,11 @@
               {{chooseSKU.salePrice}}
             </span>
 
-            <span class="zm-goods__price-lineprice">
+            <span v-show="chooseSKU.promoteType===1004" class="zm-goods__price-lineprice">
               {{chooseSKU.linePrice}}
             </span>
-
-
           </div>
-          <span v-if="good.stock <= 5" style="color: red; padding-left: 10px;">少量库存</span>
+          <span v-if="good.stock <= good.warnStock" style="color: red; padding-left: 10px;">少量库存</span>
         </div>
         <div class="van-popup__panel_line">
         </div>
@@ -452,7 +450,8 @@
           wx.setNavigationBarTitle({
             title: this.good.name
           });
-          this.urls = this.good.detailPicUrl.split(",");
+
+          this.urls = JSON.parse(this.good.detailPicUrl);
         }
       )
     },

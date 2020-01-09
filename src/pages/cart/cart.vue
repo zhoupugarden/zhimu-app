@@ -42,14 +42,16 @@
           <div style="padding: 0px 15px;">
             总计：￥{{totalPrice}}
           </div>
-          <div v-if="cartTotalPrice < 100" class="cart-container__bottom--fee">
+          <div v-if="totalPrice < deliverConfig.freePrice" class="cart-container__bottom--fee">
             <span>另需配送费</span>
-            <span>{{deliverFee}}元,</span>
-            <span>再买</span>
-            <span style="color: red">{{needAmount}}元</span>
-            <span>可减</span>
-            <span style="color: red">{{freeFee}}元</span>
-            <span>配送费</span>
+            <span>{{deliverFee}}元</span>
+            <span v-show="needAmount < 10">
+              <span>,再买</span>
+              <span style="color: red">{{needAmount}}元</span>
+              <span>可减</span>
+              <span style="color: red">{{freeFee}}元</span>
+              <span>配送费</span>
+            </span>
           </div>
           <div v-else style="font-size: 10px;">
             <span>免配送费</span>
@@ -125,7 +127,8 @@
       birthNum: "",
       totalPrice: 0,
       remark:"",
-      totalCartList:[]
+      totalCartList:[],
+      deliverConfig:{}
     }
   },
 
@@ -179,30 +182,30 @@
     },
 
     deliverFee() {
-      if (this.totalPrice < 30) {
-        return 8;
+      if (this.totalPrice < this.deliverConfig.secPrice && this.totalPrice > this.deliverConfig.beginPrice) {
+        return this.deliverConfig.beginFee;
       }
-      else if (this.totalPrice >= 30 && this.totalPrice < 100) {
-        return 5;
+      else if (this.totalPrice >= this.deliverConfig.secPrice && this.totalPrice < this.deliverConfig.freePrice) {
+        return this.deliverConfig.secFee;;
       } else {
-        return 0
+        return 0;
       }
     },
     needAmount() {
-      if (this.totalPrice < 30) {
-        return 30 - this.totalPrice;
+      if (this.totalPrice < this.deliverConfig.secPrice && this.totalPrice > this.deliverConfig.beginPrice) {
+        return this.deliverConfig.secPrice - this.totalPrice;
       }
-      else if (this.totalPrice >= 30 && this.totalPrice < 100) {
-        return 100 - this.totalPrice;
+      else if (this.totalPrice >= this.deliverConfig.secPrice && this.totalPrice < this.deliverConfig.freePrice) {
+        return this.deliverConfig.freePrice - this.totalPrice;
       }else {
         return 0
       }
     },
     freeFee() {
-      if (this.totalPrice < 30) {
-        return 3;
+      if (this.totalPrice < this.deliverConfig.secPrice) {
+        return this.deliverConfig.beginFee - this.deliverConfig.secFee;
       }
-      else if (this.totalPrice >= 30 && this.totalPrice < 100) {
+      else if (this.totalPrice >= this.deliverConfig.secPrice && this.totalPrice < this.deliverConfig.freePrice) {
         return 5;
       } else {
         return 0
@@ -355,7 +358,10 @@
     console.log("onLoad");
     this.calcTotalPrice();
     console.log("this.cartTotalPrice this.totalPrice ", this.cartTotalPrice, this.totalPrice)
-
+  },
+  onLoad() {
+    this.deliverConfig = this.$store.state.deliverConfig;
+    console.log("this.deliverConfig", this.deliverConfig);
   }
 }
 </script>

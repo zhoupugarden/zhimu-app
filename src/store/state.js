@@ -4,7 +4,11 @@ const state = {
     token:'',
     userId:'',
     isVip:0,
-    freeList:[]
+    freeList:[],
+
+    merchantInfo:{},
+    deliverConfig:{},
+    adSettings:[]
 }
 
 export default state;
