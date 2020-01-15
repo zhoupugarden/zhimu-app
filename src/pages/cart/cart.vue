@@ -19,9 +19,9 @@
         请在下方选择需要的配件
       <div class="cart-container__fitting">
         <div class="cart-container__fitting--nav">
-          <van-button size="small" @click="addFire">数字蜡烛</van-button>
-          <van-button size="small" @click="addChocolate">巧克力牌</van-button>
-          <van-button size="small" @click="addHat">生日帽</van-button>
+          <span v-for="free in freeGood">
+            <van-button size="small" @click="addFreeFitting(free)">{{free.fittingName}}</van-button>
+          </span>
           <van-button size="small" @click="popUpShow">配件饰品</van-button>
         </div>
         <div class="cart-container__fitting--detail">
@@ -91,29 +91,8 @@
   import { mapGetters, mapActions } from 'vuex';
   import { SET_OPEN_ID } from '@/store/mutation-types';
 
-  import {PAY_FITTING_LIST} from '@/utils/api';
+  import {PAY_FITTING_LIST, GET_FITTING_LIST} from '@/utils/api';
   import {request} from "@/utils/request";
-
-
-  const freeGood = [
-    {
-      url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-      productName:"巧克力牌",
-      attributeName:"1个",
-      holdValue:"请输入祝福语(14字内)",
-    },
-    {
-      url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-      productName:"数字蜡烛",
-      attributeName:"1个",
-      holdValue:"请输入年龄",
-    },
-    {
-      url: "https://t12.baidu.com/it/u=541581695,4055461334&fm=76",
-      productName:"生日帽",
-      attributeName:"1个"
-    }
-  ];
 
   export default {
   components: {
@@ -128,10 +107,10 @@
       totalPrice: 0,
       remark:"",
       totalCartList:[],
-      deliverConfig:{}
+      deliverConfig:{},
+      freeGood:[]
     }
   },
-
     watch: {
       totalCartList: {
         handler(val, oldVal) {
@@ -226,18 +205,24 @@
         'updateFreeFromCart'
       ]
     ),
-    payFittingList() {
+    addFreeFitting(data) {
+      console.log("event", data);
+      this.addFreeCart(data);
+
+    },
+    getFittingList() {
       request(
-        PAY_FITTING_LIST,
+        GET_FITTING_LIST,
         'GET'
       ).then(
         response => {
-          this.payGood = response;
+          this.payGood = response.fittingList;
+          this.freeGood = response.freeFittingList;
           console.log("this response", response);
-          this.popShow = true;
         }
       )
     },
+
     storeButton() {
       this.setOpenId("123456")
     },
@@ -246,7 +231,7 @@
       this.popShow = false;
     },
     popUpShow() {
-      this.payFittingList()
+      this.popShow = true;
     },
     navigateToSubmitOrLogin() {
       let submitUrl = "/pages/ordersubmit/main";
@@ -357,7 +342,8 @@
   onShow() {
     console.log("onLoad");
     this.calcTotalPrice();
-    console.log("this.cartTotalPrice this.totalPrice ", this.cartTotalPrice, this.totalPrice)
+    console.log("this.cartTotalPrice this.totalPrice ", this.cartTotalPrice, this.totalPrice);
+    this.getFittingList();
   },
   onLoad() {
     this.deliverConfig = this.$store.state.deliverConfig;

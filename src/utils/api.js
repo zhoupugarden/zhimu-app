@@ -102,6 +102,8 @@ export const  GET_POINT_MALL_DETAIL = BASE_API_URL + '/pointmall/detail';
 
 export const  GET_BOUNTY_REDEEM_LIST = BASE_API_URL + '/sign/redeem/list';
 
+export const  GET_FITTING_LIST = BASE_API_URL + '/fitting/list';
+
 
 
 

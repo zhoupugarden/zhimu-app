@@ -200,7 +200,6 @@
       }
     },
     methods: {
-
       formatter(type, value) {
         console.log("type vale: ", type, value);
         // if (type === 'year') {
@@ -212,9 +211,6 @@
         // }
         // return value;
       },
-
-
-
       ...mapActions(
         [
           'checkoutCartList',
@@ -440,8 +436,6 @@
         }
       },
 
-
-
       orderSubmit() {
         if (!this.validParams()) {
           return;
@@ -617,7 +611,6 @@
     },
     onShow() {
       this.calcTotalPrice();
-
       if (this.totalProductPrice < 30) {
         this.deliverValue = 8;
         this.vipTip = "加入会员可得免邮卡本次省8元";

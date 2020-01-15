@@ -1,8 +1,8 @@
 <template>
   <div class="paycard-container">
-    <img :src="item.picUrl" class="paycard-container__pic">
+    <img :src="item.headPicUrl" class="paycard-container__pic">
     <div class="paycard-container__name">
-      {{item.productName}}
+      {{item.name}}
     </div>
     <div class="paycard-container_price">
       ￥{{item.salePrice}}

@@ -7,8 +7,8 @@
         <div class="zm-goods__price">
           <span class="zm-goods__price-value">{{chooseSKU.salePrice}}</span>
           <span v-show="chooseSKU.promoteType===1004" class="zm-goods__price-lineprice">{{chooseSKU.linePrice}}</span>
-          <span v-show="chooseSKU.promoteType===1004" class="zm-goods__price-tag">
-            <van-tag type="success">限时折扣</van-tag>
+          <span v-show="chooseSKU.promoteType !== 1001" class="zm-goods__price-tag">
+            <van-tag type="success">{{promoteTag}}</van-tag>
           </span>
         </div>
         <div class="zm-goods__share">
@@ -535,6 +535,20 @@
 
       },
     computed: {
+
+      promoteTag() {
+        switch(this.chooseSKU.promoteType) {
+          case 1001:
+            return "";
+          case 1002:
+            return "买一送一";
+          case 1003:
+            return "第二件半价";
+          case 1004:
+            return "限时促销";
+        }
+      },
+
       attribute() {
         return "已选择：" + this.chooseSKU.attributeName;
       },

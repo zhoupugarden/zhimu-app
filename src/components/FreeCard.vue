@@ -1,13 +1,13 @@
 <template>
   <div class="freecard-container">
-    <img :src="freeItem.url" class="freecard-container__pic">
+    <img :src="freeItem.fittingUrl" class="freecard-container__pic">
     <div class="freecard-container__name">
-      {{freeItem.productName}} / ￥ 0.00
+      {{freeItem.fittingName}} / ￥ 0.00
     </div>
  <div v-if="freeItem.holdValue">
    <van-field
      :value="freeItem.value"
-     :placeholder="freeItem.holdValue"
+     :placeholder="holdValue"
      border="false"
      @change="fieldChange"
    />
@@ -39,11 +39,26 @@
       },
       fieldChange(event) {
         let data = {};
+        data.fittingId = this.freeItem.fittingId;
         data.productName = this.freeItem.productName;
         data.value = event.mp.detail;
         this.$emit("fieldChange", data)
       }
+    },
+    computed: {
+      holdValue() {
+        console.log("this.freeItem", this.freeItem)
+        if (this.freeItem.fittingId === 1001) {
+          return "请输入年龄";
+        }
+        if (this.freeItem.fittingId === 1006) {
+          return "请输入祝福语";
+        }
+
+      }
     }
+
+
   }
 </script>
 <style lang="scss"  scoped>
