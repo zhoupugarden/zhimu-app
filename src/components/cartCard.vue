@@ -19,7 +19,10 @@
         </div>
       <div class="zm-card__content">
         <div class="zm-card__title"> {{cardItem.productName}}</div>
-        <div class="zm-card__attr">{{cardItem.attributeName}}</div>
+
+        <div v-if = "cardItem.attributeName" class="zm-card__attr">{{cardItem.attributeName}}</div>
+        <div v-else class="zm-card__attr">个</div>
+
         <slot name="tags"></slot>
         <div class="zm-card__close">
           <van-icon name="close" @click="removeProduct"/>

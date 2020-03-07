@@ -52,7 +52,7 @@
 
 </template>
 <script>
-  import {GET_PRODUCT_CATEGORY_URL,GET_CATEGORY_AND_PRODUCT_BRIEF,GET_PRODUCT_SKU_DETAIL_BY_ID,
+  import {GET_PRODUCT_CATEGORY_URL,GET_PRODUCT_SKU_DETAIL_BY_ID,
     GET_PRODUCT_BY_CATEGORY_ID, INDEX_LIST, INDEX_INFO} from '@/utils/api';
   import {request} from "@/utils/request";
   import card from '@/components/card';

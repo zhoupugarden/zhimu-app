@@ -19,7 +19,7 @@
         请在下方选择需要的配件
       <div class="cart-container__fitting">
         <div class="cart-container__fitting--nav">
-          <span v-for="free in freeGood">
+          <span v-for="(free, index) in freeGood" :key="index">
             <van-button size="small" @click="addFreeFitting(free)">{{free.fittingName}}</van-button>
           </span>
           <van-button size="small" @click="popUpShow">配件饰品</van-button>
@@ -68,14 +68,17 @@
                  @close="popUpClose"
       >
         <div class="van-popup__custom--container">
-          <div >
+          <div class="van-popup__custom--container_cross" >
             <van-icon @click="popUpClose" name="cross" />
           </div>
-          <div v-for="(item, index) in payGood" :key="index">
-            <pay-card
+
+          <div class="van-popup__custom--container_detail">
+            <div class="van-popup__custom--container_detail_item" v-for="(item, index) in payGood" :key="index">
+              <pay-card
                 @addToCart="addGoodToCart"
-              :item="item"
-            ></pay-card>
+                :item="item"
+              ></pay-card>
+            </div>
           </div>
         </div>
       </van-popup>
@@ -207,8 +210,9 @@
     ),
     addFreeFitting(data) {
       console.log("event", data);
+      let params = {};
+      params.fittingId = data.fittingId;
       this.addFreeCart(data);
-
     },
     getFittingList() {
       request(
@@ -237,9 +241,7 @@
       let submitUrl = "/pages/ordersubmit/main";
       let loginUrl = "/pages/login/main";
       let url = "";
-
       //add-free-cart
-
       if (this.userId) {
         url = submitUrl;
       } else {
@@ -310,34 +312,7 @@
       this.popShow = false;
       this.addProductToCart(data);
       this.calcTotalPrice();
-    },
-    addChocolate() {
-      let data = {};
-      data.id = 1;
-      data.url = freeGood[0].url;
-      data.productName = freeGood[0].productName;
-      data.holdValue = freeGood[0].holdValue;
-      data.value = this.remark;
-      this.addFreeCart(data);
-    },
-    addHat() {
-      let data = {};
-      data.id = 3;
-      data.url = freeGood[2].url;
-      data.productName = freeGood[2].productName;
-      data.value = this.remark;
-      this.addFreeCart(data);
-    },
-    addFire() {
-      let data = {};
-      data.id = 2;
-      data.url = freeGood[1].url;
-      data.holdValue = freeGood[1].holdValue;
-      data.productName = freeGood[1].productName;
-      data.value = this.birthNum;
-      this.addFreeCart(data);
     }
-
   },
   onShow() {
     console.log("onLoad");
@@ -422,6 +397,21 @@
     padding-top: 10px;
     margin-bottom: 200px;
 
+  }
+  .van-popup__custom--container_detail {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    text-align: center;
+
+    justify-content: space-between;
+
+    list-style: none;
+
+    margin-left: 0;
+  }
+  .van-popup__custom--container_detail_item {
   }
 
 

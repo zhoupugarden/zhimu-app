@@ -17,7 +17,7 @@
       </div>
 
     </div>
-    <div style="font-size: 14px; font-weight:bolder; padding-top: 10px;padding-left: 10px;color: #CDA65B; background-color: white">
+    <div class="redeem-title">
       优惠券专区
     </div>
     <div class="redeem-detail">
@@ -158,6 +158,15 @@
 
 <style lang="scss" scoped>
 
+  .redeem-title {
+    font-size: 14px;
+    font-weight:bolder;
+    padding: 10px;
+    color: #CDA65B;
+    background-color: white;
+    border-bottom: 1px solid #f2f2f2;
+  }
+
   .redeem-header-total {
     display: flex;
     flex-direction: column;
@@ -192,9 +201,10 @@
     background-color: white;
     display: flex;
     flex-flow: row wrap;
-    justify-content: space-around;
+    justify-content: space-between;
     padding-top: 10px;
   }
+
   .redeem-detail-item {
     flex: 0 0 33%;
     padding: 10px 10px;

@@ -9,13 +9,22 @@ export default {
     setOpenId: ({ commit }, { id }) => commit(openId, id),
 
     addProductToCart:({state, commit}, data)=> {
-      console.log(data)
-      let cartItem = state.cartList.find(item => {
-        //
-        return item.skuId === data.skuId
-        console.log("addProductToCart", item.skuId , data.skuId)
-      })
-      console.log(cartItem)
+      console.log(data);
+      let cartItem = {};
+      if (data.skuId) {
+        cartItem = state.cartList.find(item => {
+          //
+          return item.skuId === data.skuId
+          console.log("addProductToCart", item.skuId , data.skuId)
+        })
+      } else {
+        cartItem = state.cartList.find(item => {
+          //
+          return item.productId === data.productId
+          console.log("addProductToCart", item.productId , data.productId)
+        })
+      }
+      console.log(cartItem);
       if (!cartItem) {
         commit(types.ADD_PRODUCT_TO_CART, data)
       }else {
@@ -26,14 +35,12 @@ export default {
       commit(types.ADD_FREE_TO_CART, data)
     },
 
-    decrementInventory: ({commit}, {skuId}) => {
-      console.log(skuId);
-      commit(types.DECREMENT_INVENTORY, {skuId})
+    decrementInventory: ({commit}, data) => {
+      commit(types.DECREMENT_INVENTORY, data)
     },
 
-    incrementInventory: ({commit}, {skuId}) => {
-      console.log(skuId);
-      commit(types.INCREMENT_INVENTORY, {skuId})
+    incrementInventory: ({commit}, data) => {
+      commit(types.INCREMENT_INVENTORY, data)
     },
 
     delProductFromCart:({commit}, {skuId}) => {

@@ -18,7 +18,7 @@ const mutations = {
       let isExist = false;
       state.freeList.forEach(
         item => {
-          if (item.id === freeCartItem.id) {
+          if (item.fittingId === freeCartItem.fittingId) {
             console.log("免费产品已经存在");
             isExist = true;
           }
@@ -31,16 +31,25 @@ const mutations = {
       } else {
         return;
       }
-
     },
 
-    [types.DECREMENT_INVENTORY](state, {skuId}) {
-      let cartItem = state.cartList.find(item => item.skuId === skuId);
+    [types.DECREMENT_INVENTORY](state, data) {
+      let cartItem = {};
+      if (data.skuId) {
+        cartItem = state.cartList.find(item => item.skuId === data.skuId);
+      } else {
+        cartItem = state.cartList.find(item => item.productId === data.productId);
+      }
       cartItem.quantity--;
       console.log("DECREMENT_INVENTORY", state.cartList, state.cartList.length)
     },
-    [types.INCREMENT_INVENTORY](state, {skuId}) {
-      let cartItem = state.cartList.find(item => item.skuId === skuId);
+    [types.INCREMENT_INVENTORY](state, data) {
+      let cartItem = {};
+      if (data.skuId) {
+        cartItem = state.cartList.find(item => item.skuId === data.skuId);
+      } else {
+        cartItem = state.cartList.find(item => item.productId === data.productId);
+      }
       cartItem.quantity++;
       console.log("INCREMENT_INVENTORY", state.cartList, state.cartList.length)
     },

@@ -4,7 +4,7 @@
     <div class="freecard-container__name">
       {{freeItem.fittingName}} / ￥ 0.00
     </div>
- <div v-if="freeItem.holdValue">
+ <div v-show="holdValue">
    <van-field
      :value="freeItem.value"
      :placeholder="holdValue"
@@ -12,10 +12,6 @@
      @change="fieldChange"
    />
  </div>
-
-    <div v-else style="width: 50%">
-
-    </div>
     <div class="freecard-container_close">
       <van-icon name="cross" @click="delFromCart"></van-icon>
     </div>

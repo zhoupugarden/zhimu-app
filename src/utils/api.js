@@ -10,6 +10,9 @@ export const GET_PRODUCT_BY_CATEGORY_ID = BASE_API_URL + '/product/listBriefProd
 // 获取所有分类信息及分类的产品简要信息
 export const GET_CATEGORY_AND_PRODUCT_BRIEF = BASE_API_URL + '/product/listProductAndCategory';
 
+// 获取充值配置信息
+export const GET_CHARGE_CONFIG_INFO = BASE_API_URL + '/product/getChargeSkuDto';
+
 // 根据商品id获得商品详情
 export const GET_PRODUCT_DETAIL_BY_ID = BASE_API_URL + '/productDetail/list';
 
@@ -103,6 +106,8 @@ export const  GET_POINT_MALL_DETAIL = BASE_API_URL + '/pointmall/detail';
 export const  GET_BOUNTY_REDEEM_LIST = BASE_API_URL + '/sign/redeem/list';
 
 export const  GET_FITTING_LIST = BASE_API_URL + '/fitting/list';
+
+export const  ORDER_PRESUBMIT = BASE_API_URL + '/order/presubmit';
 
 
 

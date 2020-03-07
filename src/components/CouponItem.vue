@@ -2,19 +2,19 @@
   <div class="coupon-item-container">
 
     <div class="coupon-item-left">
-      <div style="font-size: 18px;">
+      <div style="font-size: 16px; padding: 10px;">
         {{couponInfo.couponName}}
       </div>
       <div style="font-size: 10px;">
-        有效期至：{{couponInfo.validEndTime}}
+        {{couponInfo.validStartTime}} 至 {{couponInfo.validEndTime}}
       </div>
     </div>
-    <hr style="float: left;margin-top:30px;margin-bottom:30px;margin-right: 30px;border: thin dashed #aaa;">
+    <div style="float:left;width: 1px;height: 60px; background: #b2b2b2;"></div>
     <div class="coupon-item-right">
-      <div style="color: red;text-align: center;font-size: 20px;">
+      <div style="color: red;font-size: 16px; padding: 10px;">
         {{couponInfo.couponValue}}
       </div>
-      <div style="font-size: 10px;">
+      <div style="font-size: 10px;color: #b2b2b2; padding: 0px 10px; border: 1px solid #b2b2b2;">
         {{couponInfo.couponLimit}}
       </div>
     </div>
@@ -48,6 +48,7 @@
   .coupon-item-left, .coupon-item-right {
     display: flex;
     flex-direction: column;
+    text-align: center;
   }
 
 </style>

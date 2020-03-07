@@ -8,7 +8,7 @@
     </div>
 
     <div class="redeem-item-point">
-      {{redeemItem.pointCount}}
+      {{redeemItem.pointCount}}积分
     </div>
     <span style="font-size: 14px; color: white">积分</span>
 
@@ -52,7 +52,7 @@
   }
   .redeem-item-name {
     font-size: 16px;
-    font-weight: bolder;
+    padding: 10px 0px;
   }
   .redeem-item-point {
     font-size: 14px;

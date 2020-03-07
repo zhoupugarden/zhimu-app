@@ -59,7 +59,7 @@
       <van-cell :title="chooseCouponTip" custom-class="custome-cell" is-link arrow-direction="down" @click="couponPop"/>
     </div>
     <div style="font-weight: bolder;font-size: 14px;padding: 10px 15px;">
-      余额
+      余额抵扣
     </div>
     <div class="order-submit-balance">
       <van-cell :title=" '' + useBalanceAmount" custom-class="custome-cell"/>
@@ -70,7 +70,7 @@
     </div>
     <div class="order-submit-summary">
         <van-cell-group>
-          <van-cell :title="cartTotalCount + '件商品'" :value= " flag + totalProductPrice" />
+          <van-cell :title="productCount + '件商品'" :value= " flag + totalProductPrice" />
           <van-cell title="余额" :value= " '-' + flag + useBalanceAmount" />
           <van-cell title="优惠券" :value= " '-' + flag + couponValue" />
           <van-cell title="配送费" :value= "flag + deliverValue" />
@@ -115,7 +115,6 @@
 
       <van-popup :show="couponPopShow"
                  custom-style="height:80%"
-                 @enter="enterCouponPop"
                  @close="closeCouponPopup"
                  position="bottom">
 
@@ -143,7 +142,7 @@
                custom-style="height:80%"
                @close="closeProductPopup"
                position="bottom">
-          <div v-for="item in cartList" :key="index">
+          <div v-for="item in productItems" :key="index">
             <product-item :productItemInfo="item"></product-item>
           </div>
     </van-popup>
@@ -158,12 +157,11 @@
   import {toast} from '../../utils/toast';
   import {  mapActions } from 'vuex';
   import { mapGetters } from 'vuex';
-  import {GET_COUPON_BY_USER_ID, MOCK_WX_PAY, GET_USER_ADDRESS, MY_USER_INFO,ORDER_SUBMIT, PRE_USE_COUPON} from '@/utils/api';
+  import {GET_COUPON_BY_USER_ID, MOCK_WX_PAY, ORDER_PRESUBMIT, GET_USER_ADDRESS, MY_USER_INFO,ORDER_SUBMIT, PRE_USE_COUPON} from '@/utils/api';
   import {request} from "@/utils/request";
   import {formatYMD} from "@/utils/dateUtil";
 
-  const timeColumnArray = ['10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00',
-    '15:00-16:00', '16:00-17:00', '17:00-18:00', '18:00-19:00', '19:00-20:00'];
+
   export default {
     components: {
       CouponItem, ProductItem, CouponItemc
@@ -173,10 +171,8 @@
         flag:'￥',
         switchValue: 1,
         addressId:0,
-        balanceCount:3,
-        firstProduct:"测试商品",
         couponCanUseList:[],
-        chosedCoupon: null,
+        choosedCoupon: null,
         addressArray: [],
         selfAddress:"周浦镇年家浜东路129弄",
         datePopShow:false,
@@ -187,29 +183,25 @@
         formatDate: "",
         currentTime: null,
         minDate: new Date().getTime(),
+        isOverToday:false,
+        timeColumns:[],
+        allTimes:[],
         balanceValue:"0",
         userInfo:{},
         vipTip:"",
-
         totalProductPrice:0,
         couponValue: 0,
         balanceAmount:0,
-        // useBalanceAmount:0,
-        // restWxPayAmount:0,
-        deliverValue:0
+        deliverValue:0,
+        productItems:[],
+        productCount:0,
+        productAmount:0,
+        promoteItemList:[]
       }
     },
     methods: {
       formatter(type, value) {
         console.log("type vale: ", type, value);
-        // if (type === 'year') {
-        //   return `${value}年`;
-        // } else if (type === 'month') {
-        //   return `${value}月`;
-        // } else {
-        //   return `${value}日`;
-        // }
-        // return value;
       },
       ...mapActions(
         [
@@ -242,13 +234,6 @@
           url
         });
       },
-
-      enterCouponPop() {
-        console.log("====enterCouponPop=====");
-        this.getCoupon();
-      },
-
-
       datePop() {
         this.datePopShow = true;
       },
@@ -279,7 +264,11 @@
           this.currentDate = detail;
           this.datePopShow = false;
           if (detail > new Date().getTime()) {
-            this.currentTime = "10:00-11:00";
+            this.isOverToday = false;
+            this.timeColumns = this.allTimes;
+            this.currentTime = this.timeColumns[0];
+          }else {
+            this.isOverToday = true;
           }
 
         }else {
@@ -309,36 +298,6 @@
         console.log("currentTime", this.currentTime);
         this.timePopShow = false;
       },
-      listUserAddress() {
-        let params = {};
-        params.userId = this.userId;
-        request(
-          GET_USER_ADDRESS,
-          'GET',
-          params
-        ).then(
-          response => {
-            this.addressArray = response;
-            console.log("this response====", response);
-          }
-        )
-      },
-      getUserInfo() {
-        let params = {};
-        params.token = this.token;
-        request(
-          MY_USER_INFO,
-          'GET',
-          params
-        ).then(
-          response => {
-            this.userInfo = response;
-            this.balanceAmount = this.userInfo.balanceAmount;
-            console.log("this response", response);
-          }
-        )
-      },
-
       convertCartList(data) {
         let productItems = [];
         for(let item of data) {
@@ -370,33 +329,13 @@
             } else {
               that.couponPopShow = false;
               that.couponValue = response.couponAmount;
-              that.chosedCoupon = that.couponCanUseList.find(item => item.couponCode === response.couponCode);
+              that.choosedCoupon = that.couponCanUseList.find(item => item.couponCode === response.couponCode);
             }
           }
         )
       },
-
-      getCoupon() {
-        let params = {};
-        params.userId = this.userId;
-        request(
-          GET_COUPON_BY_USER_ID,
-          'GET',
-          params
-
-        ).then(
-          response => {
-            let couponList = response;
-            console.log("this response", response);
-            this.couponCanUseList = couponList.filter(
-              item => {
-                return item.status === 1;
-              }
-            );
-          }
-        )
-      },
       validParams() {
+        let result = false;
         console.log("this.switchValue , this.addressId", this.switchValue, this.addressId)
         if (this.switchValue === 1 && this.addressId === 0) {
           wx.showModal({
@@ -410,30 +349,79 @@
               }
             }
           });
-          return false;
-        } else {
-          return true;
         }
+        if (this.isOverToday === true) {
+          wx.showModal({
+            title: "提示",
+            content: '亲,商品已过当日可配送时间,请选择其他配送日期',
+            confirmText: '确定',
+            showCancel: false,
+            success(res) {
+              if(res.confirm) {
+                console.log("选择配送日期");
+              }
+            }
+          });
+        }
+        else {
+          result = true;
+        }
+        return result;
       },
 
-      calcTotalPrice() {
-        this.totalCartList = this.cartList;
-        if (this.totalCartList.length === 0) {
-          this.totalPrice = 0.00;
-        } else {
-          console.log("cartTotalPrice ");
-          console.log("totalCartList ", this.totalCartList);
-          let tmpTotalPrice = 0;
-          for (let index in this.totalCartList) {
-            console.log("item", this.totalCartList[index]);
-            let item = this.totalCartList[index];
-            let itemPrice = item.salePrice * item.quantity;
-            console.log("itemPrice", itemPrice);
-            tmpTotalPrice = tmpTotalPrice + itemPrice;
+      orderPreSubmit() {
+        let params = {};
+        params.userId = this.userId;
+        params.fittingList = this.freeCartList;
+        params.productList = this.cartList;
+        request(
+          ORDER_PRESUBMIT,
+          'POST',
+          params
+
+        ).then(
+          response => {
+            console.log("orderPresubmit response", response);
+            this.couponCanUseList = response.presubmitUser.couponList;
+            this.balanceAmount = response.presubmitUser.balanceAmount;
+            this.addressArray = response.presubmitUser.addressList;
+            this.deliverValue = response.presubmitOrder.deliverFee;
+            this.vipTip = response.presubmitOrder.vipTip;
+            let strMinDate = response.presubmitTime.minDate;
+            this.minDate = new Date(strMinDate).getTime();
+            this.isOverToday = response.presubmitTime.isOverToday;
+            this.currentTime = response.presubmitTime.currentTime;
+            let strCurrentDate = response.presubmitTime.currentDate;
+            this.currentDate = new Date(strCurrentDate).getTime();
+            this.formatDate = formatYMD(this.currentDate);
+            console.log("this.currentDate", this.currentDate);
+            this.productItems = response.presubmitProduct.productItems;
+            this.productCount = response.presubmitOrder.productCount;
+            this.useBalanceAmount = response.presubmitOrder.useBalanceAmount;
+            this.couponValue = response.presubmitOrder.couponAmount;
+            this.promoteItemList = response.presubmitOrder.promoteItemList;
+            this.totalProductPrice = response.presubmitOrder.productAmount;
+            this.timeColumns = response.presubmitTime.limitTimes;
+            this.allTimes = response.presubmitTime.allTimes;
+            if (this.isOverToday === true) {
+              wx.showModal({
+                title: "提示",
+                content: '亲,商品已过当日可配送时间,请选择其他配送日期',
+                confirmText: '确定',
+                showCancel: false,
+                success(res) {
+                  if(res.confirm) {
+                    console.log("选择配送日期");
+                  }
+                }
+              });
+            }
+
+
+
+
           }
-          this.totalProductPrice = tmpTotalPrice.toFixed(2);
-          console.log("this.totalPrice", this.totalPrice)
-        }
+        )
       },
 
       orderSubmit() {
@@ -459,8 +447,8 @@
           params.deliverType = 99;
         }
         params.orderType = 1;
-        if (this.chosedCoupon != null) {
-          params.couponCode = this.chosedCoupon.couponCode;
+        if (this.choosedCoupon != null) {
+          params.couponCode = this.choosedCoupon.couponCode;
         }
         params.productItems = this.convertCartList(this.cartList);
 
@@ -491,31 +479,26 @@
       }
     },
     computed: {
-
-      timeColumns() {
-        const timeColumnArray = ['10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00',
-          '15:00-16:00', '16:00-17:00', '17:00-18:00', '18:00-19:00', '19:00-20:00'];
-        if (this.currentDate > new Date().getTime()) {
-          return timeColumnArray;
-        } else {
-          let hour = new Date().getHours();
-
-          if ((hour - 10) > 0) {
-            return timeColumnArray.slice(hour - 10, timeColumnArray.length);
-          }else {
-            return timeColumnArray;
-          }
-
-        }
-
-      },
-
+      // timeColumns() {
+      //   const timeColumnArray = ['10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00',
+      //     '15:00-16:00', '16:00-17:00', '17:00-18:00', '18:00-19:00', '19:00-20:00'];
+      //   if (this.currentDate > new Date().getTime()) {
+      //     return timeColumnArray;
+      //   } else {
+      //     let hour = new Date().getHours();
+      //
+      //     if ((hour - 10) > 0) {
+      //       return timeColumnArray.slice(hour - 10, timeColumnArray.length);
+      //     }else {
+      //       return timeColumnArray;
+      //     }
+      //   }
+      // },
       ...mapGetters(
         [
            'isVip','cartList','freeCartList', 'cartTotalCount','cartTotalPrice','cartProductListName','token','userId'
         ]
       ),
-
       currentAddress() {
         if (this.switchValue === -1) {
           return "";
@@ -574,14 +557,14 @@
         }
       },
       chooseCouponTip() {
-        if (this.chosedCoupon != null) {
-          if (this.chosedCoupon.couponType === 1) {
-            return this.chosedCoupon.disAmount + "元优惠券";
+        if (this.choosedCoupon != null) {
+          if (this.choosedCoupon.couponType === 1) {
+            return this.choosedCoupon.disAmount + "元优惠券";
           }
-          if (this.chosedCoupon.couponType === 2) {
-            return this.chosedCoupon.disCount + "折优惠券";
+          if (this.choosedCoupon.couponType === 2) {
+            return this.choosedCoupon.disCount + "折优惠券";
           }
-          if (this.chosedCoupon.couponType === 3) {
+          if (this.choosedCoupon.couponType === 3) {
             return "免邮券";
           }
         } else {
@@ -591,42 +574,9 @@
             return "无可用优惠券";
           }
         }
-
       }
-
-    },
-
-    onLoad() {
-      this.currentDate = new Date().getTime();
-      this.formatDate = formatYMD(this.currentDate);
-      this.currentTime = "10:00-11:00";
-      let nowDate = new Date();
-      let hour = nowDate.getHours();
-      if ((hour - 10) > 10) {
-        this.currentTime = "当日停接单";
-      } else {
-        this.currentTime = timeColumnArray[Math.abs(hour - 10)];
-      }
-
     },
     onShow() {
-      this.calcTotalPrice();
-      if (this.totalProductPrice < 30) {
-        this.deliverValue = 8;
-        this.vipTip = "加入会员可得免邮卡本次省8元";
-      } else if (this.totalProductPrice >=30 && this.totalProductPrice < 80) {
-        this.vipTip = "加入会员可得免邮卡本次省8元";
-        this.deliverValue = 5;
-      } else if (this.totalProductPrice >=80 && this.totalProductPrice < 100) {
-        this.vipTip = "加入会员可得5张9折卡本次省" + (this.totalProductPrice * 0.1).toFixed(2) + "元";
-        this.deliverValue = 5;
-      }else {
-        this.vipTip = "加入会员可得5张9折卡本次省" + (this.totalProductPrice * 0.1).toFixed(2) + "元";
-        this.deliverValue = 0;
-      }
-
-      console.log("totalProductPrice", this.totalProductPrice);
-      console.log("this.addressId", this.addressId);
         //要把原有已选的值清空
         let params = this.$root.$mp.query;
         console.log(this.$root.$mp.query);
@@ -634,9 +584,7 @@
         if (null != params.addressId) {
           this.addressId = params.addressId;
         }
-      this.getUserInfo();
-      this.listUserAddress();
-      this.getCoupon();
+      this.orderPreSubmit();
     }
 
   }

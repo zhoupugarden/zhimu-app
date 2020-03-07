@@ -21,11 +21,12 @@
 </template>
 
 <script>
+
   import PrivilegeItem from '@/components/PrivilegeItem';
   import Dialog from '../../../static/vant/dialog/dialog';
   import { mapGetters } from 'vuex';
 
-  import {CHARGE, MOCK_WX_PAY} from '@/utils/api';
+  import {CHARGE, GET_CHARGE_CONFIG_INFO, MOCK_WX_PAY} from '@/utils/api';
   import {request} from "@/utils/request";
 
   export default {
@@ -33,7 +34,10 @@
       PrivilegeItem
     },
     data() {
-      return {}
+      return {
+        productId:"",
+        skuId:""
+      }
     },
     methods: {
       mockWxPay(data) {
@@ -54,12 +58,25 @@
         )
       },
 
+      getChargeProductInfo() {
+        request(
+          GET_CHARGE_CONFIG_INFO,
+          'GET'
+        ).then(
+          response => {
+            console.log("this response", response);
+            this.productId = response.productId;
+            this.skuId = response.skuId;
+          }
+        )
+      },
+
       charge() {
         let that = this;
         let params = {};
         params.userId = this.userId;
-        params.productId = 11;
-        params.chargeAmount = 500;
+        params.productId = this.productId;
+        params.skuId = this.skuId;
         console.log("charge");
         request(
           CHARGE,
@@ -86,6 +103,11 @@
         )
       }
     },
+
+    onShow() {
+      this.getChargeProductInfo();
+    },
+
     computed: {
       ...mapGetters(
         [

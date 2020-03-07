@@ -1,8 +1,8 @@
 <template>
   <div class="paycard-container">
-    <img :src="item.headPicUrl" class="paycard-container__pic">
+    <img :src="item.picUrl" class="paycard-container__pic">
     <div class="paycard-container__name">
-      {{item.name}}
+      {{item.productName}}
     </div>
     <div class="paycard-container_price">
       ￥{{item.salePrice}}
@@ -34,23 +34,21 @@
 
   .paycard-container {
     position: relative;
-    width: 120px;
+    width: 150px;
     font-size: 12px;
     /*color: @text-color;*/
     color: #34495e;
     /*background-color: @background-color-light;*/
-    background-color: #fafafa;
     box-sizing: border-box;
   .paycard-container__pic {
     position: relative;
     box-sizing: border-box;
-    width: 120px;
-    height: 90px;
+    width: 150px;
+    height: 100px;
   }
   .paycard-container__name {
-    font-weight: bold;
-    padding-bottom: 10px;
     padding-top: 10px;
+    font-size: 14px;
   }
   .paycard-container_price {
     font-weight: lighter;

@@ -29,7 +29,9 @@
     "pages/comments/main",
     "pages/setting/main",
     "pages/evaluation/main",
-    "pages/demo/main"
+    "pages/demo/main",
+    "pages/starvip/main",
+    "pages/vip/main"
 
   ],
   "window": {

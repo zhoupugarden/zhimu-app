@@ -20,13 +20,10 @@
             <span class="vip_tip_2">VIP</span>
             <span class="vip_tip">加入会员享受VIP福利</span>
           </div>
-          <div v-else>
+          <div v-else @click="navigateToVip">
             <van-tag color="gold">VIP用户</van-tag>
           </div>
-
-
         </div>
-
         <div v-else @click="navigateToLogin" class="my-basic-info__content">
           <div>
             未登录
@@ -39,10 +36,9 @@
         <div class="my-basic-info__go">
           <van-button round color="grey"
                       custom-class="mini-button"
-                      @click="navigateToLogin"
+                      @click="navigateToStarVip"
                       size="mini">开通星球会员></van-button>
         </div>
-
 
       </div>
       <div class="my-wallet-info">
@@ -120,8 +116,9 @@
         'storeUserId','storeIsVip'
       ]
     ),
-    navigateToMyVip() {
-      let url = "../myvip/main" ;
+
+    navigateToVip() {
+      let url = "../vip/main" ;
       console.log("url",url)
       wx.navigateTo({
         url
@@ -145,6 +142,15 @@
         });
       }
     },
+
+    navigateToLogin() {
+      let url = "/pages/login/main" ;
+      console.log("url",url)
+      wx.navigateTo({
+        url
+      });
+    },
+
     navigateToPoint() {
       if (!this.isLogin) {
         let url = "../login/main";
@@ -206,18 +212,31 @@
     }
   },
     navigateToMyVip() {
+      console.log("navigateToMyVip")
     if (!this.isLogin) {
       let url = "../login/main";
       console.log("当前用户没有登录");
       let pages = getCurrentPages(); 				//前两句不要忘记写
       let currentPage = pages[pages.length - 1]; 	//前两句不要忘记写
-      currentPage.route = "pages/myvip/main";
+
+      if (this.basicInfo.level && this.basicInfo.level === 1) {
+        currentPage.route = "pages/vip/main";
+      } else {
+        currentPage.route = "pages/starvip/main";
+      }
       console.log(pages);
       wx.navigateTo({
         url
       });
-    } else {
-      let url = "../myvip/main" ;
+    } else if (this.basicInfo.level === 0) {
+      let url = "../starvip/main" ;
+      console.log("url",url);
+      wx.navigateTo({
+        url
+      });
+    }
+    else {
+      let url = "../vip/main" ;
       console.log("url",url);
       wx.navigateTo({
         url
@@ -272,8 +291,8 @@
         url
       });
     },
-    navigateToLogin() {
-      let url = "/pages/login/main" ;
+    navigateToStarVip() {
+      let url = "/pages/starvip/main" ;
       console.log("url",url)
       wx.navigateTo({
         url

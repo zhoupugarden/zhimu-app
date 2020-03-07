@@ -1,15 +1,30 @@
 <template>
   <div class="product-item-container">
-    <van-card
-      :num="productItemInfo.quantity"
-      :price="productItemInfo.salePrice"
-      :desc="productItemInfo.attributeName"
-      :origin-price="productItemInfo.linePrice"
-      :title="productItemInfo.productName"
-      :thumb="productItemInfo.picUrl"
-      custom-class="root-custom-class"
-    ></van-card>
-    <van-divider />
+    <!--限时促销-->
+    <div style="width: 100%" v-if="productItemInfo === 1004">
+      <van-card
+        :num="productItemInfo.quantity"
+        :price="productItemInfo.salePrice"
+        :desc="productItemInfo.attributeName"
+        :origin-price="productItemInfo.linePrice"
+        :title="productItemInfo.name"
+        :thumb="productItemInfo.imgUrl"
+        custom-class="root-custom-class"
+      ></van-card>
+    </div>
+    <div style="width: 100%" v-else>
+      <van-card
+        :num="productItemInfo.quantity"
+        :price="productItemInfo.salePrice"
+        :desc="productItemInfo.attributeName"
+        :title="productItemInfo.name"
+        :thumb="productItemInfo.imgUrl"
+        custom-class="root-custom-class"
+      ></van-card>
+    </div>
+
+
+
   </div>
 
 </template>
@@ -25,41 +40,17 @@
 
 <style lang="scss" scoped>
   .product-item-container {
-    display: flex;
-    justify-content: space-around;
-    background-color: white;
+    height: 110px;
   }
-  .img-class {
-    width: 100px;
-    height: 100px;
-  }
-  .product-item-info {
-    font-weight: bolder;
-    font-size: 16px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .product-item-price {
-    font-weight: bolder;
-    font-size: 16px;
-  }
-  .product-item-count {
-    font-weight: lighter;
-    font-size: 14px;
-  }
-  .product-item-total {
-    font-weight: lighter;
-    font-size: 14px;
-  }
-  .root-custom-class {
-    background-color: white;
-  }
+
 </style>
 
 <style lang="scss">
   ._van-card {
     width: 100% !important;
     margin: 5px;
+  }
+  .van-card__desc {
+    padding: 10px 0px;
   }
 </style>
