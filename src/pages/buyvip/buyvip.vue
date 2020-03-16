@@ -58,25 +58,25 @@
         )
       },
 
-      getChargeProductInfo() {
-        request(
-          GET_CHARGE_CONFIG_INFO,
-          'GET'
-        ).then(
-          response => {
-            console.log("this response", response);
-            this.productId = response.productId;
-            this.skuId = response.skuId;
-          }
-        )
-      },
+      // getChargeProductInfo() {
+      //   request(
+      //     GET_CHARGE_CONFIG_INFO,
+      //     'GET'
+      //   ).then(
+      //     response => {
+      //       console.log("this response", response);
+      //       this.productId = response.productId;
+      //       this.skuId = response.skuId;
+      //     }
+      //   )
+      // },
 
       charge() {
         let that = this;
         let params = {};
         params.userId = this.userId;
-        params.productId = this.productId;
-        params.skuId = this.skuId;
+        // params.productId = this.productId;
+        // params.skuId = this.skuId;
         console.log("charge");
         request(
           CHARGE,
@@ -105,7 +105,7 @@
     },
 
     onShow() {
-      this.getChargeProductInfo();
+      // this.getChargeProductInfo();
     },
 
     computed: {

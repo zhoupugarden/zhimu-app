@@ -29,7 +29,7 @@
         </div>
         <div class="zm-card__bottom">
           <view  class="zm-card__price price-class">￥{{ cardItem.salePrice }}</view>
-          <view  class="zm-card__origin-price origin-price-class">￥ {{ cardItem.linePrice }}</view>
+          <view v-if="cardItem.promoteType === 1004"  class="zm-card__origin-price origin-price-class">￥ {{ cardItem.linePrice }}</view>
           <slot name="bottom" />
           <div class="zm-card__stepper">
             <van-stepper
@@ -75,7 +75,7 @@
     /*background-color: @background-color-light;*/
     background-color: white;
     box-sizing: border-box;
-    margin: 10px;
+    margin: 5px;
     border-radius: 5px;
     display:flex;
 
@@ -95,6 +95,12 @@
      width: 100%;
      height: 100%;
    }
+
+   &__attr {
+    padding: 10px 0px;
+    }
+
+
   &__stepper {
     display: inline-block ;
      float: right;

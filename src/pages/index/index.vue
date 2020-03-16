@@ -101,14 +101,14 @@
       }
     },
     computed: {
-
       restNotice() {
        if (this.merchantInfo.status === 1003) {
          return "休息中，" + "营业时间 " + this.merchantInfo.openTime + "-" + this.merchantInfo.closeTime
-       }
-        if (this.merchantInfo.status === 1004) {
+       }else if (this.merchantInfo.status === 1004) {
           return "休假中，" + "休假时间 " + this.merchantInfo.restStartDate + "到" + this.merchantInfo.restEndDate
-        }
+        }else {
+         return '';
+       }
 
       },
 
@@ -203,16 +203,13 @@
               url: url
             }
           )
-
         }else {
           wx.navigateTo(
             {
               url: url
             }
           )
-
         }
-
       },
 
 

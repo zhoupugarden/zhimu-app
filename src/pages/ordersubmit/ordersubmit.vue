@@ -31,11 +31,15 @@
         </div>
       </div>
       <div v-else class="order-submit-address__self">
-        {{selfAddress}}
+        <van-icon name="wap-home-o" />
+        <span style="padding: 0px 20px;">{{merchantInfo.merchantAddress}}</span>
       </div>
 
     </div>
-    <div style="font-weight: bolder;font-size: 14px;padding: 10px 15px;">配送时间</div>
+    <div v-if="switchValue === 1" style="font-weight: bolder;font-size: 14px;padding: 10px 15px;">配送时间</div>
+    <div v-else style="font-weight: bolder;font-size: 14px;padding: 10px 15px;">
+      自提时间
+    </div>
     <div class="order-submit-time">
       <div style="width: 50%">
         <van-cell title="日期" :value="formatDate" custom-class="custome-cell-time" is-link arrow-direction="down" @click="datePop"/>
@@ -81,7 +85,7 @@
       <van-button custom-class="custom-button"
                   @click="orderSubmit"
                   type="primary"
-      >微信付款{{flag + restWxPayAmount}}</van-button>
+      >{{'微信付款' + flag + restWxPayAmount}}</van-button>
     </div>
 
 
@@ -151,6 +155,8 @@
 </template>
 
 <script>
+  const ZERO_AMOUNT = 0;
+
   import CouponItem from '@/components/CouponItem';
   import CouponItemc from '@/components/CouponItemc';
   import ProductItem from '@/components/ProductItem';
@@ -170,11 +176,11 @@
       return {
         flag:'￥',
         switchValue: 1,
+        deliverType:1,
         addressId:0,
         couponCanUseList:[],
         choosedCoupon: null,
         addressArray: [],
-        selfAddress:"周浦镇年家浜东路129弄",
         datePopShow:false,
         timePopShow:false,
         couponPopShow:false,
@@ -189,13 +195,14 @@
         balanceValue:"0",
         userInfo:{},
         vipTip:"",
-        totalProductPrice:0,
-        couponValue: 0,
-        balanceAmount:0,
-        deliverValue:0,
+        totalProductPrice:0.00,
+        couponValue: ZERO_AMOUNT.toFixed(2),
+        balanceAmount:0.00,
+        deliverValue:ZERO_AMOUNT.toFixed(2),
+        tmpDeliverValue:0.00,
         productItems:[],
         productCount:0,
-        productAmount:0,
+        productAmount:0.00,
         promoteItemList:[]
       }
     },
@@ -277,6 +284,8 @@
       },
       noUseCoupon() {
         this.couponPopShow = false;
+        this.choosedCoupon = null;
+        this.couponValue = 0.00;
       },
       chooseCouponItem(item) {
         console.log("couponItem: ", item);
@@ -328,7 +337,7 @@
               toast(response.notApplyReason);
             } else {
               that.couponPopShow = false;
-              that.couponValue = response.couponAmount;
+              that.couponValue = response.couponAmount.toFixed(2);
               that.choosedCoupon = that.couponCanUseList.find(item => item.couponCode === response.couponCode);
             }
           }
@@ -372,6 +381,7 @@
       orderPreSubmit() {
         let params = {};
         params.userId = this.userId;
+        params.deliverType = this.deliverType;
         params.fittingList = this.freeCartList;
         params.productList = this.cartList;
         request(
@@ -385,7 +395,12 @@
             this.couponCanUseList = response.presubmitUser.couponList;
             this.balanceAmount = response.presubmitUser.balanceAmount;
             this.addressArray = response.presubmitUser.addressList;
-            this.deliverValue = response.presubmitOrder.deliverFee;
+            this.tmpDeliverValue = response.presubmitOrder.deliverFee;
+            console.log("tmpDeliverValue======", this.tmpDeliverValue);
+            if (this.switchValue === 1) {
+              this.deliverValue = this.tmpDeliverValue;
+              this.deliverType = 1;
+            }
             this.vipTip = response.presubmitOrder.vipTip;
             let strMinDate = response.presubmitTime.minDate;
             this.minDate = new Date(strMinDate).getTime();
@@ -398,9 +413,8 @@
             this.productItems = response.presubmitProduct.productItems;
             this.productCount = response.presubmitOrder.productCount;
             this.useBalanceAmount = response.presubmitOrder.useBalanceAmount;
-            this.couponValue = response.presubmitOrder.couponAmount;
             this.promoteItemList = response.presubmitOrder.promoteItemList;
-            this.totalProductPrice = response.presubmitOrder.productAmount;
+            this.totalProductPrice = response.presubmitOrder.productAmount.toFixed(2);
             this.timeColumns = response.presubmitTime.limitTimes;
             this.allTimes = response.presubmitTime.allTimes;
             if (this.isOverToday === true) {
@@ -416,10 +430,6 @@
                 }
               });
             }
-
-
-
-
           }
         )
       },
@@ -441,11 +451,7 @@
         }else {
           params.payType = 3;
         }
-        if (this.switchValue === 1) {
-          params.deliverType = 1;
-        }else {
-          params.deliverType = 99;
-        }
+          params.deliverType = this.deliverType;
         params.orderType = 1;
         if (this.choosedCoupon != null) {
           params.couponCode = this.choosedCoupon.couponCode;
@@ -479,24 +485,9 @@
       }
     },
     computed: {
-      // timeColumns() {
-      //   const timeColumnArray = ['10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00',
-      //     '15:00-16:00', '16:00-17:00', '17:00-18:00', '18:00-19:00', '19:00-20:00'];
-      //   if (this.currentDate > new Date().getTime()) {
-      //     return timeColumnArray;
-      //   } else {
-      //     let hour = new Date().getHours();
-      //
-      //     if ((hour - 10) > 0) {
-      //       return timeColumnArray.slice(hour - 10, timeColumnArray.length);
-      //     }else {
-      //       return timeColumnArray;
-      //     }
-      //   }
-      // },
       ...mapGetters(
         [
-           'isVip','cartList','freeCartList', 'cartTotalCount','cartTotalPrice','cartProductListName','token','userId'
+           'isVip','cartList','freeCartList', 'cartTotalCount','cartTotalPrice','cartProductListName','token','userId','merchantInfo'
         ]
       ),
       currentAddress() {
@@ -523,19 +514,19 @@
       useBalanceAmount() {
         console.log("balanceMount, cartTotalPrice", this.balanceAmount , this.totalProductPrice)
         if (this.balanceAmount >= this.totalProductPrice) {
-          return this.totalProductPrice - this.couponValue;
+          return (this.totalProductPrice - this.couponValue).toFixed(2);
         } else {
-          return this.balanceAmount;
+          return this.balanceAmount.toFixed(2);
         }
       },
 
       restWxPayAmount() {
         let needPayAmount = this.totalProductPrice + this.deliverValue - this.couponValue;
-        console.log("needPayAmount: this.useBalanceAmount", needPayAmount, this.useBalanceAmount)
+        console.log("needPayAmount: this.useBalanceAmount", needPayAmount, this.useBalanceAmount);
         if (needPayAmount > this.balanceAmount) {
           return (needPayAmount - this.balanceAmount).toFixed(2);
         }else {
-          return 0;
+          return 0.00;
         }
       },
 
@@ -576,6 +567,25 @@
         }
       }
     },
+    watch: {
+      'switchValue': {
+        handler(val) {
+          console.log("switchValue: ", val);
+          if (val === 1) {
+            this.deliverValue = this.tmpDeliverValue.toFixed(2);
+            this.deliverType = 1;
+          } else {
+            this.deliverValue = ZERO_AMOUNT.toFixed(2);
+            this.deliverType = 99;
+          }
+
+        },
+        deep:true,
+        immediate: true
+
+      }
+
+    },
     onShow() {
         //要把原有已选的值清空
         let params = this.$root.$mp.query;
@@ -584,6 +594,9 @@
         if (null != params.addressId) {
           this.addressId = params.addressId;
         }
+      //  还原配送方式
+      this.switchValue = 1;
+      this.deliverType = 1;
       this.orderPreSubmit();
     }
 
@@ -655,6 +668,8 @@
   }
   .order-submit-address__self {
     background-color: #F4F4F4;
+    display: flex;
+    padding: 10px;
   }
   .order-submit-time {
     display: flex;

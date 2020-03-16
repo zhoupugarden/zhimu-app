@@ -27,7 +27,7 @@
             <div class="order-total-info">
               <van-cell title="商品总计" :value="flag + orderInfo.productAmount" />
             </div>
-            <div v-show = "orderInfo.couponAmount > 0" class="order-deliver-info">
+            <div v-show = "orderInfo.deliverAmount > 0" class="order-deliver-info">
               <van-cell title="配送费" :value="flag + orderInfo.deliverAmount" />
             </div>
 

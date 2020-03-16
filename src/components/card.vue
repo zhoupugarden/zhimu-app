@@ -119,7 +119,7 @@
       font-size:14px;
       /*z-index:100;*/
       border-radius: 5px;
-      border-style:solid;
+      /*border-style:solid;*/
       border-width:1px;
       border-color:#E8EDF5;
       .zm-card__thumb{
@@ -150,7 +150,7 @@
           margin-left: 10px;
         }
         .zm-card__detail__price {
-
+          margin-left: 10px;
         }
         .zm-card__detail__line_price {
           font-family: "Microsoft YaHei";
@@ -163,22 +163,26 @@
           top:10px;
           right: 60px;
           .choose_attribute {
-            width: 50px;
+            width: 80px;
             height: 20px;
-            border-radius: 10px;
+            border-radius: 11px;
             background-color: #CDA65B;
             color: white;
-            font-size: 12px;
+            font-size: 14px;
             text-align: center;
+            line-height: 18px;
+            padding: 2px 0px;
+
           }
           .add_attribute {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             border-radius: 10px;
             background-color: #CDA65B;
             color: white;
-            font-size: 12px;
+            font-size: 14px;
             text-align: center;
+            line-height: 18px;
           }
 
         }

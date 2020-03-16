@@ -27,8 +27,6 @@
     },
     data() {
       return {
-        flag: this.balanceDetailItem.changeType === 1 ? "+":"-",
-        activeColor:this.balanceDetailItem.changeType === 1 ? "green":"red"
       }
     },
     computed: {
@@ -37,6 +35,20 @@
           blueActive: true
         }
       },
+      flag() {
+        if (this.balanceDetailItem.changeType === 1) {
+          return "+";
+        } else {
+          return "-";
+        }
+      },
+      activeColor() {
+        if (this.balanceDetailItem.changeType === 1) {
+          return "green";
+        } else {
+          return "red";
+        }
+      }
     }
 
   }

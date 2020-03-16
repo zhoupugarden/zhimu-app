@@ -10,6 +10,7 @@ export default {
     token:state => state.token,
     userId: state => state.userId,
     isVip: state => state.isVip,
+    merchantInfo: state => state.merchantInfo,
     isLogin: state => {
       if (!state.token) {
         return false;

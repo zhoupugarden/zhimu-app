@@ -446,6 +446,15 @@
               return sku.isPrime === true;
             }
           );
+
+          if (!this.chooseSKU) {
+            for(let sku of this.productSKUs) {
+              if (!this.chooseSKU || this.chooseSKU.orderNum < sku.orderNum) {
+                this.chooseSKU = sku;
+              }
+            }
+          }
+
           console.log("chooseSKU", this.chooseSKU);
           wx.setNavigationBarTitle({
             title: this.good.name
@@ -570,8 +579,9 @@
         } else {
           // 如果跨夜统一为第二天营业时间配送
           let nowDate = new Date();
-          let delt = nowDate.getHours() + hour;
-          console.log("delt", delt);
+          let delt = nowDate.getHours() + hour -1000;
+          console.log("delt, nowDate.getHours(),hour", delt, nowDate.getHours(), hour);
+          //超过营业截止时间
           if (delt > 20) {
             return "最早明天10点可配送";
           } else {
