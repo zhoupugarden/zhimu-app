@@ -349,8 +349,9 @@
     },
 
     addCart() {
+      console.log("addCart====")
       let that = this;
-      if (this.good.onlineStatus === 1003 || this.good.onlineStatus === 1004) {
+      if (this.online) {
         this.popShow = false;
         //   弹起到货提醒的订阅
         wx.requestSubscribeMessage({
@@ -379,17 +380,17 @@
       });
     },
     onAddCartButton() {
-      if (this.good.onlineStatus === 1003 || this.good.onlineStatus === 1004) {
-        this.popupText = "到货通知";
-     }else {
+      if (this.good.stock > 0) {
         this.popupText = "加入购物车";
+     }else {
+        this.popupText = "到货通知";
       }
       this.popShow = true;
     },
     addToBuy() {
       this.popShow = false;
       let that = this;
-      if (this.good.onlineStatus === 1003 || this.good.onlineStatus === 1004)  {
+      if (!this.online)  {
       //   弹起到货提醒的页面
         wx.requestSubscribeMessage({
           tmplIds: ['By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0'],
@@ -422,12 +423,10 @@
     },
 
     onBuyClickButton() {
-      if (this.good.onlineStatus === 1003) {
-        this.popupText = "到货通知";
-      }else if (this.good.onlineStatus === 1004)  {
-        this.popupText = "到货通知";
-      }else {
+      if (this.online) {
         this.popupText = "立即购买";
+      }else {
+        this.popupText = "到货通知";
       }
       this.popShow = true;
     },
@@ -544,6 +543,14 @@
 
       },
     computed: {
+
+      online() {
+        if (this.good.onlineStatus === 1001 && this.good.stock > 0) {
+          return true;
+        }else {
+          return false;
+        }
+      },
 
       promoteTag() {
         switch(this.chooseSKU.promoteType) {

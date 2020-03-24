@@ -7,29 +7,40 @@
              :src="cardInfo.headPicUrl">
       </div>
       <div class="zm-card__detail">
-        <div class="zm-card__detail__name">
-          <span>{{onlineStatusDesc}}</span>
-          <span>{{cardInfo.name}}</span>
-        </div>
-        <div class="zm-card__detail__price">
-          <span :style="{color:cardInfo.promoteType===1004?'red':'black'}">￥{{cardInfo.salePrice}}</span>
-          <span v-if="cardInfo.promoteType===1004" class="zm-card__detail__line_price">￥{{cardInfo.linePrice}}</span>
-        </div>
-
-        <div v-show= "cardInfo.onlineStatus === 1001 || cardInfo.onlineStatus === 1002" @click="popCart" class="zm-detail__icon">
-          <div v-if="cardInfo.pmsProductSkuList.length > 1" class="choose_attribute">
-            选规格
+        <div>
+          <div class="zm-card__detail__name">
+            <span>{{onlineStatusDesc}}</span>
+            <span>{{cardInfo.name}}</span>
           </div>
-          <div v-else class="add_attribute">
-            +
+          <div class="zm-card__detail__price">
+            <span :style="{color:cardInfo.promoteType===1004?'red':'black'}">￥{{cardInfo.salePrice}}</span>
+            <span v-if="cardInfo.promoteType===1004" class="zm-card__detail__line_price">￥{{cardInfo.linePrice}}</span>
+          </div>
+        </div>
+        <div>
+          <div v-if = "cardInfo.onlineStatus === 1001 && cardInfo.stock > 0" @click="popCart" class="zm-detail__icon">
+            <div v-if="cardInfo.pmsProductSkuList.length > 1" class="choose_attribute">
+              选规格
+            </div>
+            <div v-else class="add_attribute">
+              +
+            </div>
+          </div>
+          <div v-else @click="productNotice" class="zm-card__detail__notice">
+            到货通知
           </div>
         </div>
       </div>
     </div>
+    <van-toast  id="van-toast"/>
   </div>
 </template>
 
 <script>
+  import { PRODUCT_NOTICE } from '@/utils/api';
+  import {request} from "@/utils/request";
+  import { mapGetters } from 'vuex';
+  import {toast} from '../utils/toast';
   export default {
     props: {
       cardInfo:Object
@@ -41,6 +52,43 @@
       }
     },
     methods: {
+
+      productNotice() {
+        let that = this;
+        wx.requestSubscribeMessage({
+          tmplIds: ['By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0'],
+          success (res) {
+            if (res.By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0 === 'accept') {
+              //订阅成功
+              that.addProductNotice();
+              console.log("订阅成功", res)
+            }else {
+              console.log("拒绝订阅", res)
+            }
+          }
+        })
+      },
+      addProductNotice() {
+        let params = {};
+        params.productId = this.cardInfo.id;
+        params.userId = this.userId;
+        request(
+          PRODUCT_NOTICE,
+          'POST',
+          params
+        ).then(
+          (response) => {
+            if (response.isRepeated === 1) {
+              toast("您已订阅, 有货时我们将为您发送到货提醒通知", 3000)
+            } else {
+              this.isNoticed = true;
+              toast("商品到货提醒订阅成功");
+            }
+          }
+        )
+      },
+
+
       navigateToProduct() {
         var url = "../detail/main?productId=" + this.cardInfo.id;
         console.log("url",url)
@@ -55,21 +103,20 @@
     },
     computed: {
       onlineStatusDesc() {
-        if (this.cardInfo.onlineStatus === 1003) {
-          return "售罄 / "
-        }
-        if (this.cardInfo.onlineStatus === 1004) {
+        if (this.cardInfo.stock === 0) {
           return "缺货 / "
-        }
-        if (this.cardInfo.onlineStatus === 1002) {
-          return "预售 / "
         }
         return ""
       },
+
+      ...mapGetters(
+        [
+          'userId'
+        ]
+      ),
       maskValue() {
-        console.log("maskValue：", this.cardInfo.onlineStatus);
-        if (this.cardInfo.onlineStatus === 1003 || this.cardInfo.onlineStatus === 1004) {
-          return 0.4
+        if (this.cardInfo.stock === 0) {
+          return 0.6
         } else {
           return 1
         }
@@ -77,7 +124,7 @@
 
     },
     created() {
-      console.log(this.cardInfo)
+      console.log("this.cardInfo====",this.cardInfo)
     }
   }
 </script>
@@ -89,21 +136,6 @@
     margin-right: 10px;
     overflow: hidden;
     height:240px;
-    /*::after {*/
-      /*content: '';*/
-      /*position: absolute;*/
-      /*top: 0;*/
-      /*left: 0;*/
-      /*width: 200%;*/
-      /*height: 200%;*/
-      /*transform: scale(.5);*/
-      /*transform-origin: 0 0;*/
-      /*pointer-events: none;*/
-      /*box-sizing: border-box;*/
-      /*border: 0 solid #e5e5e5;*/
-      /*border-top-width: 1px;*/
-      /*border-bottom-width: 1px;*/
-    /*}*/
     .zm-card__tag {
       position: absolute;
       z-index: 1;
@@ -141,51 +173,64 @@
       }
       .zm-card__detail {
         position: relative;
-        width:300px;
+        width:250px;
         margin-top: 10px;
         margin-left: auto;
-        display: inline-block;
+        display: flex;
         float:left;
-        .zm-card__detail__name {
-          margin-left: 10px;
-        }
-        .zm-card__detail__price {
-          margin-left: 10px;
-        }
-        .zm-card__detail__line_price {
-          font-family: "Microsoft YaHei";
-          font-size: 12px;
-          color: #CFD4DA;
-          text-decoration:line-through
-        }
-        .zm-detail__icon {
-          position: absolute;
-          top:10px;
-          right: 60px;
-          .choose_attribute {
-            width: 80px;
-            height: 20px;
-            border-radius: 11px;
-            background-color: #CDA65B;
-            color: white;
-            font-size: 14px;
-            text-align: center;
-            line-height: 18px;
-            padding: 2px 0px;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .zm-card__detail__name {
+        margin-left: 10px;
+      }
 
-          }
-          .add_attribute {
-            width: 22px;
-            height: 22px;
-            border-radius: 10px;
-            background-color: #CDA65B;
-            color: white;
-            font-size: 14px;
-            text-align: center;
-            line-height: 18px;
-          }
+      .zm-card__detail__price {
+        margin-left: 10px;
+      }
+      .zm-card__detail__line_price {
+        font-family: "Microsoft YaHei";
+        font-size: 12px;
+        color: #CFD4DA;
+        text-decoration:line-through
+      }
 
-        }
+      .zm-card__detail__notice {
+        width: 80px;
+        height: 20px;
+        border-radius: 11px;
+        background-color: #CDA65B;
+        color: white;
+        font-size: 14px;
+        text-align: center;
+        line-height: 18px;
+        padding: 2px 0px;
+      }
+      .zm-detail__icon {
+        position: absolute;
+        top:10px;
+        right: 60px;
+      .choose_attribute {
+        width: 80px;
+        height: 20px;
+        border-radius: 11px;
+        background-color: #CDA65B;
+        color: white;
+        font-size: 14px;
+        text-align: center;
+        line-height: 18px;
+        padding: 2px 0px;
+      }
+      .add_attribute {
+        width: 22px;
+        height: 22px;
+        border-radius: 10px;
+        background-color: #CDA65B;
+        color: white;
+        font-size: 14px;
+        text-align: center;
+        line-height: 18px;
+      }
       }
     }
 
