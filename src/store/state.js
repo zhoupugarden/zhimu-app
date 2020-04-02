@@ -5,7 +5,7 @@ const state = {
     userId:'',
     isVip:0,
     freeList:[],
-
+    currentLocation:{},
     merchantInfo:{},
     deliverConfig:{},
     adSettings:[]

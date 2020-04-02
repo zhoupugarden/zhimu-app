@@ -45,7 +45,7 @@
           <div v-if="totalPrice < deliverConfig.freePrice" class="cart-container__bottom--fee">
             <span>另需配送费</span>
             <span>{{deliverFee}}元</span>
-            <span v-show="needAmount < 10">
+            <span v-show="totalPrice < deliverConfig.secPrice">
               <span>,再买</span>
               <span style="color: red">{{needAmount}}元</span>
               <span>可减</span>
@@ -94,7 +94,7 @@
   import { mapGetters, mapActions } from 'vuex';
   import { SET_OPEN_ID } from '@/store/mutation-types';
 
-  import {PAY_FITTING_LIST, GET_FITTING_LIST} from '@/utils/api';
+  import {PAY_FITTING_LIST, GET_FITTING_LIST, CART_PRODUCT_CHECK} from '@/utils/api';
   import {request} from "@/utils/request";
 
   export default {
@@ -130,7 +130,8 @@
         'freeCartList',
         'cartTotalPrice',
         'isExistCake',
-        'userId'
+        'userId',
+        'cartList'
       ]
     ),
 
@@ -175,6 +176,7 @@
     },
     needAmount() {
       if (this.totalPrice < this.deliverConfig.secPrice && this.totalPrice > this.deliverConfig.beginPrice) {
+        console.log("========", this.totalPrice, this.deliverConfig);
         return this.deliverConfig.secPrice - this.totalPrice;
       }
       else if (this.totalPrice >= this.deliverConfig.secPrice && this.totalPrice < this.deliverConfig.freePrice) {
@@ -226,6 +228,35 @@
         }
       )
     },
+    cartProductCheck() {
+      let params = {};
+      params.userId = this.userId;
+      let cartInfoList = [];
+      console.log(this.cartList);
+      for(let product of this.cartList) {
+        console.log(product);
+        let cartInfo = {};
+        cartInfo.skuId = product.skuId;
+        cartInfo.quantity = product.quantity;
+        cartInfoList.push(cartInfo);
+      }
+      params.cartSkuInfoList = cartInfoList;
+      request(
+        CART_PRODUCT_CHECK,
+        'POST',
+        params
+      ).then(
+        (response) => {
+          console.log("response:", response);
+          if (response) {
+            let url = "/pages/ordersubmit/main";
+            wx.navigateTo({
+              url
+            });
+          }
+        }
+      )
+    },
 
     storeButton() {
       this.setOpenId("123456")
@@ -242,14 +273,15 @@
       let loginUrl = "/pages/login/main";
       let url = "";
       //add-free-cart
-      if (this.userId) {
-        url = submitUrl;
-      } else {
+      if (!this.userId) {
         url = loginUrl;
+        wx.navigateTo({
+          url
+        });
+      } else {
+        this.cartProductCheck();
       }
-      wx.navigateTo({
-        url
-      });
+
     },
     removeItem(data) {
       let that = this;

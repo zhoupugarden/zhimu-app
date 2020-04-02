@@ -109,6 +109,8 @@ export const  GET_FITTING_LIST = BASE_API_URL + '/fitting/list';
 
 export const  ORDER_PRESUBMIT = BASE_API_URL + '/order/presubmit';
 
+export const  CART_PRODUCT_CHECK = BASE_API_URL + '/cart/addCartCheck';
+
 
 
 

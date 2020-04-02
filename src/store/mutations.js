@@ -13,6 +13,7 @@ const mutations = {
         cartItem
       );
     },
+
     [types.ADD_FREE_TO_CART](state, freeCartItem) {
       console.log("freeCartItem", freeCartItem);
       let isExist = false;
@@ -107,7 +108,11 @@ const mutations = {
 
   [types.ADD_AD_SETTINGS](state, settings) {
     state.adSettings = settings;
-  }
+  },
 
+  [types.ADD_CURRENT_LOCATION](state, locationItem) {
+    console.log(locationItem);
+    state.currentLocation = locationItem;
+  },
 }
 export default mutations;

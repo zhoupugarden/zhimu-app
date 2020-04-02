@@ -4,7 +4,7 @@
 
 
     <div class="login-header">
-      <img src="https://t12.baidu.com/it/u=541581695,4055461334&fm=76" class="circleImg">
+      <img :src="merchantInfo.logoUrl" class="circleImg">
     </div>
 
     <div class="login-weixin">
@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="login-footer">
-      zhimu蛋糕|每一口都是快乐
+      {{merchantInfo.slogan}}
     </div>
 
 
@@ -30,6 +30,7 @@
 
 <script>
 
+  import {  mapGetters, mapActions} from 'vuex';
   export default {
 
     data() {
@@ -37,7 +38,14 @@
       }
     },
     methods: {
+      ...mapActions(
+        [
+          'addCurrentLocation'
+        ]
+      ),
+
       navigateToWxLogin() {
+        let that = this;
         //先获取手机号
         wx.getSetting({
           success(res) {
@@ -45,24 +53,36 @@
               wx.authorize({
                 scope: 'scope.userLocation',
                 success () {
-                  console.log("用户已同意授权")
+                  console.log("用户已同意授权");
                   wx.getLocation({
                     type: 'wgs84',
                     success (res) {
-                      console.log(res)
+                      console.log(res,"用户已同意获取位置授权")
                       const latitude = res.latitude;
                       const longitude = res.longitude;
-                      const speed = res.speed;
-                      const accuracy = res.accuracy;
-                      wx.chooseLocation({
-                        success(ress) {
-                          console.log(ress)
-                        }
-                      })
+                      let locationItem = {};
+                      locationItem.latitude = latitude;
+                      locationItem.longitude = longitude;
+                      that.addCurrentLocation(locationItem);
                     }
                   })
                 }
               })
+            }else {
+              console.log("用户已授权过");
+              wx.getLocation({
+                type: 'wgs84',
+                success (res) {
+                  console.log(res,"用户已同意获取位置授权")
+                  const latitude = res.latitude;
+                  const longitude = res.longitude;
+                  let locationItem = {};
+                  locationItem.latitude = latitude;
+                  locationItem.longitude = longitude;
+                  that.addCurrentLocation(locationItem);
+                }
+              })
+
             }
           }
         })
@@ -75,7 +95,14 @@
           url
         });
       }
-    }
+    },
+    computed: {
+      ...mapGetters(
+        [
+          'merchantInfo'
+        ]
+      )
+    },
 
   }
 </script>

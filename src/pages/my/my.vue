@@ -292,7 +292,7 @@
       });
     },
     navigateToStarVip() {
-      let url = "/pages/starvip/main" ;
+      let url = "/pages/demo/main" ;
       console.log("url",url)
       wx.navigateTo({
         url

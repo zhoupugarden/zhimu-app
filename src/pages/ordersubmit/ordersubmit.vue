@@ -16,11 +16,11 @@
             点击添加地址
           </div>
           <div v-else>
-            <div style="font-size: 14px;padding: 10px 15px;">
+            <div style="font-size: 13px;padding: 10px 15px;">
               <van-icon name="phone-o"></van-icon>
               {{currentAddress.receiverName}} {{currentAddress.receiverPhone}}
             </div>
-            <div style="font-size: 14px;padding: 10px 15px;">
+            <div style="font-size: 13px;padding: 10px 15px;">
               <van-icon name="location-o"></van-icon>
               {{currentAddress.addressName}} {{currentAddress.roadDetail}}
             </div>
@@ -31,8 +31,19 @@
         </div>
       </div>
       <div v-else class="order-submit-address__self">
-        <van-icon name="wap-home-o" />
-        <span style="padding: 0px 20px;">{{merchantInfo.merchantAddress}}</span>
+        <div>
+          <van-icon name="wap-home-o" />
+        </div>
+        <div style="padding: 0px 20px; font-size: 13px;">{{merchantInfo.merchantAddress}}</div>
+        <div>
+          <div>
+            <van-button custom-class="btn-padding" @click="openMerchantLocation"
+                        icon="location-o" type="primary" size="mini">查看位置</van-button>
+          </div>
+          <div style="font-size: 13px;">
+            距您{{distance}}km
+          </div>
+        </div>
       </div>
 
     </div>
@@ -198,6 +209,7 @@
         totalProductPrice:0.00,
         couponValue: ZERO_AMOUNT.toFixed(2),
         balanceAmount:0.00,
+        distance:null,
         deliverValue:ZERO_AMOUNT.toFixed(2),
         tmpDeliverValue:0.00,
         productItems:[],
@@ -377,6 +389,17 @@
         }
         return result;
       },
+      openMerchantLocation() {
+          console.log("openWxLocation===");
+          let latitude = this.merchantInfo.latitude;
+          let longitude = this.merchantInfo.longitude;
+          wx.openLocation({
+            latitude,
+            longitude,
+            scale: 18
+          })
+      },
+
 
       orderPreSubmit() {
         let params = {};
@@ -384,6 +407,8 @@
         params.deliverType = this.deliverType;
         params.fittingList = this.freeCartList;
         params.productList = this.cartList;
+        params.latitude = this.currentLocation.latitude;
+        params.longitude = this.currentLocation.longitude;
         request(
           ORDER_PRESUBMIT,
           'POST',
@@ -394,6 +419,7 @@
             console.log("orderPresubmit response", response);
             this.couponCanUseList = response.presubmitUser.couponList;
             this.balanceAmount = response.presubmitUser.balanceAmount;
+            this.distance = response.presubmitUser.currentDistance;
             this.addressArray = response.presubmitUser.addressList;
             this.tmpDeliverValue = response.presubmitOrder.deliverFee;
             console.log("tmpDeliverValue======", this.tmpDeliverValue);
@@ -487,7 +513,7 @@
     computed: {
       ...mapGetters(
         [
-           'isVip','cartList','freeCartList', 'cartTotalCount','cartTotalPrice','cartProductListName','token','userId','merchantInfo'
+           'currentLocation', 'isVip','cartList','freeCartList', 'cartTotalCount','cartTotalPrice','cartProductListName','token','userId','merchantInfo'
         ]
       ),
       currentAddress() {
@@ -670,6 +696,7 @@
     background-color: #F4F4F4;
     display: flex;
     padding: 10px;
+    align-items: center;
   }
   .order-submit-time {
     display: flex;
@@ -699,6 +726,9 @@
   }
   .custom-button {
     width: 300px;
+  }
+  .btn-padding {
+    padding: 0px 10px !important;
   }
   .product-title-class {
    font-weight: bolder;

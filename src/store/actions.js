@@ -86,4 +86,8 @@ export default {
     commit(types.ADD_AD_SETTINGS, data)
   },
 
+  addCurrentLocation: ({state, commit}, data) => {
+      commit(types.ADD_CURRENT_LOCATION, data)
+  }
+
 }

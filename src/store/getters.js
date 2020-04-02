@@ -8,6 +8,7 @@ export default {
     openId: state => state.openId,
     cartList: state => state.cartList,
     token:state => state.token,
+    currentLocation:state => state.currentLocation,
     userId: state => state.userId,
     isVip: state => state.isVip,
     merchantInfo: state => state.merchantInfo,

@@ -219,21 +219,12 @@
 
     deliverTime() {
       let hour = this.chooseSKU.deliverTime;
-      if (this.chooseSKU.deliverTime === 1) {
+      if (this.chooseSKU.deliverTime === 1001 || this.chooseSKU.deliverTime === 1002) {
         return "现货下单立即配送";
       } else {
         // 如果跨夜统一为第二天营业时间配送
-        let nowDate = new Date();
-        let delt = nowDate.getHours() + hour -1000;
-        console.log("delt, nowDate.getHours(),hour", delt, nowDate.getHours(), hour);
-        //超过营业截止时间
-        if (delt > 20) {
           return "最早明天10点可配送";
-        } else {
-          let delt_f = delt + ":00";
-          return "最早今天"+ delt_f + "可配送";
         }
-      };
     },
     cutlery() {
       return "含" + this.chooseSKU.cutlery + "套餐具";

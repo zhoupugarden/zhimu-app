@@ -2,7 +2,7 @@
   <div>
     <!-- 内容区域 -->
     <div class="content">
-      <div>
+      <div @click="openWxLocation">
         content-0
       </div>
       <div>
@@ -56,6 +56,21 @@
       window.removeEventListener('scroll', this.onScroll)
     },
     methods: {
+
+      openWxLocation() {
+        console.log("openWxLocation===");
+        let latitude = 31.22205;
+        let longitude = 121.54479
+        wx.openLocation({
+          latitude,
+          longitude,
+          scale: 18
+        })
+      },
+
+
+
+
       // 滚动监听器
       onScroll() {
         // 获取所有锚点元素
