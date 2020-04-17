@@ -1,181 +1,195 @@
 <template>
   <div>
-    <!-- 内容区域 -->
-    <div class="content">
-      <div @click="openWxLocation">
-        content-0
-      </div>
-      <div>
-        content-1
-      </div>
-      <div>
-        content-2
-      </div>
-      <div>
-        content-3
-      </div>
-      <div>
-        content-4
-      </div>
+
+  <div>
+    <div class="sideBarClass">
+      <van-sidebar :active-key="active" @change="sideBarChange">
+        <div v-for="(category, index) in categoryList" :key="index">
+          <van-sidebar-item :title="category.name" />
+        </div>
+      </van-sidebar>
     </div>
-    <!-- 导航区域 -->
-    <ul class="navs">
-      <li :class="{active: active===0}" @click="scrollTo(0)">
-        content-0
-      </li>
-      <li :class="{active: active===1}" @click="scrollTo(1)">
-        content-1
-      </li>
-      <li :class="{active: active===2}" @click="scrollTo(2)">
-        content-2
-      </li>
-      <li :class="{active: active===3}" @click="scrollTo(3)">
-        content-3
-      </li>
-      <li :class="{active: active===4}" @click="scrollTo(4)">
-        content-4
-      </li>
-    </ul>
   </div>
+    <div  class="productListClass">
+    <scroll-view  class="goods_wrap"  :scroll-into-view="toView"  scroll-y="true">
+      <div :id="'id_'+ index"  v-for="(category, index) in categoryList" :key="index">
+        <div class="categoryTitleClass">
+          {{category.name}}
+          <div style="height: 300px;">
+            {{category.name}}
+          </div>
+        </div>
+        <!--<div v-for="(product, _index) in category.pmsProductPlusList" :key="_index">-->
+          <!--<card :cardInfo="product"-->
+          <!--&gt;</card>-->
+        <!--</div>-->
+
+      </div>
+    </scroll-view>
+    </div>
+
+    <!--<div v-show= "merchantInfo.status === 1003 || merchantInfo.status === 1004" class="rest_notice">-->
+      <!--{{restNotice}}-->
+    <!--</div>-->
+
+  </div>
+
+
 </template>
 
 <script>
+  import {INDEX_LIST, INDEX_INFO} from '@/utils/api';
+  import {request} from "@/utils/request";
+  import card from '@/components/card';
+  import { mapActions } from 'vuex';
   export default {
+    components: {
+      card
+    },
     props: {},
     data() {
       return {
-        active: 0 // 当前激活的导航索引
+        active: 0,
+        categoryList:[],
+        scrolledTop:0,
+        productListHeight:0 ,
+        categoryNum :0,
+        productNum:0,
+        foodAreaHeight:[0],
+        merchantInfo:{},
+        toView:''
       }
     },
-    mounted() {
-      // 监听滚动事件
-      document.addEventListener('scroll', this.onScroll, false)
-    },
-    destroy() {
-      // 必须移除监听器，不然当该vue组件被销毁了，监听器还在就会出错
-      window.removeEventListener('scroll', this.onScroll)
-    },
+
     methods: {
+      ...mapActions(
+        [
+          'addProductToCart', 'addMerchantInfo', 'addDeliverConfig', 'addAdSettings'
+        ]
+      ),
 
-      openWxLocation() {
-        console.log("openWxLocation===");
-        let latitude = 31.22205;
-        let longitude = 121.54479
-        wx.openLocation({
-          latitude,
-          longitude,
-          scale: 18
+      productListScrolling(e) {
+        console.log("======productListScrolling========");
+        let currentTop = e.mp.detail.scrollTop;
+        this.foodAreaHeight.forEach((item,index)=>{
+          if (currentTop >= this.foodAreaHeight[index] && currentTop < this.foodAreaHeight[index+1]){
+            this.active = index;
+          }
         })
       },
-
-
-
-
-      // 滚动监听器
-      onScroll() {
-        // 获取所有锚点元素
-        const navContents = document.querySelectorAll('.content div')
-        // 所有锚点元素的 offsetTop
-        const offsetTopArr = []
-        navContents.forEach(item => {
-          offsetTopArr.push(item.offsetTop)
-        })
-        // 获取当前文档流的 scrollTop
-        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-        // 定义当前点亮的导航下标
-        let navIndex = 0
-        for (let n = 0; n < offsetTopArr.length; n++) {
-          // 如果 scrollTop 大于等于第n个元素的 offsetTop 则说明 n-1 的内容已经完全不可见
-          // 那么此时导航索引就应该是n了
-          if (scrollTop >= offsetTopArr[n]) {
-            navIndex = n
+      sideBarChange(e) {
+        this.active = e.mp.detail;
+        let num = 0;
+        if (this.active === 0) {
+          this.scrolledTop = 0;
+        } else{
+          for (let i = 0; i < this.active; i++) {
+            num += this.categoryList[i].pmsProductPlusList.length;
           }
+          this.scrolledTop = (this.active * 20 + num * 240) * 2 ;
         }
-        this.active = navIndex
+        console.log("this.scrolledTop ", this.scrolledTop );
+        this.toView = "id_" + this.active;
+
       },
-      // 跳转到指定索引的元素
-      scrollTo(index) {
-        // 获取目标的 offsetTop
-        // css选择器是从 1 开始计数，我们是从 0 开始，所以要 +1
-        const targetOffsetTop = document.querySelector(`.content div:nth-child(${index + 1})`).offsetTop
-        // 获取当前 offsetTop
-        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-        // 定义一次跳 50 个像素，数字越大跳得越快，但是会有掉帧得感觉，步子迈大了会扯到蛋
-        const STEP = 50
-        // 判断是往下滑还是往上滑
-        if (scrollTop > targetOffsetTop) {
-          // 往上滑
-          smoothUp()
-        } else {
-          // 往下滑
-          smoothDown()
-        }
-        // 定义往下滑函数
-        function smoothDown() {
-          // 如果当前 scrollTop 小于 targetOffsetTop 说明视口还没滑到指定位置
-          if (scrollTop < targetOffsetTop) {
-            // 如果和目标相差距离大于等于 STEP 就跳 STEP
-            // 否则直接跳到目标点，目标是为了防止跳过了。
-            if (targetOffsetTop - scrollTop >= STEP) {
-              scrollTop += STEP
-            } else {
-              scrollTop = targetOffsetTop
+
+      indexInfo() {
+        request(
+          INDEX_INFO,
+          'GET'
+        ).then(
+          response => {
+            console.log("this response", response);
+            let config = response.zmDeliverConfig;
+            let settings = response.adSettings;
+            this.adSettings = response.adSettings;
+            if (this.adSettings.find(a => a.adType === 1002)) {
+              this.headAdSetting = this.adSettings.find(a => a.adType === 1002);
             }
-            document.body.scrollTop = scrollTop
-            document.documentElement.scrollTop = scrollTop
-            // 关于 requestAnimationFrame 可以自己查一下，在这种场景下，相比 setInterval 性价比更高
-            requestAnimationFrame(smoothDown)
+            this.popAdSetting = this.adSettings.find(a => a.adType === 1001);
+            let merchantInfo = response.zmMerchant;
+            this.merchantInfo = response.zmMerchant;
+            this.addMerchantInfo(merchantInfo);
+            this.addAdSettings(settings);
+            this.addDeliverConfig(config);
           }
-        }
-        // 定义往上滑函数
-        function smoothUp() {
-          if (scrollTop > targetOffsetTop) {
-            if (scrollTop - targetOffsetTop >= STEP) {
-              scrollTop -= STEP
-            } else {
-              scrollTop = targetOffsetTop
+        )
+      },
+
+      indexList() {
+        request(
+          INDEX_LIST,
+          'GET'
+        ).then(
+          response => {
+            this.categoryList = response;
+            this.categoryNum = this.categoryList.length;
+            let num = 0;
+            for (let category of this.categoryList) {
+              num += 1;
+              this.productNum += category.pmsProductPlusList.length;
+              let height = num * 20 + this.productNum * 240;
+              this.foodAreaHeight.push(height);
             }
-            document.body.scrollTop = scrollTop
-            document.documentElement.scrollTop = scrollTop
-            requestAnimationFrame(smoothUp)
+            this.productListHeight = (this.categoryNum * 20 + this.productNum * 240);
           }
+        )
+      },
+    },
+    computed: {
+      restNotice() {
+        if (this.merchantInfo.status === 1003) {
+          return "休息中，" + "营业时间 " + this.merchantInfo.openTime + "-" + this.merchantInfo.closeTime
+        }else if (this.merchantInfo.status === 1004) {
+          return "休假中，" + "休假时间 " + this.merchantInfo.restStartDate + "到" + this.merchantInfo.restEndDate
+        }else {
+          return '';
         }
       }
+    },
+    onShow() {
+      this.indexList();
+    },
+    onLoad() {
+      this.indexInfo();
     }
+
   }
 </script>
 
-<style scoped>
-  /* 内容区的样式 */
-  .content {
-    background-color: white;
-    width: 500px;
-  }
-  .content div {
-    width: 100%;
-    height: 600px;
-    font-size: 36px;
-    padding: 20px;
-    background-color: #7ec384;
-  }
-  .content div:nth-child(2n) {
-    background-color: #847ec3;
-  }
-  /* 导航栏的样式 */
-  .navs {
+<style lang="scss" scoped>
+  .sideBarClass {
     position: fixed;
-    top: 80px;
-    left: 700px;
-    background-color: #efefef;
+    left: 0px;
+    top: 0px;
   }
-  .navs li {
-    padding: 0 20px;
-    line-height: 1.6;
-    font-size: 24px;
+  .productListClass {
+    position: absolute;
+    right: 0px;
+    padding-bottom: 10px;
+    height: 100%;
   }
-  /* 当导航被点亮后改变颜色 */
-  .navs .active{
-    color: #847ec3;
-    background-color: #e2e2e2;
+  .categoryTitleClass {
+    border-bottom: 2px solid #CDA65B;
+    width: 70px;
+    overflow: hidden;
+    font-weight: bold;
+    margin-bottom: 10px;
   }
+  .rest_notice {
+    position: fixed;
+    bottom: 0px;
+    background-color: black;
+    color: white;
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+  }
+
+
+  .goods_wrap{
+      box-sizing: border-box;
+  }
+
 </style>

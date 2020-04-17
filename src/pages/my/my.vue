@@ -286,23 +286,20 @@
     },
     navigateToMission() {
       let url = "../mission/main" ;
-      console.log("url",url)
+      console.log("url",url);
       wx.navigateTo({
         url
       });
     },
     navigateToStarVip() {
-      let url = "/pages/demo/main" ;
-      console.log("url",url)
+      let url = "/pages/demo2/main" ;
       wx.navigateTo({
         url
       });
     },
     navigateToGetUserInfo() {
-      console.log("hhhhh====")
       wx.getSetting({
         success(res) {
-          console.log("resssss==", res)
           if (!res.authSetting['scope.userInfo']) {
             wx.authorize({
               scope: 'scope.userInfo',

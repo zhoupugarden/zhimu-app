@@ -1,12 +1,6 @@
 <template>
   <div class="index-container">
-    <van-notice-bar
-      v-show="merchantInfo.status === 1004"
-      left-icon="../../asset/notify.png"
-      mode="link"
-      :text="merchantInfo.noticeContent"
-    />
-    <div class="van-tree-select" :style="setMainHeight">
+
       <scroll-view scroll-y class="van-tree-select__nav">
         <view v-for="(item, index) in items"
               :key="index"
@@ -37,16 +31,15 @@
           ></card>
         </view>
       </scroll-view>
-    </div>
     <div v-show= "merchantInfo.status === 1003 || merchantInfo.status === 1004" class="rest_notice">
       {{restNotice}}
     </div>
 
     <div>
-      <cart-pop :popShow="popCartActive"
-                :productSKUs="productSKUs"
-                @popUpClose="closeActive" @addProductToCart="addToCart"></cart-pop>
-    </div>
+    <cart-pop :popShow="popCartActive"
+              :productSKUs="productSKUs"
+              @popUpClose="closeActive" @addProductToCart="addToCart"></cart-pop>
+  </div>
 
   </div>
 
@@ -57,7 +50,7 @@
   import {request} from "@/utils/request";
   import card from '@/components/card';
   import cartPop from '@/components/cartPop';
-  import {  mapActions, mapGetters } from 'vuex';
+  import {  mapActions } from 'vuex';
 
   const ITEM_HEIGHT = 360;
 
@@ -197,6 +190,7 @@
       navigateToActivity() {
         let url = this.headAdSetting.adUrl;
 
+
         if (tabUrls.indexOf(url) > -1) {
           wx.switchTab(
             {
@@ -211,8 +205,6 @@
           )
         }
       },
-
-
       indexList() {
         request(
           INDEX_LIST,
@@ -248,11 +240,9 @@
         )
       }
 
-
     },
     onShow() {
       this.indexList();
-      // this.getCategoryAndProductBrief();
       console.log("this.items{}", this.items);
       if (this.popCartActive === true) {
         this.closeActive();
@@ -288,17 +278,7 @@
     transition:width .4s ease-in-out;
   }
 
-  .active_img_class {
-    width: 100%;
-    height: 100px;
-  }
 
-  .van-tree-select {
-    position: relative;
-    font-size: 14px;
-    -webkit-user-select: none;
-    user-select: none
-  }
 
   .van-tree-select__nav {
     position: absolute;
@@ -316,24 +296,7 @@
     line-height: 44px
   }
 
-  .van-tree-select__nitem--active:after {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 3.6px;
-    background-color: #f44;
-    content: ""
-  }
 
-  .van-tree-select__nitem--active {
-    font-weight: 700;
-    background-color: #fff
-  }
-
-  .van-tree-select__nitem--disabled {
-    color: #999
-  }
 
   .van-tree-select__content {
     width: 75%;
@@ -349,13 +312,7 @@
     line-height: 20px
   }
 
-  .van-tree-select__item--active {
-    color: #f44
-  }
 
-  .van-tree-select__item--disabled {
-    color: #999
-  }
 
   .van-tree-select__selected {
     position: absolute;
@@ -373,26 +330,8 @@
     text-overflow: ellipsis
   }
 
-  .van-multi-ellipsis--l2 {
-    -webkit-line-clamp: 2
-  }
 
-  .van-multi-ellipsis--l2, .van-multi-ellipsis--l3 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical
-  }
 
-  .van-multi-ellipsis--l3 {
-    -webkit-line-clamp: 3
-  }
-
-  .van-clearfix:after {
-    content: "";
-    display: table;
-    clear: both
-  }
 
   .van-hairline, .van-hairline--bottom, .van-hairline--left, .van-hairline--right, .van-hairline--surround, .van-hairline--top, .van-hairline--top-bottom {
     position: relative
@@ -413,29 +352,7 @@
     transform: scale(.5);
     border: 0 solid #eee
   }
-  .van-hairline--top:after {
-    border-top-width: 1px
-  }
 
-  .van-hairline--left:after {
-    border-left-width: 1px
-  }
-
-  .van-hairline--right:after {
-    border-right-width: 1px
-  }
-
-  .van-hairline--bottom:after {
-    border-bottom-width: 1px
-  }
-
-  .van-hairline--top-bottom:after {
-    border-width: 1px 0
-  }
-
-  .van-hairline--surround:after {
-    border-width: 1px
-  }
 
   .rest_notice {
     position: fixed;

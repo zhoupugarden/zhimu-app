@@ -53,8 +53,8 @@
               </div>
             </div>
             <div style="font-family: 'Microsoft YaHei'; font-size: 12px;padding:10px 0px;">规格</div>
-            <div class="van-popup__panel_attribute">
-          <span v-for="(item, index) in productSKUs.pmsProductSkuList" :key="index">
+            <div v-if="productSKUs" class="van-popup__panel_attribute">
+          <span  v-for="(item, index) in productSKUs.pmsProductSkuList" :key="index">
                 <check-box
                   :id="item.skuId"
                   :name="item.attributeName"
@@ -96,8 +96,6 @@
         </div>
 
       </div>
-
-
     </van-popup>
   </div>
 </template>
@@ -244,6 +242,7 @@
 
   .cart-pop-container {
     position: relative;
+  }
   .van-popup__panel-back {
     position: absolute;
     backface-visibility: hidden;
@@ -260,7 +259,8 @@
     transform: rotateY(0deg);
     transition: all 1s;
     background-color: white;
-    height:100%;
+    height: 100%;
+  }
 
   .van-popup__panel_price {
     padding-bottom: 10px;
@@ -298,6 +298,7 @@
     display: flex;
     flex-flow: row wrap;
     align-content: flex-start;
+  }
     .van-popup__panel_extro__item {
       box-sizing: border-box;
       flex: 0 0 50%;
@@ -305,14 +306,11 @@
       font-size: 16px;
       font-family: "Microsoft YaHei";
     }
-  }
   .van-popup__panel_shopcart {
     width: 100%;
     position: fixed;
     bottom: 0px;
 
-  }
-  }
   }
 
   .zm-goods__price-lineprice {

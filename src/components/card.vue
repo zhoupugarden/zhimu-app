@@ -52,7 +52,6 @@
       }
     },
     methods: {
-
       productNotice() {
         let that = this;
         wx.requestSubscribeMessage({
@@ -132,37 +131,30 @@
   .zm-panel {
     position: relative;
     background: #fff;
-    margin-top: 10px;
     margin-right: 10px;
     overflow: hidden;
-    height:240px;
-    .zm-card__tag {
-      position: absolute;
-      z-index: 1;
-      left: 10px;
-      top: 10px;
-    }
+    height: 240px;
+  }
     .zm-card {
-      margin-left:0;
-      width:auto;
-      /*padding:5px 15px;*/
-      overflow:hidden;
-      position:relative;
-      font-size:14px;
-      /*z-index:100;*/
+      margin-left: 0;
+      width: auto;
+      overflow: hidden;
+      position: relative;
+      font-size: 14px;
       border-radius: 5px;
-      /*border-style:solid;*/
-      border-width:1px;
-      border-color:#E8EDF5;
-      .zm-card__thumb{
-        width:auto;
-        height:160px;
-        position:relative;
-        margin-left:auto;
-        margin-right:auto;
-        overflow:hidden;
-        background-size:cover;
+      border-width: 1px;
+      border-color: #E8EDF5;
+    }
+      .zm-card__thumb {
+        width: auto;
+        height: 160px;
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+        overflow: hidden;
+        background-size: cover;
         border-radius: 5px;
+      }
         .zm-card__img{
           position:absolute;
           top:0;left:0;right:0;bottom:0;
@@ -170,7 +162,6 @@
           max-width:100%;
           max-height:100%
         }
-      }
       .zm-card__detail {
         position: relative;
         width:250px;
@@ -207,9 +198,9 @@
         padding: 2px 0px;
       }
       .zm-detail__icon {
-        position: absolute;
-        top:10px;
+        top: 10px;
         right: 60px;
+      }
       .choose_attribute {
         width: 80px;
         height: 20px;
@@ -231,9 +222,6 @@
         text-align: center;
         line-height: 18px;
       }
-      }
-    }
 
-  }
 
 </style>
