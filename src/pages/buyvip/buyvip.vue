@@ -58,26 +58,9 @@
         )
       },
 
-      // getChargeProductInfo() {
-      //   request(
-      //     GET_CHARGE_CONFIG_INFO,
-      //     'GET'
-      //   ).then(
-      //     response => {
-      //       console.log("this response", response);
-      //       this.productId = response.productId;
-      //       this.skuId = response.skuId;
-      //     }
-      //   )
-      // },
-
       charge() {
         let that = this;
         let params = {};
-        params.userId = this.userId;
-        // params.productId = this.productId;
-        // params.skuId = this.skuId;
-        console.log("charge");
         request(
           CHARGE,
           'POST',
@@ -111,7 +94,7 @@
     computed: {
       ...mapGetters(
         [
-          'userId','isVip'
+          'isVip'
         ]
       ),
     }
@@ -119,21 +102,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .buyvip-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .buy-vip-button {
-    position: fixed;
-    bottom: 10px;
-    width: 90%;
-  }
-  .buy-vip-cell {
-    width: 90%;
-    margin-top: 20px;
-  }
-
+  @import "buyvip.scss";
 </style>
 
 <style lang="wxss">

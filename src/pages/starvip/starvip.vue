@@ -193,6 +193,12 @@
       }
     },
     methods: {
+      ...mapActions(
+        [
+          'storeIsVip'
+        ]
+      ),
+
       mockWxPay(data) {
         request(
           MOCK_WX_PAY,
@@ -200,10 +206,11 @@
           data
         ).then(
           response => {
-            console.log("this response", response);
             //  微信支付成功后，跳转到myvip页面
             let url = "../my/main" ;
             console.log("url",url);
+            //支付成功后，设置vip标志
+            this.storeIsVip(1);
             wx.switchTab({
               url
             });
@@ -226,7 +233,6 @@
       charge() {
         let that = this;
         let params = {};
-        params.userId = this.userId;
         params.productId = this.productId;
         params.skuId = this.skuId;
         console.log("charge");
@@ -270,7 +276,7 @@
           url
         });
       },
-      getUserInfo(token) {
+      getUserInfo() {
         let params = {};
         params.token = token;
         request(
@@ -289,7 +295,7 @@
     computed: {
       ...mapGetters(
         [
-          'userId','isVip','token','isLogin'
+          'isVip','token','isLogin'
         ]
       ),
     },
@@ -300,7 +306,7 @@
           url:'/pages/login/main'
         })
       } else {
-        this.getUserInfo(this.token);
+        this.getUserInfo();
       }
     },
     onUnload() {
@@ -320,83 +326,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .starvip-card_image {
-    width: 300px;
-    height: 180px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    margin: 30px auto;
-    position: relative;
-  }
-  .starvip-tip {
-    text-align: center;
-    color: #d9b56e;
-  }
-  .privilege-icon {
-    width:30px;
-    height:30px;
-  }
-  .privilege-icon_pop {
-    width:80px;
-    height:80px;
-  }
-
-  .privilege-items {
-    display: flex;
-    justify-content: space-around;
-    align-content: space-around;
-    align-items: baseline;
-    width: 100%;
-  }
-  .privilege-item {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-  }
-  .popshow-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 300px;
-    height: 240px;
-    justify-content: space-around;
-  }
-
-
-  .starvip-open {
-    background-color: #ffffff;
-    margin: 10px 0px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    height: 150px;
-  }
-  .starvip-month {
-    background-color: #ffffff;
-  }
-  .starvip-buy {
-    position: fixed;
-    bottom: 0px;
-    border-top: solid #b2b2b2 1px;
-    display: -webkit-flex;
-    width: 100%;
-    height: 50px;
-  }
-  .starvip-privilege {
-    background-color: #ffffff;
-    margin-top: 10px;
-    padding-bottom: 80px;
-  }
-  .button-font {
-    -webkit-flex: 1;
-    display: flex;
-    font-weight: bolder;
-    justify-content: center;
-    align-items: center;
-  }
-
-
-
+  @import "starvip.scss";
 </style>
 
 <style lang="wxss">

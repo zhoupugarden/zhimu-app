@@ -9,6 +9,7 @@ import getters from './getters'
 
 
 import home from './home'
+import merchant from './merchant'
 
 Vue.use(Vuex)
 
@@ -28,12 +29,18 @@ export default new Vuex.Store({
           reducer(val) {
               console.log("=====createPersistedState========", val);
               return {
-                cartList:val.cartList
+                cartList:val.cartList,
+                merchantInfo:val.merchant.merchantInfo,
+                deliverConfig:val.merchant.deliverConfig,
+                token:val.token,
+                isLogin:val.isLogin,
+                currentLocation:val.currentLocation
               }
           }
         })
     ],
     modules:{
-      home
+      home,
+      merchant
     }
 })

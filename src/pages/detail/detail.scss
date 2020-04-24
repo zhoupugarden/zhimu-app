@@ -1,0 +1,178 @@
+.font_setting {
+  font-size: 12px;
+  font-family: 'Microsoft YaHei';
+  padding-left: 5px;
+  /*color: #888888;*/
+}
+.star_comment {
+  background-color: #CFD4DA;
+  width: 200px;
+  border-radius: 5px;
+  font-size: 13px;
+  padding: 10px;
+}
+.van-popup__panel_extro__item {
+  box-sizing: border-box;
+  flex: 0 0 50%;
+  padding: 5px 5px;
+  font-size: 16px;
+  font-family: "Microsoft YaHei";
+}
+.zm-goods__notice {
+  margin: 20px;
+}
+.zm-goods__detail {
+  font-size: 0;
+  margin:0;
+  padding:0;
+}
+.zm-goods__detail-img {
+  width: 100%;
+}
+.van-popup__panel_extro_item {
+  box-sizing: border-box;
+  flex: 0 0 50%;
+  padding: 5px 5px;
+  font-size: 16px;
+  font-family: "Microsoft YaHei";
+}
+.van-popup__panel_attribute {
+  display: flex;
+  padding: 10px 15px;
+}
+.extro-info__item_i {
+  display: flex;
+  align-items: center;
+}
+.van-popup__panel_price{
+  padding: 0px 10px;
+}
+
+.zm-goods__review_detail {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 10px;
+  padding-bottom: 10px;
+}
+.avatar-img {
+  display: block;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+}
+.vip_tip_class {
+  display: flex;
+  justify-content: space-around;
+  font-size: 13px;
+  background-color: #fde3ca;
+  margin: 10px;
+  padding: 5px 0px;
+}
+
+.attribute-extro-info {
+  display: flex;
+  flex-flow: row wrap;
+  align-content: flex-start;
+  background-color: white;
+  padding: 10px 15px;
+}
+.extro-info__item {
+  box-sizing: border-box;
+  flex: 0 0 50%;
+  padding: 5px 5px;
+  font-size: 16px;
+  font-family: "Microsoft YaHei";
+}
+.attribute-extro-info:after {
+  content:" ";
+  display:block;
+  margin:5px auto 0;
+  width:100%;
+  border-bottom:1px solid #f2f2f2;
+  transition:width .4s ease-in-out;
+}
+.van-popup__panel_extro {
+  display: flex;
+  flex-flow: row wrap;
+  align-content: flex-start;
+  padding: 10px 15px;
+}
+
+.zm-goods__extroInfo {
+  margin: 5px 10px;
+}
+.zm-goods__price-value {
+  font-size: 18px;
+  font-family: "Microsoft YaHei";
+  padding-right: 5px;
+}
+.zm-goods__price-value:before {
+  content:'￥';
+  font-size: small;
+}
+.zm-goods__price-lineprice {
+  font-family: "Microsoft YaHei";
+  padding-right: 5px;
+  font-size: 10px;
+  color: #CFD4DA;
+  text-decoration:line-through;
+}
+.zm-goods__price-lineprice:before {
+  content:'原价 ￥';
+  text-decoration:line-through;
+  font-size: 10px;
+}
+
+.zm-goods__container {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 50px;
+}
+.zm-goods__head {
+  position: relative;
+  padding-bottom: 10px;
+  background-color: white;
+}
+.zm-goods__name {
+  font-size: 16px;
+  margin: 5px 0;
+  text-align: left;
+}
+.zm-goods__share {
+  position: absolute;
+  right: 10px;
+  top: 0px;
+  text-align: center;
+}
+.zm-goods__price {
+  margin: 5px 0;
+  text-align: left;
+}
+.zm-goods__link  {
+  background-color: red;
+}
+.zm-goods__content {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.zm-goods__detail {
+  position: relative;
+}
+.zm-goods__ingredients {
+  position: relative;
+}
+
+.zm-goods__ingredients__content {
+  position: absolute;
+  width: 80px;
+}
+
+button {
+  font-size: 10px;
+  background-color: #FFFFFF;
+  color: #888888;
+}
+button::after {
+  border: none;
+}

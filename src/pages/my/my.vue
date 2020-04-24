@@ -16,7 +16,7 @@
           </div>
 
           <div style="font-size: 12px;">{{basicInfo.phoneNo}}</div>
-          <div v-if="basicInfo.level === 0" @click="navigateToMyVip">
+          <div v-if="isVip" @click="navigateToMyVip">
             <span class="vip_tip_2">VIP</span>
             <span class="vip_tip">加入会员享受VIP福利</span>
           </div>
@@ -80,7 +80,7 @@
 <script>
 
 
-  import { mapGetters , mapActions} from 'vuex';
+  import { mapState , mapActions} from 'vuex';
   import {MY_USER_INFO} from '@/utils/api';
   import {request} from "@/utils/request";
 
@@ -97,7 +97,6 @@
   },
   data() {
     return {
-      isLogin:false,
       basicInfo: {},
 
       walletInfo : {
@@ -113,7 +112,7 @@
   methods: {
     ...mapActions(
       [
-        'storeUserId','storeIsVip'
+        'storeIsVip'
       ]
     ),
 
@@ -282,7 +281,6 @@
           url
         });
       }
-
     },
     navigateToMission() {
       let url = "../mission/main" ;
@@ -292,7 +290,7 @@
       });
     },
     navigateToStarVip() {
-      let url = "/pages/demo2/main" ;
+      let url = "/pages/demo/main" ;
       wx.navigateTo({
         url
       });
@@ -340,39 +338,34 @@
     getPhoneNumber(e) {
       console.log("获取手机号",e)
     },
-    getUserInfo(token) {
+    getUserInfo() {
       let params = {};
-      params.token = token;
         request(
           MY_USER_INFO,
           'GET',
           params
         ).then(
           response => {
-            //将userID放在存储中
             console.log("response",response)
-            this.storeUserId(response.id);
             this.storeIsVip(response.level);
             this.basicInfo = response;
           }
         )
     }
-
   },
-  computed: {
-    ...mapGetters(
-      [
-        'token', 'userId'
-      ]
-    )
-  },
+    computed: {
+      ...mapState({
+        isLogin: state => state.isLogin,
+        isVip: state => state.isVip
+      }),
+    },
 
-  onShow() {
-    if (this.token) {
-      this.isLogin = true;
-      this.getUserInfo(this.token);
+
+    onShow() {
+    console.log("=====this.isLogin=====", this.isLogin);
+    if (this.isLogin === 1) {
+      this.getUserInfo();
     } else {
-      this.isLogin = false;
       this.basicInfo = Object.assign({}, originBasicInfo);
     }
   }
@@ -381,70 +374,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .my-container {
-    position:relative;
-  }
-  .circleImg {
-    border-radius: 30px;
-    width:60px;
-    height:60px;
-  }
-  .vip_tip {
-    background-image: linear-gradient(#847048, #D9C49A);
-    color: black;
-    font-size: 12px;
-    border-bottom-right-radius: 10px;
-    border-top-right-radius: 10px;
-    padding: 2px 10px 2px 2px;
-    font-weight: bold;
-  }
-  .vip_tip_2 {
-    background-color: #230000;
-    padding: 2px;
-    color: #D9C49A;
-    font-size: 12px;
-    font-weight: bold;
-  }
-
-  .my-profile {
-    position: relative;
-    margin-top: 10px;
-  }
-  .my-basic-info {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: white;
-  }
-
-  .my-basic-info__Avatar {
-    padding: 10px 15px;
-  }
-
-  .my-basic-info__content {
-    flex:auto;
-  }
-  .my-basic-info__go {
-    padding: 10px 15px;
-  }
-
-  .my-wallet-info {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color: white;
-  }
-  .my-wallet-info__style {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .my-operation {
-    position: relative;
-    margin-top: 10px;
-  }
+  @import "./my.scss";
 </style>
 
 <style lang="wxss">

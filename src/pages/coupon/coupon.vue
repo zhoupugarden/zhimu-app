@@ -97,15 +97,9 @@
           return item.status === 2
         })
       },
-        ...mapGetters(
-          [
-            'userId','token'
-          ]
-        )
     },
     onShow() {
       let data = {};
-      data.userId = this.userId;
       this.getCoupon(data);
     },
 
@@ -127,29 +121,7 @@
 </script>
 
 <style lang="scss" scoped>
-
-  .balance-summary__title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: white;
-    font-size: 12px;
-  }
-  .balance-summary__total {
-    background-color: white;
-    font-size: 30px;
-    color: green;
-    display: flex;
-    justify-content: center;
-  }
-  .coupon-list {
-    padding-bottom: 100px;
-  }
-  .coupon-redeem {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-  }
+  @import "coupon.scss";
 </style>
 
 <style lang="scss">
@@ -164,7 +136,6 @@
   .van-button__custom {
     width: 100%;
   }
-
 
 </style>
 

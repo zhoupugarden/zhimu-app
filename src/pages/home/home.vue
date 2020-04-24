@@ -4,12 +4,15 @@
        <!--菜单导航-->
       <scroll-view class="menu-nav" :scroll-y="true"
                    :scroll-into-view="'nav'+selectIndex">
-        <li v-for="(item, index) in navDemo" :key="item.id"
+        <li v-for="(item, index) in categoryNameList" :key="item.id"
             :id="'nav'+index"
             class="nav-item"
             :class="{active: selectIndex==index}"
             @click="selectMenuAction(index)">
-          <span>{{item.name}}</span>
+          <div v-show="item.hasNew" class="nav_item_tag">
+            new
+          </div>
+          <div>{{item.name}}</div>
         </li>
       </scroll-view>
 
@@ -18,8 +21,11 @@
                    :scroll-into-view="'group'+menuIndex"
                    @scroll="menuListScrollAction"
       >
-        <div style="border-bottom: 1px dashed #b2b2b2;" v-for="(products, index) in productList" :key="index" :id="'group'+index">
-          <h3 class="group-title">{{navDemo[index].name}}</h3>
+        <div v-if="adHeadSettings" class="index-header" @click="navigateToActivity">
+          <image style="width: 100%; height: 100px; " mode="scaleToFill" :src="adHeadSettings.imgUrl"></image>
+        </div>
+        <div style="border-bottom: 1px dashed #b2b2b2;" v-for="(products, index) in productMenuList" :key="index" :id="'group'+index">
+          <h3 class="group-title">{{categoryNameList[index].name}}</h3>
           <ul>
             <li v-for="(item, j) in products" :key="item.id" class="menu-item">
               <card :cardInfo="item"
@@ -29,10 +35,15 @@
         </div>
       </scroll-view>
     </div>
+
+    <div v-show= "merchantInfo.status === 1003 || merchantInfo.status === 1004" class="rest_notice">
+      {{restNotice}}
+    </div>
+
     <!--弹出框-->
     <div>
       <cart-pop :popShow="popCartActive"
-                :productSKUs="productSKUs"
+                :productSKUs="productSku"
                 @popUpClose="closeActive" @addProductToCart="addToCart"></cart-pop>
     </div>
   </div>
@@ -47,7 +58,6 @@
   import {mapState, mapActions} from 'vuex';
 
 
-
   export default {
     components: {
       card,cartPop
@@ -57,34 +67,44 @@
         selectIndex: 0,
         menuIndex: 0,
         scrollTop: 0,
-        categoryNameList:[],
-        categoryList:[],
         popCartActive:false,
+        productSku:[]
       }
     },
     computed: {
-
       ...mapState({
-        navDemo: state=>state.home.categoryNameList,
+        categoryNameList: state=>state.home.categoryNameList,
         productList: state=>state.home.productList,
+        productMenuList: state=>state.home.productMenuList,
+        skuList: state=>state.home.skuList,
+        merchantInfo: state=>state.merchant.merchantInfo,
+        adHeadSettings: state => state.merchant.adHeadSettings
       }),
 
       heightArr(){
-        let heightArr = this.productList.map(item=>{
+        let heightArr = this.productMenuList.map(item=>{
           return item.length*240+30;
         });
         console.log(heightArr);
         return heightArr;
-      }
+      },
+
+      restNotice() {
+        if (this.merchantInfo.status === 1003) {
+          return "休息中，" + "营业时间 " + this.merchantInfo.openTime + "-" + this.merchantInfo.closeTime
+        }else if (this.merchantInfo.status === 1004) {
+          return "休假中，" + "休假时间 " + this.merchantInfo.restStartDate + "到" + this.merchantInfo.restEndDate
+        }else {
+          return '';
+        }
+      },
+
     },
     methods: {
-
-
       ...mapActions(
         [
-          'addProductToCart', 'addMerchantInfo', 'addDeliverConfig', 'addAdSettings'
+          'addProductToCart'
         ]
-
       ),
 
       // 菜单导航的点击事件
@@ -144,11 +164,12 @@
         this.popCartActive = false;
         console.log("data",data);
         let productId = data.productId;
-        this.productSKUs
-          = this.productList[this.selectIndex].find(
-          item => item.id === productId
-        );
-        console.log("this.productSKUs", this.productSKUs);
+        this.productSku = this.skuList.filter(a=>a.productId === productId);
+        // this.productSKUs
+        //   = this.productMenuList[this.selectIndex].find(
+        //   item => item.id === productId
+        // );
+        // console.log("this.productSKUs", this.productSKUs);
         this.popCartActive = true;
       },
       closeActive() {
@@ -169,80 +190,13 @@
         console.log("active----", val);
       }
     },
-    mounted(){
-      // 请求商家的菜单数据
-      // this.indexList();
-      let {id} = this.$root.$mp.query;
-      this.$store.dispatch('home/getHomeData', {id});
-
+    onShow(){
+      this.$store.dispatch('home/getHomeData');
+      this.$store.dispatch('merchant/getMerchantData');
     }
   }
 </script>
 
-<style scooped>
-  .menu-wrap{
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 45px;
-    display: flex;
-  }
-  .menu-nav{
-    width: 100px;
-    height: 100%;
-    font-size: 14px;
-    background: #f2f2f2;
-  }
-  .nav-item{
-    padding: 12px 5px;
-  }
-  .nav-item.active{
-    font-weight: bold;
-    background: white;
-  }
-  .menu-nav image{
-    width: 12px;
-    height: 12px;
-  }
-  .menu-list{
-    flex: 1;
-    height: 100%;
-    margin: 0 10px;
-  }
-  .group-title{
-    height: 30px;
-    line-height: 30px;
-    font-size: 14px;
-    font-weight: bold;
-    border-bottom: 2px solid #D9B56E;
-    width: 70px;
-    text-align: center;
-  }
-  .menu-item{
-    display: flex;
-    height: 240px;
-    padding: 10px 0;
-  }
-  .menu-item .pic{
-    width: 80px;
-    height: 80px;
-  }
-  .menu-item .content{
-    margin-left: 5px;
-    flex: 1;
-  }
-  .menu-item .content .title{
-    font-size: 14px;
-    color: #222;
-    font-weight: bold;
-  }
-  .tools{
-    width: 100%;
-    height: 45px;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    background: palegoldenrod;
-  }
+<style lang="scss" scooped>
+  @import "home.scss";
 </style>

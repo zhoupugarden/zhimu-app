@@ -36,11 +36,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .balancequestion-container {
-    width: 80%;
-    padding-left: 20px;
-  }
-
+ @import "memberquestion.scss";
 </style>
 <style lang="scss">
   .van-tabs__custom {

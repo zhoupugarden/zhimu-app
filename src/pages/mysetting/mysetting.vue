@@ -142,7 +142,6 @@
     },
     updateUserInfo() {
       let params = {};
-      params.userId = this.userId;
       params.birthDate = new Date(this.basicInfo.birthDate);
       params.gender = this.valueSex;
       request(
@@ -161,7 +160,6 @@
     },
     getUserInfo() {
       let params = {};
-      params.token = this.token;
       request(
         MY_USER_INFO,
         'GET',
@@ -189,7 +187,7 @@
     },
     ...mapGetters(
       [
-        'cartTotalCount','userId','token'
+        'cartTotalCount'
       ]
     )
   },
@@ -201,36 +199,7 @@
 </script>
 
 <style lang="scss" scoped>
-
-  .mysetting-header {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    background-color: white;
-    height: 100px;
-  }
-  .mysetting-detail {
-    margin-top: 10px;
-  }
-
-  .circleImg {
-    border-radius: 30px;
-    width:60px;
-    height:60px;
-  }
-
-  .radio-flex {
-    display: flex;
-    width: 200px;
-    justify-content: space-between;
-    font-size: 14px;
-  }
-  .sex-flex {
-    display: flex;
-    background-color: white;
-    align-items:center;
-  }
-
+@import "mysetting.scss";
 </style>
 
 <style lang="wxss">

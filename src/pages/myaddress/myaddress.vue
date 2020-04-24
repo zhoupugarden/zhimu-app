@@ -35,7 +35,6 @@
       jump:false,
       addressArray:[]
     }
-
   },
   methods: {
     onChange(event) {
@@ -46,7 +45,6 @@
       console.log("del address data", data);
       let params = {};
       params.addressId = data;
-      params.userId = this.userId;
 
       wx.showActionSheet(
         {
@@ -68,7 +66,6 @@
 
     listUserAddress() {
       let params = {};
-      params.userId = this.userId;
       request(
         GET_USER_ADDRESS,
         'GET',
@@ -109,22 +106,11 @@
         url
       });
     },
-    // backToOrderSubmit(e) {
-    //   let pages = getCurrentPages();
-    //   console.log("pageUrl", pages);
-    //   let prePage = pages[1];
-    //   if (prePage.route === 'pages/ordersubmit/main') {
-    //     prePage.setData({addressId:e.id})
-    //     wx.redirectTo({
-    //       url: '/' + prePage.route + '?addressId=' + e.id
-    //     })
-    //   }
-    // }
   },
     computed: {
       ...mapGetters(
         [
-          'userId','isLogin'
+          'isLogin'
         ]
       )
     },
@@ -147,18 +133,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .address-add-button {
-    position: fixed;
-    bottom: 0px;
-    width: 100%;
-    background-color: white;
-    margin-top: 10px;
-  }
-  .address-add-button_wrap {
-    display: flex;
-    justify-content: center;
-    padding: 10px 10px;
-  }
+  @import "myaddress.scss";
 </style>
 
 <style lang="scss">

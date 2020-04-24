@@ -1,6 +1,6 @@
 {
   "pages": [
-    "pages/index/main",
+    "pages/home/main",
     "pages/order/main",
     "pages/cart/main",
     "pages/my/main",
@@ -30,7 +30,6 @@
     "pages/setting/main",
     "pages/evaluation/main",
     "pages/demo/main",
-    "pages/demo2/main",
     "pages/starvip/main",
     "pages/vip/main"
 
@@ -46,7 +45,7 @@
     "selectedColor": "#000000",
     "list": [{
       "text": "首页",
-      "pagePath": "pages/index/main",
+      "pagePath": "pages/home/main",
       "iconPath": "static/bar/default/home.png",
       "selectedIconPath": "static/bar/active/home_fill.png"
     },{

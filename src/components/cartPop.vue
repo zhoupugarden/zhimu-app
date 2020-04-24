@@ -25,25 +25,24 @@
                   <span class="font_setting">{{chooseSKU.cakeSize}}</span>
                 </div>
               </div>
-              <div class="van-popup__panel_extro__item">
+              <div v-show="chooseSKU.capacity" class="van-popup__panel_extro__item">
                 <div style="display: flex">
                   <img src="../asset/people.png" style="width: 20px; height: 20px; ">
                   <span class="font_setting">{{chooseSKU.capacity}}</span>
                 </div>
               </div>
-              <div class="van-popup__panel_extro__item">
+              <div v-show="chooseSKU.copies" class="van-popup__panel_extro__item">
                 <div style="display: flex">
                   <img src="../asset/time.png" style="width: 20px; height: 20px; ">
                   <span class="font_setting">{{chooseSKU.copies}}</span>
                 </div>
               </div>
-              <div class="van-popup__panel_extro__item">
+              <div v-show="cutleryDesc" class="van-popup__panel_extro__item">
                 <div style="display: flex">
                   <img src="../asset/cutlery.png" style="width: 20px; height: 20px; ">
-                  <span class="font_setting">{{cutlery}}</span>
+                  <span class="font_setting">{{cutleryDesc}}</span>
                 </div>
               </div>
-
               <div class="van-popup__panel_extro__item">
                 <div style="display: flex">
                   <img src="../asset/cutlery.png" style="width: 20px; height: 20px; ">
@@ -53,8 +52,8 @@
               </div>
             </div>
             <div style="font-family: 'Microsoft YaHei'; font-size: 12px;padding:10px 0px;">规格</div>
-            <div v-if="productSKUs" class="van-popup__panel_attribute">
-          <span  v-for="(item, index) in productSKUs.pmsProductSkuList" :key="index">
+            <div  class="van-popup__panel_attribute">
+          <span style="padding-right: 5px;" v-for="(item, index) in productSKUs" :key="index">
                 <check-box
                   :id="item.skuId"
                   :name="item.attributeName"
@@ -102,6 +101,8 @@
 
 <script>
   import CheckBox from '@/components/CheckBox';
+  import {mapState} from 'vuex';
+
   export default {
   name: 'cart-pop',
     components: {
@@ -109,10 +110,8 @@
     },
   props: {
     popShow: Boolean,
-    productSKUs: Object,
-    position: {
-      type: String
-    },
+    productSKUs: Array,
+    productId:Number,
     popupText: {
       type: String,
       default:"加入购物车"
@@ -121,7 +120,8 @@
   data() {
     return {
       chooseSKU:{},
-      active:0
+      active:0,
+      cutlery:0
     }
   },
 
@@ -156,9 +156,7 @@
           that.closeActive();
         }, 1000
       );
-
     },
-
     popUpClose() {
       console.log("popUpClose");
       this.popShow = false;
@@ -170,7 +168,7 @@
     },
     selectedSKU(event) {
       console.log("event", event);
-      this.chooseSKU = this.productSKUs.pmsProductSkuList.find(
+      this.chooseSKU = this.productSKUs.find(
         sku => sku.skuId === event
       );
       console.log("this.chooseSku", this.chooseSKU)
@@ -180,22 +178,10 @@
   watch: {
     productSKUs() {
       console.log("this.productSKUs", this.productSKUs);
-      let pmsProductSkuList = this.productSKUs.pmsProductSkuList;
-      this.chooseSKU = pmsProductSkuList.find(
-        function (sku) {
-          return sku.isPrime === true;
-        }
-      );
-      if (!this.chooseSKU) {
-        for(let sku of pmsProductSkuList) {
-          if (!this.chooseSKU || this.chooseSKU.orderNum < sku.orderNum) {
-            this.chooseSKU = sku;
-          }
-        }
-      }
 
-      console.log("this.chooseSKU", this.chooseSKU)
-    }
+      this.chooseSKU = this.productSKUs.find(a => a.isPrime === true);
+
+    },
   },
 
   computed: {
@@ -216,7 +202,6 @@
       },
 
     deliverTime() {
-      let hour = this.chooseSKU.deliverTime;
       if (this.chooseSKU.deliverTime === 1001 || this.chooseSKU.deliverTime === 1002) {
         return "现货下单立即配送";
       } else {
@@ -224,11 +209,15 @@
           return "最早明天10点可配送";
         }
     },
-    cutlery() {
-      return "含" + this.chooseSKU.cutlery + "套餐具";
+    cutleryDesc() {
+        if (!this.chooseSKU.cutlery) {
+          return "";
+        }else {
+          return "含" + this.chooseSKU.cutlery + "套餐具";
+        }
     }
   }
-}
+  }
 </script>
 
 <style lang="scss" scoped>

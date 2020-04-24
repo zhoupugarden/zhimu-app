@@ -1,19 +1,14 @@
 <template>
   <div class="login-container">
-
-
-
     <div class="login-header">
       <img :src="merchantInfo.logoUrl" class="circleImg">
     </div>
 
     <div class="login-weixin">
-      <van-button type="primary" custom-class	= "login-button-custom" round @click="navigateToWxLogin">
-        <van-icon name="chat-o"/>
-        按钮微信授权登录
-      </van-button>
-      <div>
-      </div>
+      <button class="btn1" open-type="getUserInfo" lang="zh_CN" type="primary" @getuserinfo="navigateToWxLogin">
+        <image class='btnImg' src='/static/images/wechat.png'></image>
+        微信授权登录
+      </button>
     </div>
     <div class="login-other" @click="navigateToUserLogin">
       <div style="color: blue; font-size: 14px; font-family: 'Microsoft YaHei'">
@@ -30,7 +25,8 @@
 
 <script>
 
-  import {  mapGetters, mapActions} from 'vuex';
+  import {  mapState,  mapActions} from 'vuex';
+  import {getLocation, getAuth, getUserWxInfo} from '@/utils/wxApi';
   export default {
 
     data() {
@@ -43,51 +39,19 @@
           'addCurrentLocation'
         ]
       ),
-
-      navigateToWxLogin() {
-        let that = this;
-        //先获取手机号
-        wx.getSetting({
-          success(res) {
-            if (!res.authSetting['scope.userLocation']) {
-              wx.authorize({
-                scope: 'scope.userLocation',
-                success () {
-                  console.log("用户已同意授权");
-                  wx.getLocation({
-                    type: 'wgs84',
-                    success (res) {
-                      console.log(res,"用户已同意获取位置授权")
-                      const latitude = res.latitude;
-                      const longitude = res.longitude;
-                      let locationItem = {};
-                      locationItem.latitude = latitude;
-                      locationItem.longitude = longitude;
-                      that.addCurrentLocation(locationItem);
-                    }
-                  })
-                }
-              })
-            }else {
-              console.log("用户已授权过");
-              wx.getLocation({
-                type: 'wgs84',
-                success (res) {
-                  console.log(res,"用户已同意获取位置授权")
-                  const latitude = res.latitude;
-                  const longitude = res.longitude;
-                  let locationItem = {};
-                  locationItem.latitude = latitude;
-                  locationItem.longitude = longitude;
-                  that.addCurrentLocation(locationItem);
-                }
-              })
-
-            }
-          }
-        })
+       navigateToWxLogin() {
+         getAuth('scope.userLocation', async () => {
+           let location = await getLocation();
+           console.log("=====", location);
+           this.addCurrentLocation(location);
+         });
+         getAuth('scope.userInfo', async () => {
+           let wxInfo = await getUserWxInfo();
+           console.log("==wxInfo===", wxInfo);
+         })
 
       },
+
       navigateToUserLogin() {
         let url = "/pages/phonelogin/main" ;
         console.log("url",url);
@@ -97,53 +61,40 @@
       }
     },
     computed: {
-      ...mapGetters(
-        [
-          'merchantInfo'
-        ]
-      )
+      ...mapState({
+        merchantInfo: state=>state.merchant.merchantInfo,
+      }),
     },
 
   }
 </script>
 
 <style lang="scss" scoped>
-
-  .login-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .circleImg {
-    border-radius: 40px;
-    width:80px;
-    height:80px;
-    margin: 20px 0px;
-  }
-  .login-other {
-    padding: 20px 0px;
-  }
-  .login-weixin {
-    padding: 10px 0px;
-
-  }
-  .login-footer {
-    position: fixed;
-    bottom: 10px;
-    font-size: 12px;
-    color: #999999;
-    font-weight: lighter;
-  }
-
-</style>
-
-<style lang="scss">
-  .login-button-custom {
+  @import "login.scss";
+  .btn1 {
     width: 300px;
-    height: 80px;
+    margin-top: 10px;
+    background-color: #09BB07;
+    font-size: 14px;
+    color: white;
+    border-radius: 49px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
   }
 
+  .btnImg {
+    margin-right: 4px;
+    width: 23px;
+    height: 23px;
+  }
+
+  .btn1::after {
+    border-radius: 49px;
+    border: 0;
+  }
 
 </style>
 

@@ -157,11 +157,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .complaint_contact_info {
-    margin-top: 10px;
-    background-color: white;
-  }
-
+ @import "comlaint.scss";
 </style>
 <style lang="scss">
   .van-tabs__custom {

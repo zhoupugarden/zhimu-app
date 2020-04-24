@@ -13,11 +13,7 @@ export const CHECK_OUT_CART = 'CHECK_OUT_CART';
 export const CHECK_OUT_FREE_CART = 'CHECK_OUT_FREE_CART';
 export const TOKEN = 'TOKEN';
 export const LOG_OUT = 'LOG_OUT';
-export const USER_ID = 'USER_ID';
+export const IS_LOGIN = 'IS_LOGIN';
 export const IS_VIP = 'IS_VIP';
-
-export  const ADD_MERCHANT_INFO = 'ADD_MERCHANT_INFO';
-export  const ADD_AD_SETTINGS = 'ADD_AD_SETTINGS';
-export  const ADD_DELIVER_CONFIG = 'ADD_DELIVER_CONFIG';
 
 export const ADD_CURRENT_LOCATION = 'ADD_CURRENT_LOCATION';

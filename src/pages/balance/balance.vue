@@ -41,7 +41,6 @@
     methods: {
       balanceDetailList() {
         let params = {};
-        params.userId = this.userId;
         request(
           GET_BALANCE_DETAIL,
           'GET',
@@ -57,7 +56,7 @@
     computed: {
       ...mapGetters(
         [
-          'userId','isLogin'
+          'isLogin'
         ]
       )
     },
@@ -89,22 +88,8 @@
 </script>
 
 <style lang="scss" scoped>
+  @import "balance.scss";
 
-  .balance-summary__title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: white;
-    font-size: 12px;
-  }
-  .balance-summary__total {
-    background-color: white;
-    font-size: 30px;
-    color: green;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 </style>
 
 <style lang="scss">
@@ -114,7 +99,6 @@
   }
 
 </style>
-
 <style lang="wxss">
   page{
     height: 100%;

@@ -199,7 +199,6 @@
       submitOrderComment() {
         let commentBo = {};
         commentBo.orderNo = this.orderNo;
-        commentBo.userId = this.userId;
         commentBo.deliverScore = this.rateValue;
         commentBo.itemBos = this.commentItems;
         commentBo.tags = this.choosedTag;
@@ -245,7 +244,7 @@
     computed: {
       ...mapGetters(
         [
-          'userId','isVip','token'
+          'isVip'
         ]
       ),
     },
@@ -270,45 +269,7 @@
 </script>
 
 <style lang="scss" scoped>
-
-  .evaluation-add-button {
-    position: fixed;
-    bottom: 0px;
-    width: 100%;
-    background-color: white;
-    z-index: 1;
-  }
-  .evaluation-add-button_wrap {
-    display: flex;
-    justify-content: center;
-    padding: 10px 10px;
-  }
-  .evaluation-switch {
-    display: flex;
-    margin: 10px 0px;
-    padding-bottom: 60px;
-  }
-
-
-  .total-tags {
-    display: flex;
-    justify-content:space-around;
-  }
-  .evaluation-total {
-    background-color: white;
-    margin: 5px;
-    padding: 5px;
-  }
-  .deliver-info_time {
-    font-size: 12px;
-  }
-  .deliver-info {
-    font-size: 20px;
-  }
-  .total-score {
-    text-align:center;
-  }
-
+  @import "evaluation.scss";
 </style>
 
 <style lang="scss">

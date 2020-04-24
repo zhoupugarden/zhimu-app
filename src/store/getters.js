@@ -9,17 +9,8 @@ export default {
     cartList: state => state.cartList,
     token:state => state.token,
     currentLocation:state => state.currentLocation,
-    userId: state => state.userId,
+    isLogin: state => state.isLogin,
     isVip: state => state.isVip,
-    merchantInfo: state => state.merchantInfo,
-    isLogin: state => {
-      if (!state.token) {
-        return false;
-      } else {
-        return true;
-      }
-    },
-
     cartTotalCount: state => {
       return state.cartList.reduce(
         (count, item) => {
@@ -27,6 +18,7 @@ export default {
         }, 0
       )
     },
+
   cartProductListName: state => {
       let listName = [];
    for (let i = 0; i< state.cartList.length; i++) {

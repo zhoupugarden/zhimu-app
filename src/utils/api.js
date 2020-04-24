@@ -31,6 +31,8 @@ export const SMS_VERIFY_CODE_VERIFY = BASE_API_URL + '/sms/verifyCode/verify';
 
 export const MY_PHONE_LOGIN = BASE_API_URL + '/my/phoneLogin';
 
+export const WX_LOGIN = BASE_API_URL + '/wx/login';
+
 export const MY_USER_INFO = BASE_API_URL + '/my/userInfo';
 
 export const GET_COUPON_BY_USER_ID = BASE_API_URL + '/coupon/list';

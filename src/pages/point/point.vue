@@ -55,7 +55,6 @@
   methods: {
     pointDetailList() {
       let params = {};
-      params.userId = this.userId;
       request(
         GET_POINT_DETAIL,
         'GET',
@@ -71,7 +70,7 @@
     computed: {
       ...mapGetters(
         [
-          'userId','isLogin'
+          'isLogin'
         ]
       )
     },
@@ -95,22 +94,7 @@
 </script>
 
 <style lang="scss" scoped>
-
-  .point-summary__title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: white;
-    font-size: 12px;
-  }
-  .point-summary__total {
-    background-color: white;
-    font-size: 30px;
-    color: green;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+@import "point.scss";
 </style>
 
 <style lang="scss">

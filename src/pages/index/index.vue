@@ -19,7 +19,7 @@
         :style="setItemHeight"
       >
         <div v-show="headAdSetting.status" class="index-header" @click="navigateToActivity">
-          <image style="width: 100%; height: 100px; " mode="scaleToFill" :src="headAdSetting.imgUrl"></image>
+          <image style="width: 100%; height: 120px; " mode="scaleToFill" :src="headAdSetting.imgUrl"></image>
         </div>
         <div class="category_name_class">{{titleName}}</div>
         <view v-for="(subItem, index) in subItems"
@@ -38,6 +38,7 @@
     <div>
     <cart-pop :popShow="popCartActive"
               :productSKUs="productSKUs"
+              :productId="chooseProductId"
               @popUpClose="closeActive" @addProductToCart="addToCart"></cart-pop>
   </div>
 
@@ -127,12 +128,10 @@
       mainActiveIndex: 'updateSubItems'
     },
     methods: {
-
       ...mapActions(
         [
           'addProductToCart', 'addMerchantInfo', 'addDeliverConfig', 'addAdSettings'
         ]
-
       ),
 
       onSelectItem(event) {
@@ -189,8 +188,6 @@
 
       navigateToActivity() {
         let url = this.headAdSetting.adUrl;
-
-
         if (tabUrls.indexOf(url) > -1) {
           wx.switchTab(
             {

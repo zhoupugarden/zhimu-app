@@ -74,7 +74,6 @@
   data() {
     return {
       active:0,
-      isLogin:false,
       orderItems:[],
       waitCommentItems:[],
       waitPayItems:[],
@@ -90,7 +89,6 @@
       this.pageNum = 1;
       this.active = event.mp.detail.index;
       let params = {};
-      params.userId = this.userId;
       params.pageNum = this.pageNum;
       params.pageSize = this.pageSize;
       if (this.active === 0) {
@@ -157,7 +155,7 @@
     computed: {
       ...mapGetters(
         [
-          'userId','token'
+          'isLogin'
         ]
       ),
       hasNoOrder() {
@@ -169,17 +167,11 @@
 
     },
     onShow() {
-    if (this.token) {
+    if (this.isLogin) {
       let params = {};
-      params.userId = this.userId;
-      this.isLogin = true;
       this.getOrderListByUserId(params);
       this.active = 0;
-    } else {
-      console.log("this.isLogin", this.isLogin);
-      this.isLogin = false;
     }
-
     },
     onReachBottom() {
       //要做个判断， 如果size已经小于10， 则不再分页查询
@@ -214,28 +206,8 @@
 }
 </script>
 
-<style scoped>
-  page {
-    height: 100%;
-  }
-
-  .order-container {
-    position: relative;
-    width: 100%;
-    height:100%;
-  }
-  .not-login-container {
-    position: absolute;
-    top: 30%;
-    left: 20%;
-  }
-  .not-login-content {
-    display: flex;
-    text-align: center;
-  }
-
-  .order-list {
-  }
+<style lang="scss" scoped>
+  @import "order.scss";
 </style>
 <style lang="scss">
   .van-tabs__custom {

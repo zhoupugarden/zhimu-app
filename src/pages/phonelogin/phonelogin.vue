@@ -41,7 +41,7 @@
       </div>
     </div>
     <div>
-      <button open-type="getUserInfo" lang="zh_CN" type="primary" @getuserinfo="verifyAndLogin">登录</button>
+      <button class="btn1" open-type="getUserInfo" lang="zh_CN" type="primary" @getuserinfo="verifyAndLogin">登录</button>
     </div>
 
     <div class="phonelogin-footer">
@@ -56,8 +56,8 @@
 
   import {SMS_VERIFY_CODE_SEND, SMS_VERIFY_CODE_VERIFY, MY_PHONE_LOGIN, UPDATE_USER_WX_INFO} from '@/utils/api';
   import {request} from "@/utils/request";
-  import {toast} from '../../utils/toast';
-  import {  mapActions } from 'vuex';
+  import {getLocation, getAuth, getUserWxInfo} from '@/utils/wxApi';
+  import {  mapActions, mapState } from 'vuex';
 
   const tabUrls = [
     'pages/my/main',
@@ -84,7 +84,7 @@
       ...mapActions(
         [
           'storeToken',
-          'storeUserId'
+          'storeIsLogin'
         ]
       ),
 
@@ -176,81 +176,33 @@
           data
         ).then(
           response => {
-            console.log("myPhoneLogin", response)
-            that.storeToken(response.token);
-            that.storeUserId(response.id);
-            console.log("response====", response);
-            //将提交数据情况，后续用object.assign清楚
-            this.phoneNo = "";
-            this.verifyCode = "";
-            if (response.avatarUrl === null) {
-              wx.getSetting({
-                success(res) {
-                  console.log("resssss==", res)
-                  if (!res.authSetting['scope.userInfo']) {
-                    wx.authorize({
-                      scope: 'scope.userInfo',
-                      success () {
-                        console.log("用户已同意授权");
-                        wx.getUserInfo({
-                          success: res => {
-                            console.log('app.js执行 getUserInfo');
-                            // 可以将 res 发送给后台解码出 unionId
-                            console.log(res);
-                            let userUpdateWxBo = {};
-                            console.log("out response", response);
-                            userUpdateWxBo.userId = response.id;
-                            userUpdateWxBo.avatarUrl = res.userInfo.avatarUrl;
-                            userUpdateWxBo.nickName = res.userInfo.nickName;
-                            userUpdateWxBo.gender = res.userInfo.gender;
-                            that.updateUserWxInfo(userUpdateWxBo);
-                            //这里back可能更新动作还未结束，返回上一页面获取不到最新信息
-                            // that.backToPage();
-                            // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-                            // 所以此处加入 callback 以防止这种情况
-                          },
-                          fail(res) {
-                            console.log("fail response", res)
-                          }
-                        })
-                      }
-                    })
-                  } else {
-                    wx.getUserInfo({
-                      success: res => {
-                        console.log('app.js执行 getUserInfo');
-                        // 可以将 res 发送给后台解码出 unionId
-                        console.log(res)
-                        // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-                        // 所以此处加入 callback 以防止这种情况
-                        //如何获取openId
-                        // this.verifySmsCodeBo.openId = res.userInfo;
-                        // this.verifySmsCodeBo.sessionKey = res.userInfo;
-                        let userUpdateWxBo = {};
-                        console.log("out response", response);
-                        userUpdateWxBo.userId = response.id;
-                        userUpdateWxBo.avatarUrl = res.userInfo.avatarUrl;
-                        userUpdateWxBo.nickName = res.userInfo.nickName;
-                        userUpdateWxBo.gender = res.userInfo.gender;
-                        that.updateUserWxInfo(userUpdateWxBo);
-                      }
-                    })
-                  }
-                },
-                fail(res) {
-                  console.log("fail res", res);
-                }
-              });
-            }else {
-              that.backToPage();
-            }
+            that.storeIsLogin(response.isLogin);
+            getAuth('scope.userLocation', async () => {
+              let location = await getLocation();
+              console.log("=====", location);
+              this.addCurrentLocation(location);
+            });
+            getAuth('scope.userInfo', async () => {
+              let wxInfo = await getUserWxInfo();
+              let userUpdateWxBo = {};
+              userUpdateWxBo.avatarUrl = wxInfo.userInfo.avatarUrl;
+              userUpdateWxBo.nickName = wxInfo.userInfo.nickName;
+              userUpdateWxBo.gender = wxInfo.userInfo.gender;
+              that.updateUserWxInfo(userUpdateWxBo);
+              //这里back可能更新动作还未结束，返回上一页面获取不到最新信息
+              // that.backToPage();
+              // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+              // 所以此处加入 callback 以防止这种情况
+            })
+
+
           }
         );
       },
 
       backToPage() {
         let pages = getCurrentPages();
-        console.log("pages======", pages)
+        console.log("pages======", pages);
           let curPage = pages[pages.length - 3];
         console.log("curPage",curPage, pages.length );
           let route = curPage.route;
@@ -296,7 +248,6 @@
           success (resss) {
             if (resss) {
               //发起网络请求
-              console.log("resss", resss);
               let userLoginBo = {};
               userLoginBo.wxCode = resss.code;
               userLoginBo.phoneNo = that.phoneNo;
@@ -322,6 +273,12 @@
 
     },
     computed: {
+      ...mapState({
+        isLogin: state=>state.isLogin
+      }),
+
+
+
       codeText() {
         if (this.show) {
           return '获取验证码';
@@ -335,33 +292,29 @@
 </script>
 
 <style lang="scss" scoped>
+@import "phonelogin.scss";
 
-  .phonelogin-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
 
-  .circleImg {
-    border-radius: 40px;
-    width:80px;
-    height:80px;
-    margin: 20px 0px;
-  }
-  .phonelogin-form {
-    padding: 20px 0px;
-  }
-  .phonelogin-tips {
-    margin: 10px;
-  }
+.btn1 {
+  width: 200px;
+  margin-top: 10px;
+  background-color: #000000;
+  font-size: 14px;
+  color: white;
+  border-radius: 49px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
 
-  .phonelogin-footer {
-    position: fixed;
-    bottom: 10px;
-    font-size: 12px;
-    color: #999999;
-    font-weight: lighter;
-  }
+
+
+.btn1::after {
+  border-radius: 49px;
+  border: 0;
+}
+
 
 </style>
 

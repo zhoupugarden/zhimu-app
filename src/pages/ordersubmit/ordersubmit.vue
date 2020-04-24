@@ -40,7 +40,7 @@
             <van-button custom-class="btn-padding" @click="openMerchantLocation"
                         icon="location-o" type="primary" size="mini">查看位置</van-button>
           </div>
-          <div style="font-size: 13px;">
+          <div v-show="distance" style="font-size: 13px;">
             距您{{distance}}km
           </div>
         </div>
@@ -172,8 +172,7 @@
   import CouponItemc from '@/components/CouponItemc';
   import ProductItem from '@/components/ProductItem';
   import {toast} from '../../utils/toast';
-  import {  mapActions } from 'vuex';
-  import { mapGetters } from 'vuex';
+  import { mapGetters, mapActions, mapState } from 'vuex';
   import {GET_COUPON_BY_USER_ID, MOCK_WX_PAY, ORDER_PRESUBMIT, GET_USER_ADDRESS, MY_USER_INFO,ORDER_SUBMIT, PRE_USE_COUPON} from '@/utils/api';
   import {request} from "@/utils/request";
   import {formatYMD} from "@/utils/dateUtil";
@@ -302,7 +301,6 @@
       chooseCouponItem(item) {
         console.log("couponItem: ", item);
         let params = {};
-        params.userId = this.userId;
         params.couponCode = item.couponCode;
         params.totalAmount = this.cartTotalPrice;
         params.productItems = this.convertCartList(this.cartList);
@@ -403,7 +401,6 @@
 
       orderPreSubmit() {
         let params = {};
-        params.userId = this.userId;
         params.deliverType = this.deliverType;
         params.fittingList = this.freeCartList;
         params.productList = this.cartList;
@@ -465,7 +462,6 @@
           return;
         }
         let params = {};
-        params.userId = this.userId;
         params.addressId = this.addressId;
         params.deliverDate = this.formatDate;
         params.deliverTime = this.currentTime;
@@ -513,8 +509,13 @@
     computed: {
       ...mapGetters(
         [
-           'currentLocation', 'isVip','cartList','freeCartList', 'cartTotalCount','cartTotalPrice','cartProductListName','token','userId','merchantInfo'
+           'currentLocation', 'isVip','cartList','freeCartList', 'cartTotalCount','cartTotalPrice','cartProductListName','merchantInfo'
         ]
+      ),
+      ...mapState(
+        {
+          merchantInfo: state=>state.merchant.merchantInfo,
+        }
       ),
       currentAddress() {
         if (this.switchValue === -1) {
@@ -630,90 +631,7 @@
 </script>
 
 <style lang="scss" scoped>
-
-  .order-submit-switch {
-    margin: 0px 10px;
-    width: 100px;
-    height: 30px;
-    border-radius: 20px;
-    display: flex;
-    border:1px solid black;
-    align-items: center;
-  }
-  .switch-style {
-    font-family: "Microsoft YaHei";
-    font-size: 14px;
-    width: 40px;
-    height: 25px;
-    border-radius: 15px;
-    background-color: black;
-    color: white;
-    border: solid;
-    text-align: center;
-    line-height: 25px;
-    padding: 0px 5px;
-  }
-  .vip_tip {
-    background-image: linear-gradient(#847048, #D9C49A);
-    color: black;
-    font-size: 12px;
-    border-bottom-right-radius: 10px;
-    border-top-right-radius: 10px;
-    padding: 2px 10px 2px 2px;
-    font-weight: bold;
-  }
-  .vip_tip_2 {
-    background-color: #230000;
-    padding: 2px;
-    color: #D9C49A;
-    font-size: 12px;
-    font-weight: bold;
-  }
-
-  .un-switch-style {
-    font-size: 14px;
-    width: 40px;
-    text-align: center;
-    padding: 0px 5px;
-    font-family: "Microsoft YaHei";
-    line-height: 25px;
-
-  }
-  .order-submit-address {
-    padding: 10px 0px;
-  }
-  .order-submit-address__deliver {
-    display: flex;
-    align-items: center;
-    background-color: #F4F4F4;
-    justify-content: space-between;
-  }
-  .order-submit-address__deliver-info {
-    display: flex;
-    flex-direction: column;
-  }
-  .order-submit-address__self {
-    background-color: #F4F4F4;
-    display: flex;
-    padding: 10px;
-    align-items: center;
-  }
-  .order-submit-time {
-    display: flex;
-  }
-  .order-submit-summary {
-    padding-bottom: 100px;
-  }
-  .order-submit-button {
-    position: fixed;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    z-index: 100;
-    bottom: 10px;
-    background-color: white;
-  }
-
+  @import "ordersubmit.scss";
 </style>
 
 <style lang="scss">

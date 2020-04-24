@@ -6,7 +6,6 @@ import * as types from './mutation-types'
 //     commit(types.OPEN_ID, id)
 // }
 export default {
-    setOpenId: ({ commit }, { id }) => commit(openId, id),
 
     addProductToCart:({state, commit}, data)=> {
       console.log(data);
@@ -54,15 +53,14 @@ export default {
     commit(types.UPDATE_FREE_FROM_CART, data)
     },
 
-
   storeToken: ({commit}, token) => {
       commit(types.TOKEN, token)
     },
     logout: ({commit}) => {
       commit(types.LOG_OUT)
     },
-    storeUserId: ({commit}, userId) => {
-      commit(types.USER_ID, userId)
+  storeIsLogin: ({commit}, isLogin) => {
+      commit(types.IS_LOGIN, isLogin)
     },
     storeIsVip: ({commit}, level) => {
     commit(types.IS_VIP, level)
@@ -72,18 +70,6 @@ export default {
     },
   checkoutFreeCartList: ({commit}) => {
     commit(types.CHECK_OUT_FREE_CART)
-  },
-
-  addMerchantInfo:({state, commit}, data) => {
-    commit(types.ADD_MERCHANT_INFO, data)
-  },
-
-  addDeliverConfig:({state, commit}, data) => {
-    commit(types.ADD_DELIVER_CONFIG, data)
-  },
-
-  addAdSettings:({state, commit}, data) => {
-    commit(types.ADD_AD_SETTINGS, data)
   },
 
   addCurrentLocation: ({state, commit}, data) => {

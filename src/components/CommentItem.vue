@@ -102,7 +102,7 @@
     margin-right: 10px;
   }
   .comment-item-container {
-    position: relative;
+    position:   relative;
     padding-left: 80px;
     padding-top: 10px;
     padding-bottom: 10px;

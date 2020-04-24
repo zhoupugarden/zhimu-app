@@ -1,4 +1,4 @@
-import * as types from './mutation-types'
+  import * as types from './mutation-types'
 
 //调用检查商品库存数量的后台接口，然后更新
 // import shop from '../../api/shop'
@@ -87,27 +87,14 @@ const mutations = {
       state.token = token;
     },
     [types.LOG_OUT](state) {
-      state.token = '';
-      state.userId = '';
+      state.isLogin = 0;
     },
 
-    [types.USER_ID](state, userId) {
-      state.userId = userId;
+    [types.IS_LOGIN](state, isLogin) {
+      state.isLogin = isLogin;
     },
   [types.IS_VIP](state, level) {
     state.isVip = level;
-  },
-
-  [types.ADD_MERCHANT_INFO](state, info) {
-      state.merchantInfo = info;
-  },
-
-  [types.ADD_DELIVER_CONFIG](state, config) {
-    state.deliverConfig = config;
-  },
-
-  [types.ADD_AD_SETTINGS](state, settings) {
-    state.adSettings = settings;
   },
 
   [types.ADD_CURRENT_LOCATION](state, locationItem) {

@@ -67,17 +67,14 @@
         });
       },
 
-      getUserInfo(token) {
+      getUserInfo() {
         let params = {};
-        params.token = token;
         request(
           MY_USER_INFO,
           'GET',
           params
         ).then(
           response => {
-            //将userID放在存储中
-            console.log("response",response)
             this.userInfo = response;
           }
         )
@@ -89,7 +86,6 @@
           'GET',
         ).then(
           response => {
-            //将userID放在存储中
             console.log("response",response)
             this.redeemItems = response;
           }
@@ -99,7 +95,6 @@
       pointRedeem(data) {
         console.log("pointRedeem", data)
         let param = {};
-        param.userId = this.userId;
         param.pointMallId = data.id;
         request(
           POINT_REDEEM,
@@ -128,15 +123,9 @@
       }
 
     },
-    computed: {
-      ...mapGetters(
-        [
-          'userId', 'token'
-        ]
-      )
-    },
+
     onShow() {
-     this.getUserInfo(this.token);
+     this.getUserInfo();
      this.getPointmallList();
     },
 
@@ -157,60 +146,7 @@
 </script>
 
 <style lang="scss" scoped>
-
-  .redeem-title {
-    font-size: 14px;
-    font-weight:bolder;
-    padding: 10px;
-    color: #CDA65B;
-    background-color: white;
-    border-bottom: 1px solid #f2f2f2;
-  }
-
-  .redeem-header-total {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: white;
-    padding: 5px 0px;
-  }
-
-  .redeem-header-operation {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    background-color: white;
-    padding: 10px 0px;
-  }
-
-  .redeem-header-operation_left {
-    font-size: 14px;
-    font-weight: bolder;
-  }
-  .redeem-header-operation_right {
-    font-size: 14px;
-    font-weight: bolder;
-  }
-  .redeem-header-operation_split {
-    float:left;
-    width: 1px;
-    height: 20px;
-    background: #e6ebf3;
-  }
-  .redeem-detail {
-    background-color: white;
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-between;
-    padding-top: 10px;
-  }
-
-  .redeem-detail-item {
-    flex: 0 0 33%;
-    padding: 10px 10px;
-  }
-
-
+@import "pointredeem.scss";
 </style>
 
 <style lang="scss">

@@ -254,53 +254,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .comments-header {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-bottom: 1px solid #b2b2b2;
-    background-color: white;
-    padding: 10px 0px;
-  }
-  .comments-tag {
-    display: flex;
-    flex-flow: row wrap;
-    padding: 10px 0px;
-    background-color: white;
-  }
-  .comment-favor {
-    display: flex;
-    align-items: center;
-  }
-  .comment-pack {
-    display: flex;
-    align-items: center;
-  }
-  .comment-tag-style {
-    font-family: "Microsoft YaHei";
-    font-size: 12px;
-    height: 25px;
-    border-radius: 15px;
-    border: 1px solid #CFD4DA;
-    text-align: center;
-    line-height: 25px;
-    padding: 1px 10px;
-    margin: 5px 5px;
-  }
-  .comment-active-tag-style {
-    font-family: "Microsoft YaHei";
-    font-size: 12px;
-    height: 25px;
-    border-radius: 15px;
-    background-color: #f2f2f2;
-    border: 1px solid #F39B00;
-    color: #F39B00;
-    text-align: center;
-    line-height: 25px;
-    padding: 1px 10px;
-    margin: 5px 5px;
-  }
-
+  @import "comments.scss";
 </style>
 
 <style lang="scss">

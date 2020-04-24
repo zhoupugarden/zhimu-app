@@ -252,45 +252,7 @@
 </script>
 
 <style lang="scss" scoped>
-
-  .order-item-detail {
-    background-color: white;
-  }
-  .order-freeitem-detail {
-    font-size: 12px;
-    padding: 0 10px;
-  }
-  .order-coupon-detail {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    padding: 10px 16px 10px 0px;
-    border-bottom: 1px solid #f2f2f2;
-    margin-left: 16px;
-  }
-
-  .order-submit-button {
-    position: fixed;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    z-index: 100;
-    bottom: 10px;
-    background-color: white;
-  }
-  .order-order-info {
-    padding-bottom: 100px;
-  }
-  .merchant-contact-info {
-    display: flex;
-    justify-content: center;
-  }
-  .coupon-img {
-    height: 14px;
-    width: 14px;
-    padding-right: 10px;
-  }
-
+  @import "orderdetail.scss";
 </style>
 
 <style lang="scss">

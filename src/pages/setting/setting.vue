@@ -18,8 +18,6 @@
   import {  mapActions } from 'vuex';
 
   export default {
-
-
   components: {
   },
 
@@ -64,36 +62,7 @@
 </script>
 
 <style lang="scss" scoped>
-
-  .mysetting-header {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    background-color: white;
-    height: 100px;
-  }
-  .mysetting-detail {
-    margin-top: 10px;
-  }
-
-  .circleImg {
-    border-radius: 30px;
-    width:60px;
-    height:60px;
-  }
-
-  .radio-flex {
-    display: flex;
-    width: 200px;
-    justify-content: space-between;
-    font-size: 14px;
-  }
-  .sex-flex {
-    display: flex;
-    background-color: white;
-    align-items:center;
-  }
-
+  @import "setting.scss";
 </style>
 
 <style lang="wxss">

@@ -70,16 +70,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .pointhelp-container {
-    padding: 20px;
-  }
-  .q_title {
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-    padding: 50px;
-  }
-
+ @import "pointhelp.scss";
 </style>
 
 <style lang="scss">

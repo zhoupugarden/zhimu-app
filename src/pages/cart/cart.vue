@@ -91,7 +91,7 @@
   import cartCard from '@/components/cartCard';
   import FreeCard from '@/components/FreeCard';
   import PayCard from '@/components/PayCard';
-  import { mapGetters, mapActions } from 'vuex';
+  import { mapGetters, mapActions ,mapState} from 'vuex';
   import { SET_OPEN_ID } from '@/store/mutation-types';
 
   import {PAY_FITTING_LIST, GET_FITTING_LIST, CART_PRODUCT_CHECK} from '@/utils/api';
@@ -110,7 +110,6 @@
       totalPrice: 0,
       remark:"",
       totalCartList:[],
-      deliverConfig:{},
       freeGood:[]
     }
   },
@@ -130,15 +129,15 @@
         'freeCartList',
         'cartTotalPrice',
         'isExistCake',
-        'userId',
+        'isLogin',
         'cartList'
       ]
     ),
+    ...mapState({
+      deliverConfig: state=>state.merchant.deliverConfig,
+      cartList:state=>state.cartList
+    }),
 
-    cartList() {
-      return this.$store.getters.cartList;
-      this.$forceUpdate()
-    },
     freeList() {
       console.log("this.$store.state.freeList", this.$store.state.freeList)
         return this.$store.getters.freeCartList
@@ -169,7 +168,7 @@
         return this.deliverConfig.beginFee;
       }
       else if (this.totalPrice >= this.deliverConfig.secPrice && this.totalPrice < this.deliverConfig.freePrice) {
-        return this.deliverConfig.secFee;;
+        return this.deliverConfig.secFee;
       } else {
         return 0;
       }
@@ -230,7 +229,6 @@
     },
     cartProductCheck() {
       let params = {};
-      params.userId = this.userId;
       let cartInfoList = [];
       console.log(this.cartList);
       for(let product of this.cartList) {
@@ -258,9 +256,6 @@
       )
     },
 
-    storeButton() {
-      this.setOpenId("123456")
-    },
     popUpClose() {
       console.log("popUpClose");
       this.popShow = false;
@@ -273,7 +268,7 @@
       let loginUrl = "/pages/login/main";
       let url = "";
       //add-free-cart
-      if (!this.userId) {
+      if (!this.isLogin) {
         url = loginUrl;
         wx.navigateTo({
           url
@@ -347,107 +342,14 @@
     }
   },
   onShow() {
-    console.log("onLoad");
     this.calcTotalPrice();
-    console.log("this.cartTotalPrice this.totalPrice ", this.cartTotalPrice, this.totalPrice);
     this.getFittingList();
-  },
-  onLoad() {
-    this.deliverConfig = this.$store.state.deliverConfig;
-    console.log("this.deliverConfig", this.deliverConfig);
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .cart-close {
-    background-color: red;
-  }
-  .cart-container {
-    position: relative;
-    height: 100%;
-  }
-  .cart-no-container {
-    position: absolute;
-    top: 40%;
-    left: 40%;
-    text-align: center;
-  }
-
-  .cart-container__bottom {
-    width: 100%;
-    height: 100px;
-    position: fixed;
-    bottom: 0;
-    z-index: 100;
-    background-color: white;
-  }
-  .cart-container__popup {
-    z-index: -1;
-  }
-  .cart-container__bottom--button {
-    position: fixed;
-    bottom: 20px;
-    width: 90%;
-    /*还需要仔细研究如何居中显示*/
-    left: 4%;
-  }
-  .cart-container__tip {
-    padding-top: 20px;
-    font-size: 50%;
-    font-weight: lighter;
-    text-align: center;
-  }
-  .cart-container__bottom--line {
-    width: 100%;
-    height: 1px;
-    border-top: solid #ACC0D8 1px;
-  }
-  .cart-container__bottom--fee {
-    font-size: 10px;
-    padding-left: 10px;
-  }
-  .cart-container__bottom--total {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-  }
-
-  .cart-container__fitting--nav {
-    display: flex;
-    justify-content: space-around;
-    padding-bottom: 10px;
-  }
-  .cart-container__popup--detail {
-    padding-bottom: 10px;
-  }
-
-  .cart-container__popup {
-    position: relative;
-  }
-  .cart-container__fitting {
-    padding-top: 10px;
-    margin-bottom: 200px;
-
-  }
-  .van-popup__custom--container_detail {
-    display: flex;
-
-    flex-wrap: wrap;
-
-    text-align: center;
-
-    justify-content: space-between;
-
-    list-style: none;
-
-    margin-left: 0;
-  }
-  .van-popup__custom--container_detail_item {
-  }
-
-
-
+  @import "cart.scss";
 </style>
 <style lang="scss">
   .van-popup--bottom {

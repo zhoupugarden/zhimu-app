@@ -59,7 +59,7 @@
 
   import {ADD_NEW_ADDRESS, GET_ADDRESS_BY_ID, UPDATE_USER_ADDRESS} from '@/utils/api';
   import {request} from "@/utils/request";
-  import { mapGetters} from 'vuex';
+  import { mapGetters, mapState} from 'vuex';
   export default {
 
   data() {
@@ -73,7 +73,6 @@
 
   },
   methods: {
-
     addOrUpdateAddress() {
       if (this.addressId) {
         this.updateAddress();
@@ -84,7 +83,6 @@
 
     addNewAddress() {
       let params = this.address;
-      params.userId = this.userId;
       request(
         ADD_NEW_ADDRESS,
         'POST',
@@ -120,7 +118,6 @@
     updateAddress() {
       let params = this.address;
       params.addressId = this.addressId;
-      params.userId = this.userId;
       request(
         UPDATE_USER_ADDRESS,
         'POST',
@@ -190,9 +187,6 @@
     function toRadians(d) {  return d * Math.PI / 180;}
   },
 
-
-
-
     clickChooseLocation() {
       let that = this;
       console.log("clickChooseLocation")
@@ -217,14 +211,12 @@
               },
               fail(e) {
                 console.log("为什么失败", e);
-
-
                 wx.showModal({
                   title: '提示',
                   content: '请开启定位功能以便确定是否可以免费配送',
                   success (res) {
                     if (res.confirm) {
-                      console.log('用户点击确定')
+                      console.log('用户点击确定');
                       wx.openSetting(
                         {
                           success(res) {
@@ -243,20 +235,13 @@
           }else {
             wx.chooseLocation({
               success: resChoose => {
-
-                console.log(resChoose)
-                let addressName = resChoose.name
-                console.log(addressName)
-
                 that.address.roadName = resChoose.address;
                 that.address.addressName = resChoose.name;
                 that.address.latitude = resChoose.latitude;
                 that.address.longitude = resChoose.longitude;
-
                 let distance = that.getDistance(that.address.latitude, that.address.longitude);
-
-                if (distance > 3000) {
-                //  大于3公里配送范围
+                if (distance > this.merchantInfo.deliverScope * 1000) {
+                //  大于可配送范围
                   wx.showModal(
                     {
                       title: '提示',
@@ -275,11 +260,10 @@
     }
   },
     computed: {
-      ...mapGetters(
-        [
-          'userId'
-        ]
-      )
+
+      ...mapState({
+        merchantInfo: state=>state.merchant.merchantInfo
+      }),
     },
     onShow() {
       let params = this.$root.$mp.query;
@@ -306,18 +290,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .address-add-button {
-    position: fixed;
-    bottom: 0px;
-    width: 100%;
-    background-color: white;
-    margin-top: 10px;
-  }
-  .address-add-button_wrap {
-    display: flex;
-    justify-content: center;
-    padding: 10px 10px;
-  }
+  @import "newaddress.scss";
 </style>
 
 <style lang="scss">

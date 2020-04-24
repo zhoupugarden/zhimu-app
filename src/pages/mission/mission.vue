@@ -195,7 +195,6 @@
           return;
         }
         let param = {};
-        param.userId = this.userId;
         request(
           ADD_SIGN,
           'post',
@@ -225,7 +224,6 @@
       redeemCoupon(data) {
         console.log("redeemCoupon", data)
         let param = {};
-        param.userId = this.userId;
         param.bountySettingId = data.id;
         request(
           BOUNTY_REDEEM,
@@ -257,7 +255,6 @@
 
       signIndex() {
         let param = {};
-        param.userId = this.userId;
         request(
           SIGN_INDEX,
           'get',
@@ -284,14 +281,8 @@
         )
       },
 
-
-
-
-
-
       signDetail() {
         let param = {};
-        param.userId = this.userId;
         request(
           SIGN_DETAIL,
           'get',
@@ -305,13 +296,7 @@
         )
       },
     },
-    computed: {
-      ...mapGetters(
-        [
-          'userId','token'
-        ]
-      )
-    },
+
     watch: {
       sign(val) {
         if (val === true) {
@@ -334,71 +319,10 @@
 </script>
 
 <style lang="scss" scoped>
-
-  .bounty-redeem-container {
-    background-color: moccasin;
-    margin: 10px;
-    padding-bottom: 10px;
-  }
-
-  .sign-container {
-    background-color: white;
-    border-radius: 10px;
-    margin: 10px;
-    position: relative;
-  }
-  .sign-rule {
-    display: flex;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    align-items: center;
-  }
-
-  .mission-container {
-    position: relative;
-  }
-
-  .bounty-total-container {
-    text-align: center;
-    color: white;
-    background-color: orange;
-    padding: 20px;
-    height: 100px;
-    z-index: -1;
-    display: flex;
-    flex-direction: column;
-
-  }
-  .detail-container {
-    position: absolute;
-    display: flex;
-    background-color: white;
-    top: 20px;
-    right: 0px;
-    justify-content: center;
-    width: 80px;
-    align-content: center;
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-    height: 30px;
-  }
-  .sign-total-container {
-    text-align: center;
-    font-size: 12px;
-  }
-
+@import "mission.scss";
 </style>
 
 <style lang="scss">
-
-  /*.van-step__title {*/
-    /*font-size: 8px !important;*/
-  /*}*/
-  /*.van-step--horizontal {*/
-    /*font-size: 8px !important;*/
-  /*}*/
-
 
 </style>
 

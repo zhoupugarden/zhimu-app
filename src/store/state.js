@@ -2,13 +2,10 @@
 const state = {
     cartList:[],
     token:'',
-    userId:'',
+    isLogin:0,
     isVip:0,
     freeList:[],
-    currentLocation:{},
-    merchantInfo:{},
-    deliverConfig:{},
-    adSettings:[]
+    currentLocation:{}
 }
 
 export default state;

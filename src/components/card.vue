@@ -3,6 +3,9 @@
     <div class="zm-card" :style="{opacity : maskValue}">
 
       <div class="zm-card__thumb" @click="navigateToProduct">
+        <div v-show="cardInfo.isNew" class="new_product_tag">
+          新品
+        </div>
         <img class="zm-card__img" mode="aspectFill"
              :src="cardInfo.headPicUrl">
       </div>
@@ -41,6 +44,8 @@
   import {request} from "@/utils/request";
   import { mapGetters } from 'vuex';
   import {toast} from '../utils/toast';
+  import {subscribeMessage} from '@/utils/wxApi';
+
   export default {
     props: {
       cardInfo:Object
@@ -54,20 +59,17 @@
     methods: {
       productNotice() {
         let that = this;
-        wx.requestSubscribeMessage({
-          tmplIds: ['By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0'],
-          success (res) {
-            if (res.By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0 === 'accept') {
-              //订阅成功
-              that.addProductNotice();
-              console.log("订阅成功", res)
-            }else {
-              console.log("拒绝订阅", res)
-            }
-          }
-        })
+        let id = 'By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0';
+        let tmplIds = [];
+        tmplIds.push(id);
+        subscribeMessage(tmplIds,  (res)=> {
+          console.log("res===========",res);
+          that.addProductNotice();
+        });
+
       },
       addProductNotice() {
+        console.log("addProductNotice====");
         let params = {};
         params.productId = this.cardInfo.id;
         params.userId = this.userId;
@@ -87,16 +89,14 @@
         )
       },
 
-
       navigateToProduct() {
-        var url = "../detail/main?productId=" + this.cardInfo.id;
+        let url = "/pages/detail/main?productId=" + this.cardInfo.id;
         console.log("url",url)
         wx.navigateTo({
           url
         });
       },
       popCart() {
-        console.log("popCart waaaaa");
         this.$emit('popCart', {"productId":this.cardInfo.id});
       }
     },
@@ -121,9 +121,6 @@
         }
       }
 
-    },
-    created() {
-      console.log("this.cardInfo====",this.cardInfo)
     }
   }
 </script>
@@ -145,6 +142,15 @@
       border-width: 1px;
       border-color: #E8EDF5;
     }
+    .new_product_tag {
+      position: absolute;
+      transform: rotate(45deg);
+      text-align: center;
+      width: 100%;
+      background-color: #ffc95f;
+      margin-left: 90px;
+      font-weight: normal !important;
+    }
       .zm-card__thumb {
         width: auto;
         height: 160px;
@@ -156,11 +162,9 @@
         border-radius: 5px;
       }
         .zm-card__img{
-          position:absolute;
-          top:0;left:0;right:0;bottom:0;
-          width:auto;height:auto;
-          max-width:100%;
-          max-height:100%
+          width: 100%;
+          height: 160px;
+
         }
       .zm-card__detail {
         position: relative;
