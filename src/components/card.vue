@@ -16,13 +16,13 @@
             <span>{{cardInfo.name}}</span>
           </div>
           <div class="zm-card__detail__price">
-            <span :style="{color:cardInfo.promoteType===1004?'red':'black'}">￥{{cardInfo.salePrice}}</span>
-            <span v-if="cardInfo.promoteType===1004" class="zm-card__detail__line_price">￥{{cardInfo.linePrice}}</span>
+            <span :style="{color:cardInfo.promoteType===1004?'red':'black'}">￥{{cardInfo.primeSalePrice}}</span>
+            <span v-if="cardInfo.promoteType===1004" class="zm-card__detail__line_price">￥{{cardInfo.primeLinePrice}}</span>
           </div>
         </div>
         <div>
           <div v-if = "cardInfo.onlineStatus === 1001 && cardInfo.stock > 0" @click="popCart" class="zm-detail__icon">
-            <div v-if="cardInfo.pmsProductSkuList.length > 1" class="choose_attribute">
+            <div v-if="cardInfo.skuCount > 1" class="choose_attribute">
               选规格
             </div>
             <div v-else class="add_attribute">
@@ -42,7 +42,6 @@
 <script>
   import { PRODUCT_NOTICE } from '@/utils/api';
   import {request} from "@/utils/request";
-  import { mapGetters } from 'vuex';
   import {toast} from '../utils/toast';
   import {subscribeMessage} from '@/utils/wxApi';
 
@@ -72,7 +71,6 @@
         console.log("addProductNotice====");
         let params = {};
         params.productId = this.cardInfo.id;
-        params.userId = this.userId;
         request(
           PRODUCT_NOTICE,
           'POST',
@@ -107,12 +105,6 @@
         }
         return ""
       },
-
-      ...mapGetters(
-        [
-          'userId'
-        ]
-      ),
       maskValue() {
         if (this.cardInfo.stock === 0) {
           return 0.6

@@ -30,21 +30,29 @@ export function request(url, method = "GET", data) {
             return;
           }
           resolve(res.data.data)
-        } else if (res.statusCode === 401) {
+        } else if (res.data.code === 401) {
           wx.navigateTo(
             {
               url:'/pages/login/main'
             }
           )
 
-        } else  {
+        } else if (res.data.code === 500) {
           wx.showModal({
             title: '提示',
             content: res.data.message,
             showCancel: false
           });
           reject(res.data);
+        } else {
+          wx.showModal({
+            title: '提示',
+            content: "休息一下，等会再来",
+            showCancel: false
+          });
+          reject(res.data);
         }
+
       },
       fail: function (err) {
         wx.showModal({

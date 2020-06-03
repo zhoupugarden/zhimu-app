@@ -6,7 +6,8 @@
     "van-radio": "/static/vant/radio/index",
     "van-field": "/static/vant/field/index",
     "van-popup": "/static/vant/popup/index",
-    "van-button": "/static/vant/button/index"
+    "van-button": "/static/vant/button/index",
+    "van-dialog": "/static/vant/dialog/index"
   },
   "navigationBarTitleText": "修改资料"
 }

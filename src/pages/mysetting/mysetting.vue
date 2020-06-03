@@ -77,6 +77,7 @@
                   @click="updateUserInfo"
                   type="primary">保存</van-button>
     </div>
+    <van-dialog id="van-dialog" />
   </div>
 </template>
 
@@ -86,6 +87,7 @@
   import {request} from "@/utils/request";
   import { mapGetters} from 'vuex';
   import {formatYMD} from "@/utils/dateUtil";
+  import Dialog from '../../../static/vant/dialog/dialog';
 
   export default {
   data() {
@@ -150,10 +152,16 @@
         params
       ).then(
         response => {
-          console.log(response)
-          wx.switchTab({
-            url:"/pages/my/main"
-          })
+          console.log(response);
+          Dialog.alert({
+            title: '提示',
+            message: '赠送' + response.pointCount + '积分',
+          }).then(() => {
+            // on close
+            wx.switchTab({
+              url:"/pages/my/main"
+            })
+          });
         }
       )
 

@@ -3,16 +3,11 @@
     <div class="evaluation-total">
         <div class="deliver-info">
           <div class="deliver-info_user">
-            骑手：{{orderInfo.deliverName}}
-          </div>
-          <hr style="border: 1px solid #f2f2f2; margin: 2px 0px" />
-          <div class="deliver-info_time">
-            配送日期：{{orderInfo.deliverDate}}
-            配送时间：{{orderInfo.deliverTime}}
+            服务评价
           </div>
         </div>
         <div class="total-score">
-          <van-rate size="30px" :value="rateValue" @change="activeTags"/>
+          <van-rate size="14px" :value="rateValue" @change="activeTags"/>
         </div>
         <div v-if="isActive" class="total-tags">
           <div v-for="(item, index) in tagDescs" :key="index" >
@@ -30,13 +25,13 @@
       ></evaluation-item>
     </div>
     <div class="evaluation-switch">
-      <div style="font-size: 20px;">
+      <div style="font-size: 14px; padding-right: 10px;">
         匿名评价
       </div>
       <div>
         <van-switch :checked="isAnonymous"
                     active-color="#07c160"
-                    @change="onChangeSwitch" size="20px"/>
+                    @change="onChangeSwitch" size="14px"/>
       </div>
     </div>
     <div class="evaluation-add-button">
@@ -219,7 +214,6 @@
             } else {
               title = "评价成功";
             }
-
             wx.showModal({
               title: title,
               content: '您已获赠' + pointCount + '积分',
@@ -235,7 +229,6 @@
                 }
               }
             });
-
           }
         )
       }

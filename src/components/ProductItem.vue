@@ -1,7 +1,7 @@
 <template>
   <div class="product-item-container">
     <!--限时促销-->
-    <div style="width: 100%" v-if="productItemInfo === 1004">
+    <div style="width: 100%" v-if="productItemInfo.promote === 1004">
       <van-card
         :num="productItemInfo.quantity"
         :price="productItemInfo.salePrice"
@@ -16,7 +16,7 @@
       <van-card
         :num="productItemInfo.quantity"
         :price="productItemInfo.salePrice"
-        :desc="productItemInfo.attributeName"
+        :desc="productItemInfo.attributeValue + productItemInfo.attributeName"
         :title="productItemInfo.name"
         :thumb="productItemInfo.imgUrl"
         custom-class="root-custom-class"

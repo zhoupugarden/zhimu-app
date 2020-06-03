@@ -1,7 +1,6 @@
 <template>
   <div class="ordersubmit-container">
     <div class="order-submit-switch" @click="switchOther">
-
       <div :class="orderSubmitSwitchDeliver">
         配送
       </div>
@@ -37,7 +36,7 @@
         <div style="padding: 0px 20px; font-size: 13px;">{{merchantInfo.merchantAddress}}</div>
         <div>
           <div>
-            <van-button custom-class="btn-padding" @click="openMerchantLocation"
+            <van-button round color="#000000" custom-class="btn-padding" @click="openMerchantLocation"
                         icon="location-o" type="primary" size="mini">查看位置</van-button>
           </div>
           <div v-show="distance" style="font-size: 13px;">
@@ -53,10 +52,10 @@
     </div>
     <div class="order-submit-time">
       <div style="width: 50%">
-        <van-cell title="日期" :value="formatDate" custom-class="custome-cell-time" is-link arrow-direction="down" @click="datePop"/>
+        <van-cell title-width="40px;" title="日期" :value="formatDate" custom-class="custome-cell-time" is-link arrow-direction="down" @click="datePop"/>
       </div>
       <div style="width: 50%">
-        <van-cell title="时间" :value="currentTime" custom-class="custome-cell-time" is-link arrow-direction="down" @click="timePop"/>
+        <van-cell title-width="40px;" title="时间" :value="currentTime" custom-class="custome-cell-time" is-link arrow-direction="down" @click="timePop"/>
       </div>
     </div>
     <div style="display: flex; align-items: center;">
@@ -94,6 +93,7 @@
 
     <div class="order-submit-button">
       <van-button custom-class="custom-button"
+                  color="#000000"
                   @click="orderSubmit"
                   type="primary"
       >{{'微信付款' + flag + restWxPayAmount}}</van-button>
@@ -129,21 +129,21 @@
     </van-popup>
 
       <van-popup :show="couponPopShow"
-                 custom-style="height:80%"
+                 custom-style="height:80%; background-color: #f2f2f2;"
                  @close="closeCouponPopup"
                  position="bottom">
 
         <div style="position: relative;">
           <div style="padding-bottom: 10px; position: relative; height: 100%">
             <div style="padding-bottom: 50px;">
-              <div v-for="(item , index) in couponCanUseList" :key="index" @click="chooseCouponItem(item)" style="margin: 10px">
-                <coupon-itemc :couponInfo="item" @preCheckCoupon="preCheckCoupon"></coupon-itemc>
+              <div v-for="(item , index) in couponCanUseList" :key="index" @click="chooseCouponItem(item)">
+                <coupon-item :couponInfo="item" @preCheckCoupon="preCheckCoupon"></coupon-item>
               </div>
             </div>
 
             <div style="background-color: white; width: 100%; position: fixed; bottom: 0; border-top: 1px solid #F4F4F4">
               <div style="padding-top: 10px;text-align: center;">
-                <van-button type= "primary" @click = "noUseCoupon" custom-class="custom-button">不使用优惠券</van-button>
+                <van-button color="#000000" type= "primary" @click = "noUseCoupon" custom-class="custom-button">不使用优惠券</van-button>
               </div>
             </div>
           </div>
@@ -162,6 +162,8 @@
           </div>
     </van-popup>
     <van-toast  id="van-toast"/>
+    <van-dialog id="van-dialog" />
+
   </div>
 </template>
 
@@ -169,18 +171,18 @@
   const ZERO_AMOUNT = 0;
 
   import CouponItem from '@/components/CouponItem';
-  import CouponItemc from '@/components/CouponItemc';
   import ProductItem from '@/components/ProductItem';
   import {toast} from '../../utils/toast';
   import { mapGetters, mapActions, mapState } from 'vuex';
-  import {GET_COUPON_BY_USER_ID, MOCK_WX_PAY, ORDER_PRESUBMIT, GET_USER_ADDRESS, MY_USER_INFO,ORDER_SUBMIT, PRE_USE_COUPON} from '@/utils/api';
+  import {GET_COUPON_BY_USER_ID, PAY_ORDER, MOCK_WX_PAY, ORDER_PRESUBMIT, GET_USER_ADDRESS, MY_USER_INFO,ORDER_SUBMIT, PRE_USE_COUPON} from '@/utils/api';
   import {request} from "@/utils/request";
   import {formatYMD} from "@/utils/dateUtil";
+  import Dialog from '../../../static/vant/dialog/dialog';
 
 
   export default {
     components: {
-      CouponItem, ProductItem, CouponItemc
+      CouponItem, ProductItem
     },
     data() {
       return {
@@ -206,15 +208,16 @@
         userInfo:{},
         vipTip:"",
         totalProductPrice:0.00,
-        couponValue: ZERO_AMOUNT.toFixed(2),
+        couponValue: ZERO_AMOUNT,
         balanceAmount:0.00,
         distance:null,
-        deliverValue:ZERO_AMOUNT.toFixed(2),
+        deliverValue:ZERO_AMOUNT,
         tmpDeliverValue:0.00,
         productItems:[],
         productCount:0,
         productAmount:0.00,
-        promoteItemList:[]
+        promoteItemList:[],
+        cartProductListName:""
       }
     },
     methods: {
@@ -241,7 +244,7 @@
       navigateToOrderDetail(orderNo) {
         var url = "../orderdetail/main?orderNo=" + orderNo;
         console.log("url",url)
-        wx.navigateTo({
+        wx.redirectTo({
           url
         });
       },
@@ -302,7 +305,6 @@
         console.log("couponItem: ", item);
         let params = {};
         params.couponCode = item.couponCode;
-        params.totalAmount = this.cartTotalPrice;
         params.productItems = this.convertCartList(this.cartList);
         this.preCheckCoupon(params);
       },
@@ -326,6 +328,7 @@
           productItem.skuId = item.skuId;
           productItem.quantity = item.quantity;
           productItem.type = item.type;
+          productItem.promoteType = item.promoteType;
           productItem.productName = item.productName;
           productItems.push(productItem)
         }
@@ -347,7 +350,7 @@
               toast(response.notApplyReason);
             } else {
               that.couponPopShow = false;
-              that.couponValue = response.couponAmount.toFixed(2);
+              that.couponValue = response.couponAmount;
               that.choosedCoupon = that.couponCanUseList.find(item => item.couponCode === response.couponCode);
             }
           }
@@ -434,10 +437,11 @@
             this.formatDate = formatYMD(this.currentDate);
             console.log("this.currentDate", this.currentDate);
             this.productItems = response.presubmitProduct.productItems;
+            this.cartProductListName = response.presubmitOrder.cartProductListName;
             this.productCount = response.presubmitOrder.productCount;
             this.useBalanceAmount = response.presubmitOrder.useBalanceAmount;
             this.promoteItemList = response.presubmitOrder.promoteItemList;
-            this.totalProductPrice = response.presubmitOrder.productAmount.toFixed(2);
+            this.totalProductPrice = response.presubmitOrder.productAmount;
             this.timeColumns = response.presubmitTime.limitTimes;
             this.allTimes = response.presubmitTime.allTimes;
             if (this.isOverToday === true) {
@@ -457,7 +461,54 @@
         )
       },
 
+      orderPay(orderNo) {
+        let that = this;
+        let data = {};
+        data.orderNo = orderNo;
+        request(
+          PAY_ORDER,
+          'post',
+          data
+        ).then(
+          response => {
+            console.log("支付订单响应：", response);
+            //  在这里需要调用微信支付
+            let data = {};
+            data.out_trade_no = response.orderNo;
+            data.transaction_id = response.unifiedOrderNo;
+            data.total_fee = response.amount;
+            Dialog.confirm({
+              title: '微信支付',
+              message:'确认支付' + data.total_fee + '元'
+            }).then(() => {
+              that.mockWxPay(data);
+            }).catch(() => {
+              // on cancel
+              console.log("取消微信支付");
+            //  进入订单详情页面
+              that.navigateToOrderDetail(orderNo);
+            });
+          }
+        )
+      },
+
+      mockWxPay(data) {
+        request(
+          MOCK_WX_PAY,
+          'POST',
+          data
+        ).then(
+          response => {
+            console.log("this response", response);
+            //  微信支付成功后，跳转到订单详情页面
+            let orderNo = response.orderNo;
+            this.navigateToOrderDetail(orderNo);
+          }
+        )
+      },
+
       orderSubmit() {
+        let that = this;
         if (!this.validParams()) {
           return;
         }
@@ -465,25 +516,13 @@
         params.addressId = this.addressId;
         params.deliverDate = this.formatDate;
         params.deliverTime = this.currentTime;
-
-        if (this.restWxPayAmount === 0) {
-          params.payType = 2;
-        }else if (this.useBalanceAmount === 0) {
-          params.payType = 1;
-        }else {
-          params.payType = 3;
-        }
-          params.deliverType = this.deliverType;
-        params.orderType = 1;
+        params.deliverType = this.deliverType;
         if (this.choosedCoupon != null) {
           params.couponCode = this.choosedCoupon.couponCode;
         }
         params.productItems = this.convertCartList(this.cartList);
-
         params.freeProductItems = this.freeCartList;
-
         params.remark = "留言待补充";
-
         request(
           ORDER_SUBMIT,
           'POST',
@@ -493,12 +532,13 @@
             console.log("this response", response);
             let orderNo = response.orderNo;
             if (response.orderStatus === 2) {
+              //如果订单提交，余额支付的话，则直接余额支付成功，跳转到订单详情页面
               toast("订单支付成功", 2000);
-              this.navigateToOrderDetail(orderNo);
+              that.navigateToOrderDetail(orderNo);
             } else {
-              this.navigateToOrderDetail(orderNo);
+              //调用后台进行prepay， 然后进行微信支付
+              that.orderPay(orderNo);
             }
-
             this.checkoutCartList();
             this.checkoutFreeCartList();
           }
@@ -509,7 +549,7 @@
     computed: {
       ...mapGetters(
         [
-           'currentLocation', 'isVip','cartList','freeCartList', 'cartTotalCount','cartTotalPrice','cartProductListName','merchantInfo'
+           'currentLocation', 'isVip','cartList','freeCartList', 'cartTotalCount','cartTotalPrice','merchantInfo'
         ]
       ),
       ...mapState(
@@ -539,19 +579,21 @@
       },
 
       useBalanceAmount() {
-        console.log("balanceMount, cartTotalPrice", this.balanceAmount , this.totalProductPrice)
-        if (this.balanceAmount >= this.totalProductPrice) {
-          return (this.totalProductPrice - this.couponValue).toFixed(2);
+        console.log("balanceMount, cartTotalPrice", this.balanceAmount , this.totalProductPrice);
+        let totalAmount = this.deliverValue + this.totalProductPrice;
+        if (this.balanceAmount >= totalAmount) {
+          return totalAmount - this.couponValue;
         } else {
-          return this.balanceAmount.toFixed(2);
+          return this.balanceAmount;
         }
       },
 
       restWxPayAmount() {
+        console.log("this.totalProductPrice , this.deliverValue,this.couponValue", this.totalProductPrice , this.deliverValue,this.couponValue);
         let needPayAmount = this.totalProductPrice + this.deliverValue - this.couponValue;
         console.log("needPayAmount: this.useBalanceAmount", needPayAmount, this.useBalanceAmount);
         if (needPayAmount > this.balanceAmount) {
-          return (needPayAmount - this.balanceAmount).toFixed(2);
+          return needPayAmount - this.balanceAmount;
         }else {
           return 0.00;
         }
@@ -575,15 +617,27 @@
         }
       },
       chooseCouponTip() {
+        console.log("this.choosedCoupon=============", this.choosedCoupon);
         if (this.choosedCoupon != null) {
-          if (this.choosedCoupon.couponType === 1) {
-            return this.choosedCoupon.disAmount + "元优惠券";
-          }
-          if (this.choosedCoupon.couponType === 2) {
-            return this.choosedCoupon.disCount + "折优惠券";
-          }
-          if (this.choosedCoupon.couponType === 3) {
-            return "免邮券";
+          switch (this.choosedCoupon.couponType) {
+            case 1:
+              return this.choosedCoupon.disAmount + "元优惠券";
+            case 2:
+              return this.choosedCoupon.disCount + "折优惠券";
+            case 3:
+              return "免邮券";
+            case 4:
+              return;
+            case 5:
+              return this.choosedCoupon.couponValue;
+            case 6:
+              return this.choosedCoupon.couponValue;
+            case 8:
+              return this.choosedCoupon.couponValue;
+            case 9:
+              return this.choosedCoupon.couponValue;
+            default:
+              return;
           }
         } else {
           if (this.couponCanUseList.length > 0) {
@@ -599,10 +653,10 @@
         handler(val) {
           console.log("switchValue: ", val);
           if (val === 1) {
-            this.deliverValue = this.tmpDeliverValue.toFixed(2);
+            this.deliverValue = this.tmpDeliverValue;
             this.deliverType = 1;
           } else {
-            this.deliverValue = ZERO_AMOUNT.toFixed(2);
+            this.deliverValue = ZERO_AMOUNT;
             this.deliverType = 99;
           }
 
@@ -614,17 +668,27 @@
 
     },
     onShow() {
+      //初始化页面的数据
+      this.choosedCoupon = null;
+      this.couponPopShow = false;
+      this.productPopShow = false;
+      this.couponValue = ZERO_AMOUNT;
         //要把原有已选的值清空
         let params = this.$root.$mp.query;
-        console.log(this.$root.$mp.query);
-        //有两种路径，1 从购物车页面进来，2重新选择地址后返回
+        let pages = getCurrentPages();
+        console.log("ordersubmit onshow", pages);
+      let prevPage = pages[pages.length - 2];
+      if (prevPage.route === 'pages/cart/main') {
+        this.orderPreSubmit();
+      }
+      console.log(this.$root.$mp.query);
+        //有三种路径，1 从购物车页面进来，2重新选择地址后返回 3 支付完成后返回
         if (null != params.addressId) {
           this.addressId = params.addressId;
         }
       //  还原配送方式
       this.switchValue = 1;
       this.deliverType = 1;
-      this.orderPreSubmit();
     }
 
   }

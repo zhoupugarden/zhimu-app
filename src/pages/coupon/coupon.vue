@@ -18,14 +18,14 @@
       <van-tab title="已使用">
         <div class="coupon-list">
           <div v-for="(item, index) in couponUsedList" :key="index">
-            <coupon-itemm :couponInfo="item"></coupon-itemm>
+            <coupon-item :couponInfo="item"></coupon-item>
           </div>
         </div>
       </van-tab>
       <van-tab title="已过期">
         <div class="coupon-list">
           <div v-for="(item, index) in couponInvalidList" :key="index">
-            <coupon-itemm :couponInfo="item"></coupon-itemm>
+            <coupon-item :couponInfo="item"></coupon-item>
           </div>
         </div>
       </van-tab>
@@ -44,7 +44,7 @@
 
   export default {
     components: {
-      CouponItem, CouponItemm
+      CouponItem
     },
     data() {
       return {

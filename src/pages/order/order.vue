@@ -3,12 +3,13 @@
     <div v-if="!isLogin" class="not-login-container">
     <div class="not-login-content">
       <div>
-        <van-icon size="20px" color="#CFD4DA" name="info-o" />
-        <div style="font-size: 15px; padding: 10px; color: #CFD4DA">
+        <div style="font-size: 14px; padding: 10px; color: #B2B2B2">
           您还没有登录，请登录后查看订单
         </div>
         <div>
-          <van-button type="primary" @click="navigateToLogin">登录</van-button>
+          <van-button color="#000000" type="primary"
+                      custom-style="width:100px; height:30px;"
+                      round @click="navigateToLogin">登录</van-button>
         </div>
       </div>
     </div>
@@ -16,6 +17,8 @@
 
     <div v-else>
       <van-tabs :active="active"
+                animated
+                color="#000000"
                 custom-class="van-tabs__custom"
                 @change="onChange">
         <van-tab
@@ -63,7 +66,6 @@
   import {request} from "@/utils/request";
   import { mapGetters} from 'vuex';
   import {toast} from '../../utils/toast';
-  import Dialog from '../../../static/vant/dialog/dialog';
 
   export default {
 
@@ -189,7 +191,6 @@
       }
 
       let params = {};
-      params.userId = this.userId;
       params.pageSize = this.pageSize;
       params.pageNum = this.pageNum + 1;
       this.pageNum = this.pageNum + 1;
@@ -208,6 +209,7 @@
 
 <style lang="scss" scoped>
   @import "order.scss";
+
 </style>
 <style lang="scss">
   .van-tabs__custom {

@@ -1,7 +1,7 @@
 <template>
   <div class="phonelogin-container">
     <div class="phonelogin-header">
-      <img src="https://t12.baidu.com/it/u=541581695,4055461334&fm=76" class="circleImg">
+      <img :src="merchantInfo.logoUrl" class="circleImg">
     </div>
 
     <div class="phonelogin-form">
@@ -56,8 +56,8 @@
 
   import {SMS_VERIFY_CODE_SEND, SMS_VERIFY_CODE_VERIFY, MY_PHONE_LOGIN, UPDATE_USER_WX_INFO} from '@/utils/api';
   import {request} from "@/utils/request";
-  import {getLocation, getAuth, getUserWxInfo} from '@/utils/wxApi';
-  import {  mapActions, mapState } from 'vuex';
+  import {getLocation, getAuth, getUserWxInfo, wxLogin} from '@/utils/wxApi';
+  import { mapActions, mapState } from 'vuex';
 
   const tabUrls = [
     'pages/my/main',
@@ -84,7 +84,8 @@
       ...mapActions(
         [
           'storeToken',
-          'storeIsLogin'
+          'storeIsLogin',
+          'addCurrentLocation'
         ]
       ),
 
@@ -176,7 +177,9 @@
           data
         ).then(
           response => {
-            that.storeIsLogin(response.isLogin);
+            let token = response;
+            that.storeToken(token);
+            that.storeIsLogin(1);
             getAuth('scope.userLocation', async () => {
               let location = await getLocation();
               console.log("=====", location);
@@ -202,17 +205,13 @@
 
       backToPage() {
         let pages = getCurrentPages();
-        console.log("pages======", pages);
           let curPage = pages[pages.length - 3];
-        console.log("curPage",curPage, pages.length );
           let route = curPage.route;
-        console.log("url",route);
         if (tabUrls.find(
           item => {
             return item === route;
           }
         )) {
-          console.log("存在");
           wx.switchTab(
             {
               url: '/' + route
@@ -236,7 +235,6 @@
           data
         ).then(
           response => {
-            console.log("update user wx info", response);
             that.backToPage();
           }
         )
@@ -244,40 +242,25 @@
 
       login() {
         let that = this;
-        wx.login({
-          success (resss) {
-            if (resss) {
-              //发起网络请求
-              let userLoginBo = {};
-              userLoginBo.wxCode = resss.code;
-              userLoginBo.phoneNo = that.phoneNo;
-              that.myPhoneLogin(userLoginBo);
-            } else {
-              console.log('登录失败！' + resss.errMsg)
-            }
-          },
-          fail (fail) {
-            console.log("fail login");
-            let userLoginBo = {};
-            userLoginBo.phoneNo = that.phoneNo;
-            that.myPhoneLogin(userLoginBo);
-          }
-        })
-
-
+        wxLogin(async (res) => {
+          console.log("res=======", res);
+          //发起网络请求
+          let userLoginBo = {};
+          userLoginBo.phoneNo = this.phoneNo;
+          userLoginBo.code = res.code;
+          that.myPhoneLogin(userLoginBo);
+        });
             //  注册， 登录，跳转
             //页面只负责处理data的业务，对code的处理在request当中
             //request.js中封装了对异常code的统一处理， 使用的是wx.showModal,后续如何进行前后台的异常统一处理和提示
-
       }
 
     },
     computed: {
       ...mapState({
-        isLogin: state=>state.isLogin
+        isLogin: state=>state.isLogin,
+        merchantInfo:state => state.merchant.merchantInfo
       }),
-
-
 
       codeText() {
         if (this.show) {

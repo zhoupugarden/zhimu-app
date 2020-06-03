@@ -1,22 +1,24 @@
 <template>
   <div class="zm-goods__container">
     <div class="zm-goods__head">
-      <img :src="good.headPicUrl" mode="scaleToFill" style="width: 100%; height: 300px">
+      <img :src="productInfo.headPicUrl" mode="scaleToFill" style="width: 100%; height: 300px">
       <div style="position: relative; padding-left: 10px;">
-        <div class="zm-goods__name">{{good.name}}</div>
+        <div class="zm-goods__name">{{productInfo.name}}</div>
         <div class="zm-goods__price">
           <span class="zm-goods__price-value">{{chooseSKU.salePrice}}</span>
-          <span v-show="chooseSKU.promoteType===1004" class="zm-goods__price-lineprice">{{chooseSKU.linePrice}}</span>
-          <span v-show="chooseSKU.promoteType !== 1001" class="zm-goods__price-tag">
+          <span v-show="productInfo.promoteType===1004" class="zm-goods__price-lineprice">{{chooseSKU.linePrice}}</span>
+          <span v-show="productInfo.promoteType !== 1001" class="zm-goods__price-tag">
             <van-tag type="success">{{promoteTag}}</van-tag>
           </span>
         </div>
         <div class="zm-goods__share">
-          <div>
-            <img src="../../asset/share.png" style="width: 20px;height: 20px">
-          </div>
           <div style="font-size: 12px; color: white">
-            <button size="mini"  open-type='share'>分享</button>
+            <button size="mini" open-type='share'>
+              <img src="../../asset/share.png" style="width: 20px;height: 20px">
+              <div>
+                分享
+              </div>
+            </button>
           </div>
         </div>
       </div>
@@ -37,32 +39,32 @@
         <van-cell :title="attribute" custom-class ="choose-attribute-class" title-class="cell-title-class" is-link @click="chooseAttributes" />
       </div>
       <div class="attribute-extro-info">
-        <div class="extro-info__item">
+        <div v-show="chooseSKU.cakeSize" class="extro-info__item">
           <div class="extro-info__item_i">
             <img src="../../asset/cake_2.png" style="width: 20px; height: 20px; ">
             <span class="font_setting">{{chooseSKU.cakeSize}}</span>
           </div>
         </div>
-        <div class="extro-info__item">
+        <div v-show="chooseSKU.capacity" class="extro-info__item">
           <div class="extro-info__item_i">
             <img src="../../asset/people.png" style="width: 20px; height: 20px; ">
             <span class="font_setting">{{chooseSKU.capacity}}</span>
           </div>
         </div>
-        <div class="extro-info__item">
+        <div v-show="chooseSKU.copies" class="extro-info__item">
           <div class="extro-info__item_i">
             <img src="../../asset/people.png" style="width: 20px; height: 20px; ">
             <span class="font_setting">{{chooseSKU.copies}}</span>
           </div>
         </div>
-        <div class="extro-info__item">
+        <div v-show="chooseSKU.cutlery" class="extro-info__item">
           <div class="extro-info__item_i">
             <img src="../../asset/cutlery.png" style="width: 20px; height: 20px; ">
             <span class="font_setting">{{cutlery}}</span>
           </div>
 
         </div>
-        <div class="extro-info__item">
+        <div v-show="deliverTime" class="extro-info__item">
           <div class="extro-info__item_i">
             <img src="../../asset/time.png" style="width: 20px; height: 20px; ">
             <span class="font_setting">{{deliverTime}}</span>
@@ -82,7 +84,7 @@
                         void-color="#eee"
                         icon="like"
                         void-icon="like-o"
-                        :value="good.sweetLevel"
+                        :value="productInfo.sweetLevel"
               />
             </span>
           </div>
@@ -90,7 +92,7 @@
         <van-cell>
           <div class="zm-goods__fresh">
             <span style="float: left; font-size: 12px;">保鲜条件：</span>
-            <span style="float: left; font-size: 12px;">{{good.freshCondition}}</span>
+            <span style="float: left; font-size: 12px;">{{productInfo.freshCondition}}</span>
           </div>
         </van-cell>
       </div>
@@ -107,7 +109,7 @@
         </van-tab>
         <van-tab title="原料">
           <div class="zm-goods__ingredients">
-            <span class="zm-goods__ingredients__content">{{good.ingredients}}</span>
+            <span class="zm-goods__ingredients__content">{{productInfo.ingredients}}</span>
           </div>
         </van-tab>
         </van-tab>
@@ -174,11 +176,11 @@
                 :url="commentUrl"
                 value="查看全部"
                 value-class="zm-goods__review_value" />
-      <div v-if="commentContent !== null" class="zm-goods__review_detail">
-        <img :src="avatarUrl" class="avatar-img">
+      <div v-if="starCommentInfo" class="zm-goods__review_detail">
+        <img :src="starCommentInfo.avatarUrl" class="avatar-img">
         <div style="width: 60%;">
           <div class="star_comment">
-            {{commentContent}}
+            {{starCommentInfo.commentContent}}
           </div>
         </div>
       </div>
@@ -196,11 +198,13 @@
         />
         <van-goods-action-button
           text="加入购物车"
+          plain
           type="warning"
           @click="onAddCartButton"
         />
         <van-goods-action-button
           text="立即购买"
+          plain
           @click="onBuyClickButton"
         />
       </van-goods-action>
@@ -212,50 +216,44 @@
                @close="popUpClose"
                :overlay="true">
       <div class="van-popup__panel">
-        <div style="display: flex; align-items: center; padding: 10px">
+        <div style="display: flex; align-items: center;padding: 20px 0px; border-bottom: 1px solid #f2f2f2;">
           <div class="van-popup__panel_price">
             <span>
-              ￥
-            </span>
-            <span style="font-size: 30px;">
               {{chooseSKU.salePrice}}
             </span>
-
             <span v-show="chooseSKU.promoteType===1004" class="zm-goods__price-lineprice">
               {{chooseSKU.linePrice}}
             </span>
           </div>
-          <span v-if="good.stock <= good.warnStock" style="color: red; padding-left: 10px;">少量库存</span>
-        </div>
-        <div class="van-popup__panel_line">
+          <span v-if="productInfo.stock <= productInfo.warnStock" style="color: red; font-size: 12px; padding-left: 10px;">少量库存</span>
         </div>
         <div class="van-popup__panel_extro">
-          <div class="van-popup__panel_extro__item">
+          <div v-show="chooseSKU.cakeSize" class="van-popup__panel_extro__item">
             <div class="extro-info__item_i">
               <img src="../../asset/size.png" style="width: 20px; height: 20px; ">
               <span class="font_setting">{{chooseSKU.cakeSize}}</span>
             </div>
           </div>
-          <div class="van-popup__panel_extro__item">
+          <div v-show="chooseSKU.capacity" class="van-popup__panel_extro__item">
             <div class="extro-info__item_i">
               <img src="../../asset/people.png" style="width: 20px; height: 20px; ">
               <span class="font_setting">{{chooseSKU.capacity}}</span>
             </div>
           </div>
-          <div class="van-popup__panel_extro__item">
+          <div v-show="chooseSKU.copies" class="van-popup__panel_extro__item">
             <div class="extro-info__item_i">
               <img src="../../asset/time.png" style="width: 20px; height: 20px; ">
               <span class="font_setting">{{chooseSKU.copies}}</span>
             </div>
           </div>
-          <div class="van-popup__panel_extro__item">
+          <div v-show="chooseSKU.cutlery" class="van-popup__panel_extro__item">
             <div class="extro-info__item_i">
               <img src="../../asset/cutlery.png" style="width: 20px; height: 20px; ">
               <span class="font_setting">{{cutlery}}</span>
             </div>
           </div>
 
-          <div class="van-popup__panel_extro__item">
+          <div v-show="chooseSKU.deliverTime" class="van-popup__panel_extro__item">
             <div class="extro-info__item_i">
               <img src="../../asset/cutlery.png" style="width: 20px; height: 20px; ">
               <span class="font_setting">{{deliverTime}}</span>
@@ -263,12 +261,11 @@
 
           </div>
         </div>
-        <div style="font-family: 'Microsoft YaHei'; font-size: 12px;padding: 0px 20px">规格</div>
+        <div style=" font-size: 14px; padding: 20px 0px;">规格</div>
         <div class="van-popup__panel_attribute">
-          <span v-for="(item, index) in productSKUs" :key="index">
+          <span style="margin-right: 5px;" v-for="(item, index) in productSKUs" :key="index">
            <check-box
-            :id="item.skuId"
-            :name="item.attributeName"
+            :skuItem="item"
             :type="item.skuId === chooseSKU.skuId ? 'selected' : 'default'"
             @selectedSKU="selectedSKU"
           ></check-box>
@@ -301,12 +298,14 @@
 </template>
 
 <script>
-  import {GET_PRODUCT_DETAIL_BY_ID, PRODUCT_NOTICE, GET_PRODUCT_SKU_DETAIL_BY_ID, GET_STAR_COMMENT } from '@/utils/api';
+  import {GET_PRODUCT_DETAIL_BY_ID, PRODUCT_NOTICE } from '@/utils/api';
   import {request} from "@/utils/request";
   import { mapGetters, mapActions } from 'vuex';
   import { ADD_PRODUCT_TO_CART } from '@/store/mutation-types';
   import CheckBox from '@/components/CheckBox';
   import {toast} from '../../utils/toast';
+  import {subscribeMessage} from '@/utils/wxApi';
+
   export default {
     components: {
       CheckBox
@@ -316,6 +315,8 @@
       active: 0,
       good: {
       },
+      productInfo: {},
+      starCommentInfo:{},
       popShow:false,
       outShowUp:false,
       urls: [],
@@ -327,7 +328,6 @@
       commentUrl:"",
       phoneNo:"",
       isNoticed:false,
-      avatarUrl:""
     }
   },
   //如何支持pathVariable 的请求？？
@@ -351,21 +351,19 @@
     addCart() {
       console.log("addCart====")
       let that = this;
-      if (this.online) {
+      if (!this.online) {
         this.popShow = false;
         //   弹起到货提醒的订阅
-        wx.requestSubscribeMessage({
-          tmplIds: ['By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0'],
-          success (res) {
-            if (res.By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0 === 'accept') {
-              //订阅成功
-              that.addProductNotice();
-              console.log("订阅成功", res)
-            }else {
-              console.log("拒绝订阅", res)
-            }
-          }
-        })
+
+        let that = this;
+        let id = 'By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0';
+        let tmplIds = [];
+        tmplIds.push(id);
+        subscribeMessage(tmplIds,  (res)=> {
+          console.log("res===========",res);
+          that.addProductNotice();
+        });
+
       }else {
         this.addProductToCart(this.chooseSKU);
         this.popShow = false;
@@ -380,7 +378,7 @@
       });
     },
     onAddCartButton() {
-      if (this.good.stock > 0) {
+      if (this.productInfo.stock > 0) {
         this.popupText = "加入购物车";
      }else {
         this.popupText = "到货通知";
@@ -392,18 +390,14 @@
       let that = this;
       if (!this.online)  {
       //   弹起到货提醒的页面
-        wx.requestSubscribeMessage({
-          tmplIds: ['By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0'],
-          success (res) {
-            if (res.By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0 === 'accept') {
-              //订阅成功
-              that.addProductNotice();
-              console.log("订阅成功", res)
-            }else {
-              console.log("拒绝订阅", res)
-            }
-          }
-        })
+        let that = this;
+        let id = 'By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0';
+        let tmplIds = [];
+        tmplIds.push(id);
+        subscribeMessage(tmplIds,  (res)=> {
+          console.log("res===========",res);
+          that.addProductNotice();
+        });
 
       }else {
         this.addProductToCart(this.chooseSKU);
@@ -438,59 +432,35 @@
       ).then(
         (response) => {
           this.good = response;
-          console.log("this.good response", this.good);
-          this.productSKUs = response.pmsProductSkuList;
-          this.chooseSKU = this.productSKUs.find(
-            function (sku) {
-              return sku.isPrime === true;
-            }
-          );
-
-          console.log("chooseSKU", this.chooseSKU);
+          this.productInfo = response.productDto;
+          this.starCommentInfo = response.starCommentDto;
+          this.productSKUs = response.skuDtoList;
+          this.chooseSKU = this.productSKUs[0];
           wx.setNavigationBarTitle({
-            title: this.good.name
+            title: this.productInfo.name
           });
-
-          this.urls = JSON.parse(this.good.detailPicUrl);
+          this.urls = JSON.parse(this.productInfo.detailPicUrl);
         }
       )
     },
     chooseAttributes() {
-      console.log("chooseAttributes");
       this.popShow = true;
     },
     popUpClose() {
-      console.log("popUpClose");
       this.popShow = false;
     },
 
     phoneNoChange(event) {
-      console.log("event: ", event)
       this.phoneNo = event.mp.detail;
     },
 
-
-    getStarComment(data) {
-      request(
-        GET_STAR_COMMENT,
-        'GET',
-        data
-      ).then(
-        (response) => {
-          console.log("this.good response", response);
-         this.comment = response;
-         this.commentContent = response.content;
-         this.avatarUrl = response.avatarUrl;
-        }
-      )
-    },
     outShowClose() {
       this.outShowUp = false;
     },
 
     addProductNotice() {
       let params = {};
-      params.productId = this.good.id;
+      params.productId = this.productInfo.id;
       request(
         PRODUCT_NOTICE,
         'POST',
@@ -512,18 +482,17 @@
         console.log(res.target)
       }
       return {
-        title: "自定义转发标题",
-        path:'/page/detail/main?productId=123'
+        title: this.productInfo.name,
+        path:'/page/detail/main?productId='+this.productInfo.id,
+        desc: this.productInfo.name
       }
     },
 
     onShow() {
-      console.log(this.$root.$mp.query);
           let params = {};
           params.productId = this.$root.$mp.query.productId;
           //后续可以将这两个请求合并成一个
           this.getProductDetail(params);
-          this.getStarComment(params);
           this.commentUrl = "/pages/comments/main?productId=" + this.$root.$mp.query.productId;
 
       //    将数据还原，后续用Obejct.assign
@@ -534,9 +503,8 @@
 
       },
     computed: {
-
       online() {
-        if (this.good.onlineStatus === 1001 && this.good.stock > 0) {
+        if (this.productInfo.onlineStatus === 1001 && this.productInfo.stock > 0) {
           return true;
         }else {
           return false;
@@ -544,7 +512,7 @@
       },
 
       promoteTag() {
-        switch(this.chooseSKU.promoteType) {
+        switch(this.productInfo.promoteType) {
           case 1001:
             return "";
           case 1002:
@@ -557,7 +525,7 @@
       },
 
       attribute() {
-        return "已选择：" + this.chooseSKU.attributeName;
+        return "已选择：" + this.chooseSKU.attributeValue +  this.chooseSKU.attributeName;
       },
       vipTip() {
         let freeAmount = this.chooseSKU.salePrice * 0.1;
@@ -565,9 +533,9 @@
       },
       content() {
         if (this.isNoticed) {
-          return "订阅成功," + this.good.name + "有货时我们将给您发送通知";
+          return "订阅成功," + this.productInfo.name + "有货时我们将给您发送通知";
         }else {
-          return "您希望在" + this.good.name + "有货时收到通知么?";
+          return "您希望在" + this.productInfo.name + "有货时收到通知么?";
         }
       },
       deliverTime() {
@@ -595,8 +563,21 @@
 
 <style lang="scss" scoped>
   @import "detail.scss";
+  .van-popup__panel {
+    width: 90%;
+    margin: 0 auto;
+  }
+
 </style>
 <style lang="scss">
+
+  .icon-class {
+    background-color: #000000;
+  }
+  .button-custom-class{
+    font-size:100px;
+  }
+
   .cell-title-class {
     font-size: 12px !important;
   }

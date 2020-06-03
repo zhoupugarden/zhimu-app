@@ -12,6 +12,7 @@
     <div class="address-add-button">
       <div class="address-add-button_wrap">
         <van-button round
+                    color="#000000"
                     custom-class="custom-button"
                     @click="navigateToNew"
                     type="primary">新增收货地址</van-button>

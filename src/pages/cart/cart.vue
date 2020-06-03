@@ -1,8 +1,8 @@
 <template>
   <div class="cart-container">
     <div class="cart-no-container" v-if="isEmptyCart">
-      <van-icon name="shopping-cart-o"></van-icon>
-      <div style="font-size: small; font-family: 'Microsoft YaHei'">您的购物车是空的</div>
+      <van-icon size="30px" color="#b2b2b2" name="shopping-cart-o"></van-icon>
+      <div style="font-size: 14px; color: #b2b2b2;">您的购物车是空的</div>
     </div>
     <div v-else>
       <div class="cart-container__detail">
@@ -16,13 +16,15 @@
         </div>
       </div>
       <div v-show="showTip" class="cart-container__tip">
-        请在下方选择需要的配件
+        <div style="font-size: 14px;color: #b2b2b2; padding: 20px 0px;">
+          请在下方选择需要的配件
+        </div>
       <div class="cart-container__fitting">
         <div class="cart-container__fitting--nav">
           <span v-for="(free, index) in freeGood" :key="index">
-            <van-button size="small" @click="addFreeFitting(free)">{{free.fittingName}}</van-button>
+            <van-button custom-style="color:#323233" color="#f2f2f2" size="small" @click="addFreeFitting(free)">{{free.fittingName}}</van-button>
           </span>
-          <van-button size="small" @click="popUpShow">配件饰品</van-button>
+          <van-button custom-style="color:#323233" color="#f2f2f2" size="small" @click="popUpShow">配件饰品</van-button>
         </div>
         <div class="cart-container__fitting--detail">
           <div v-for="(item_, index) in freeCartList" :key="index">
@@ -59,7 +61,7 @@
         </div>
 
         <div class="cart-container__bottom--button">
-          <van-button size="large" type="primary" @click="navigateToSubmitOrLogin">下一步</van-button>
+          <van-button color="#000000" size="large" type="primary" @click="navigateToSubmitOrLogin">下一步</van-button>
         </div>
       </div>
       <van-popup position="bottom"
@@ -69,7 +71,7 @@
       >
         <div class="van-popup__custom--container">
           <div class="van-popup__custom--container_cross" >
-            <van-icon @click="popUpClose" name="cross" />
+            <van-icon size="20" @click="popUpClose" name="cross" />
           </div>
 
           <div class="van-popup__custom--container_detail">
@@ -164,18 +166,19 @@
     },
 
     deliverFee() {
-      if (this.totalPrice < this.deliverConfig.secPrice && this.totalPrice > this.deliverConfig.beginPrice) {
+      if (this.totalPrice < this.deliverConfig.beginPrice) {
         return this.deliverConfig.beginFee;
-      }
-      else if (this.totalPrice >= this.deliverConfig.secPrice && this.totalPrice < this.deliverConfig.freePrice) {
+      } else if (this.totalPrice >= this.deliverConfig.beginPrice && this.totalPrice < this.deliverConfig.secPrice) {
+        return this.deliverConfig.beginFee;
+
+      } else if (this.totalPrice >= this.deliverConfig.secPrice && this.totalPrice < this.deliverConfig.freePrice) {
         return this.deliverConfig.secFee;
       } else {
         return 0;
       }
     },
     needAmount() {
-      if (this.totalPrice < this.deliverConfig.secPrice && this.totalPrice > this.deliverConfig.beginPrice) {
-        console.log("========", this.totalPrice, this.deliverConfig);
+       if (this.totalPrice < this.deliverConfig.secPrice) {
         return this.deliverConfig.secPrice - this.totalPrice;
       }
       else if (this.totalPrice >= this.deliverConfig.secPrice && this.totalPrice < this.deliverConfig.freePrice) {
@@ -185,7 +188,7 @@
       }
     },
     freeFee() {
-      if (this.totalPrice < this.deliverConfig.secPrice) {
+  if (this.totalPrice < this.deliverConfig.secPrice) {
         return this.deliverConfig.beginFee - this.deliverConfig.secFee;
       }
       else if (this.totalPrice >= this.deliverConfig.secPrice && this.totalPrice < this.deliverConfig.freePrice) {
@@ -264,7 +267,6 @@
       this.popShow = true;
     },
     navigateToSubmitOrLogin() {
-      let submitUrl = "/pages/ordersubmit/main";
       let loginUrl = "/pages/login/main";
       let url = "";
       //add-free-cart
@@ -318,7 +320,7 @@
           console.log("itemPrice", itemPrice);
           tmpTotalPrice = tmpTotalPrice + itemPrice;
         }
-        this.totalPrice = tmpTotalPrice.toFixed(2);
+        this.totalPrice = tmpTotalPrice;
         console.log("this.totalPrice", this.totalPrice)
       }
     },
@@ -370,6 +372,6 @@
 <style lang="wxss">
   page{
     height: 100%;
-    background-color:#F4F4F4 !important;
+    background-color:#f2f2f2 !important;
   }
 </style>

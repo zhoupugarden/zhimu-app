@@ -9,12 +9,19 @@
         {{balanceDetailItem.changeDate}}
       </div>
     </div>
+    <div>
+      <div
+        style="padding-right: 10px; font-size: 12px;"
+        :style="{color : activeColor}">
+        {{flag}}{{balanceDetailItem.changeAmount}}
+      </div>
+      <div class="balanceitem-time">
+        余额：{{balanceDetailItem.balanceAmount}}
+      </div>
 
-    <div
-      style="padding-right: 10px; font-size: 12px;"
-      :style="{color : activeColor}">
-      {{flag}}{{balanceDetailItem.changeAmount}}
     </div>
+
+
 
   </div>
 </template>

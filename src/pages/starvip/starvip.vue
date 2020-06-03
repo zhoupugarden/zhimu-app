@@ -278,15 +278,12 @@
       },
       getUserInfo() {
         let params = {};
-        params.token = token;
         request(
           MY_USER_INFO,
           'GET',
           params
         ).then(
           response => {
-            //将userID放在存储中
-            console.log("response",response)
             this.userInfo = response;
           }
         )

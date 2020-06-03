@@ -15,15 +15,15 @@
           <div>{{item.name}}</div>
         </li>
       </scroll-view>
-
       <!-- 菜单内容 -->
       <scroll-view class="menu-list" :scroll-y="true"
                    :scroll-into-view="'group'+menuIndex"
                    @scroll="menuListScrollAction"
       >
-        <div v-if="adHeadSettings" class="index-header" @click="navigateToActivity">
-          <image style="width: 100%; height: 100px; " mode="scaleToFill" :src="adHeadSettings.imgUrl"></image>
+        <div :id="'group' + 100" v-if="adHeadSettings" class="index-header" @click="navigateToActivity">
+          <image style="width: 100%; height: 120px; " mode="scaleToFill" :src="adHeadSettings.imgUrl"></image>
         </div>
+
         <div style="border-bottom: 1px dashed #b2b2b2;" v-for="(products, index) in productMenuList" :key="index" :id="'group'+index">
           <h3 class="group-title">{{categoryNameList[index].name}}</h3>
           <ul>
@@ -35,11 +35,9 @@
         </div>
       </scroll-view>
     </div>
-
-    <div v-show= "merchantInfo.status === 1003 || merchantInfo.status === 1004" class="rest_notice">
+    <div v-show = "merchantInfo.status === 1003 || merchantInfo.status === 1004" class="rest_notice">
       {{restNotice}}
     </div>
-
     <!--弹出框-->
     <div>
       <cart-pop :popShow="popCartActive"
@@ -51,7 +49,7 @@
 
 <script>
 
-  import {INDEX_LIST, INDEX_INFO} from '@/utils/api';
+  import {INDEX_LIST,GET_PRODUCT_DETAIL_BY_ID} from '@/utils/api';
   import {request} from "@/utils/request";
   import card from '@/components/card';
   import cartPop from '@/components/cartPop';
@@ -68,15 +66,14 @@
         menuIndex: 0,
         scrollTop: 0,
         popCartActive:false,
-        productSku:[]
+        productSku:[],
+        productInfo:{}
       }
     },
     computed: {
       ...mapState({
         categoryNameList: state=>state.home.categoryNameList,
-        productList: state=>state.home.productList,
         productMenuList: state=>state.home.productMenuList,
-        skuList: state=>state.home.skuList,
         merchantInfo: state=>state.merchant.merchantInfo,
         adHeadSettings: state => state.merchant.adHeadSettings
       }),
@@ -112,30 +109,10 @@
         // 设置选中的菜单
         this.menuIndex = index;
         console.log("index, this.selectIndex", index, this.selectIndex, this.selectIndex==index);
-        /*
-        // 方式1:
-        // 计算高度，滚动到对应位置
-        let height = 0;
-        for(let i = 0; i < index; i++){
-            height += this.heightArr[i];
-        }
-        this.scrollTop = height;
-        */
-        // 方式2
-        // 切换scroll-into-view
       },
       // 菜单的滚动事件
       menuListScrollAction(ev){
         let top = ev.mp.detail.scrollTop;
-
-        /*
-         [1030, 630, 330, 330, 2130, 930, 2130, 530, 330, 630, 330, 230]
-
-         0~1030    0
-         1030~1030+630 1
-         ...
-        */
-
         let index = 0;
         if(top >= 0){
           for(let i = 0; i < this.heightArr.length; i++){
@@ -160,30 +137,54 @@
         this.selectIndex = index;
       },
 
+      getProductDetail(data) {
+        request(
+          GET_PRODUCT_DETAIL_BY_ID,
+          'GET',
+          data
+        ).then(
+          (response) => {
+            this.productInfo = response.productDto;
+            this.productSku = response.skuDtoList;
+            this.popCartActive = true;
+          }
+        )
+      },
+
+
       onPopCart(data) {
         this.popCartActive = false;
         console.log("data",data);
         let productId = data.productId;
-        this.productSku = this.skuList.filter(a=>a.productId === productId);
-        // this.productSKUs
-        //   = this.productMenuList[this.selectIndex].find(
-        //   item => item.id === productId
-        // );
-        // console.log("this.productSKUs", this.productSKUs);
-        this.popCartActive = true;
+        let params = {};
+        params.productId = productId;
+        this.getProductDetail(params);
       },
       closeActive() {
-        console.log("closeActive")
         this.popCartActive = false;
       },
       addToCart(data) {
-        console.log("addTocart", data)
+        data.picUrl = this.productInfo.headPicUrl;
+        data.type = this.productInfo.type;
+        data.categoryId = this.productInfo.categoryId;
+        data.productName = this.productInfo.name;
         this.addProductToCart(data);
         // //加些过渡动画
         // this.popCartActive = false;
       },
 
+      navigateToActivity() {
+        if (this.adHeadSettings.isNavigate === 1) {
+          let url = this.adHeadSettings.navigateUrl;
+          console.log("url",url)
+          wx.navigateTo({
+            url
+          });
+        } else {
+          console.log("不需要调整");
+        }
 
+      }
     },
     watch: {
       active(val) {
@@ -192,7 +193,9 @@
     },
     onShow(){
       this.$store.dispatch('home/getHomeData');
-      this.$store.dispatch('merchant/getMerchantData');
+      if (this.adHeadSettings) {
+        this.menuIndex = 100;
+      }
     }
   }
 </script>

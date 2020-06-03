@@ -1,18 +1,26 @@
 <template>
   <div class="pointitem-container">
     <div class="pointitem-left">
-      <div class="pointitem-type">
-        {{pointDetailItem.changeDesc}}
+      <div >
+        <span class="pointitem-type" >{{pointDetailItem.changeDesc}}</span>
+        <span class="pointitem-time" v-show="pointDetailItem.orderNoLastFour">(订单号：{{pointDetailItem.orderNoLastFour}})</span>
       </div>
       <div class="pointitem-time">
         {{pointDetailItem.changeDate}}
       </div>
     </div>
-    <div
-      style="padding-right: 10px; font-size: 12px;"
-      :style="{color : activeColor}">
-      {{flag + pointDetailItem.changeAmount}}
+    <div>
+      <div
+        style="padding-right: 10px; font-size: 12px;"
+        :style="{color : activeColor}">
+        {{flag + pointDetailItem.changeAmount}}
+      </div>
+      <div class="pointitem-time">
+        剩余：{{pointDetailItem.pointAmount}}
+      </div>
+
     </div>
+
   </div>
 
 </template>

@@ -29,10 +29,10 @@
         <van-button size="small" @click="cancelOrder">取消订单</van-button>
       </div>
        <div v-show="orderInfo.orderStatus === 1">
-         <van-button size="small" type="primary" @click="payOrder">马上付款</van-button>
+         <van-button  color="#000000" size="small" type="primary" @click="payOrder">立即支付</van-button>
        </div>
       <div v-show="orderInfo.orderStatus === 5 && orderInfo.isComment === 0">
-        <van-button size="small" type="primary" @click="navigateToEvaluation">评价得积分</van-button>
+        <van-button color="#000000" size="small" type="primary" @click="navigateToEvaluation">评价得积分</van-button>
       </div>
     </div>
 
@@ -113,7 +113,6 @@
           }
         )
       },
-
       payOrder() {
         let that = this;
         let orderNo = this.orderInfo.orderNo;
@@ -130,7 +129,7 @@
             let params = {};
             params.unifiedOrderNo = response.unifiedOrderNo;
             params.orderNo = response.orderNo;
-            params.amount = that.orderInfo.totalAmount;
+            params.amount = response.amount;
             let data = {};
             data.out_trade_no = params.orderNo;
             data.transaction_id = params.unifiedOrderNo;
@@ -165,6 +164,9 @@
         if (this.orderInfo.orderStatus === 100) {
           return "订单完成";
         }
+        if (this.orderInfo.orderStatus === 101) {
+          return "退款完成";
+        }
         if (this.orderInfo.orderStatus === 3 || this.orderInfo.orderStatus === 4) {
           return "已支付";
         }
@@ -178,8 +180,9 @@
     position: relative;
     background-color: white;
     margin-top: 10px;
+  }
   .order-card__status {
-    padding: 5px 8px;
+    padding: 5px 10px;
     display: flex;
     justify-content: space-between;
     height: 30px;
@@ -190,12 +193,13 @@
     display: flex;
     position: relative;
     justify-content: flex-start;
-    padding-top : 5px;
-    padding-bottom : 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     box-sizing: border-box;
     border-bottom: 1px solid #f2f2f2;
     border-top: 1px solid #f2f2f2;
     margin: 0px 10px;
+  }
 
   .order-card__detail-image {
     box-sizing: border-box;
@@ -210,32 +214,6 @@
     flex-wrap: wrap;
   }
 
-  }
-
-  /*line如何水平居中显示*/
-  /*.order-card__detail:before {*/
-    /*content: "";*/
-    /*display: block;*/
-    /*position: absolute;*/
-    /*bottom: 0;*/
-    /*left: 0;*/
-    /*width: 90%;*/
-    /*height: 1px;*/
-    /*background: lightgray;*/
-  /*}*/
-
-  /*.order-card__detail:after {*/
-    /*content: "";*/
-    /*display: block;*/
-    /*position: absolute;*/
-    /*top: 0;*/
-    /*left: 0;*/
-    /*width: 90%;*/
-    /*height: 1px;*/
-    /*background: lightgray;*/
-  /*}*/
-
-
   .order-card__operation {
     display: flex;
     align-items: center;
@@ -243,5 +221,5 @@
     padding: 5px 8px;
     height: 40px;
   }
-  }
+
 </style>

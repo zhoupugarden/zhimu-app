@@ -1,20 +1,20 @@
 <template>
   <div class="evaluationitem-container">
 
-    <van-card
-      :num="itemInfo.quantity"
-      :price="itemInfo.salePrice"
-      :desc="itemInfo.attributeName"
-      :origin-price="itemInfo.linePrice"
-      :title="itemInfo.productName"
-      :thumb="itemInfo.picUrl"
-      custom-class="root-custom-class"
-    ></van-card>
-
-    <hr style="border: 1px solid #f2f2f2; margin: 2px 0px" />
+    <div style="border-bottom: 1px solid #f2f2f2;">
+      <van-card
+        :num="itemInfo.quantity"
+        :price="itemInfo.salePrice"
+        :desc="itemInfo.attributeName"
+        :origin-price="itemInfo.linePrice"
+        :title="itemInfo.productName"
+        :thumb="itemInfo.picUrl"
+        custom-class="root-custom-class"
+      ></van-card>
+    </div>
     <div class="evaluation-score">
-      <span style="font-size: 12px;">味道</span>
-      <van-rate size="12" :value="rateValue" @change="rateChange" />
+      <span style="font-size: 14px;">商品味道：</span>
+      <van-rate size="14" :value="rateValue" @change="rateChange" />
     </div>
     <div class="evaluation-comment">
       <van-field
@@ -28,6 +28,9 @@
       />
     </div>
     <upload width="120rpx" height="120rpx" max="3" @choosed="choosedPics" @delete="deleted" :srcs= "srcList"></upload>
+      <div class="point-tip">
+        有图评价另有积分加送哦:)
+      </div>
   </div>
 
 </template>
@@ -140,7 +143,48 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
+    padding: 10px 0px;
   }
+  .point-tip {
+    display: inline-block;
+    font-size: 10px;
+    margin: 10px;
+    background: linear-gradient(left, #f71605, #e0f513);
+    background: -webkit-linear-gradient(left, #f71605, #e0f513);
+    background: -o-linear-gradient(right, #f71605, #e0f513);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation:scratchy 0.253s linear forwards infinite;
+  }
+  @keyframes  scratchy {
+    0% {
+      background-position: 0 0;
+    }
+    25% {
+      background-position: 0 0;
+    }
+    26% {
+      background-position: 20px -20px;
+    }
+    50% {
+      background-position: 20px -20px;
+    }
+    51% {
+      background-position: 40px -40px;
+    }
+    75% {
+      background-position: 40px -40px;
+    }
+    76% {
+      background-position: 60px -60px;
+    }
+    99% {
+      background-position: 60px -60px;
+    }
+    100% {
+      background-position: 0 0;
+    }
+  }
+
 
 </style>

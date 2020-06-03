@@ -68,15 +68,15 @@ export  function subscribeMessage(subscribeType, callback) {
     wx.requestSubscribeMessage({
       tmplIds: subscribeType,
       success(res) {
-        callback(res);
+        if (res[subscribeType] === 'accept') {
+          callback(res);
+        }
       }
     })
   })
 }
 
 export function wxLogin(callback) {
-
-  console.log("=====wxLogin========");
   return new Promise(
     (resolve, reject) => {
       wx.login(
@@ -87,7 +87,6 @@ export function wxLogin(callback) {
           },
           fail(res) {
             console.log("====fail===", res);
-
           }
         }
       )

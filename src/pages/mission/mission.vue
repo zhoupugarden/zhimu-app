@@ -116,19 +116,17 @@
         <span style="font-size: 12px; color: #b2b2b2;">{{item.signDate}}</span>
       </div>
     </van-popup>
-
+    <van-toast  id="van-toast"/>
   </div>
 </template>
 
 <script>
 
   import BountyItem from '@/components/BountyItem';
-  import {ADD_SIGN,SIGN_INDEX,BOUNTY_REDEEM,SIGN_DETAIL,GET_BOUNTY_REDEEM_LIST } from '@/utils/api';
+  import {ADD_SIGN,SIGN_INDEX,BOUNTY_REDEEM,SIGN_DETAIL,GET_BOUNTY_REDEEM_LIST, PRODUCT_NOTICE } from '@/utils/api';
   import {request} from "@/utils/request";
-  import { mapGetters} from 'vuex';
+  import {subscribeMessage} from '@/utils/wxApi';
   import {toast} from '../../utils/toast';
-
-
 
   export default {
     components: {
@@ -190,7 +188,24 @@
       popTip() {
         this.popShow = true;
       },
+      noticeAdd() {
+        let params = {};
+        params.noticeType = 4;
+        request(
+          PRODUCT_NOTICE,
+          'post',
+          params
+        ).then(
+          (response) => {
+            console.log("response ==== notice add", response);
+            //订阅成功
+            toast("签到提醒订阅成功");
+          }
+        )
+
+      },
       signAdd() {
+        let that = this;
         if (this.disable) {
           return;
         }
@@ -208,21 +223,18 @@
             wx.requestSubscribeMessage({
               tmplIds: ['NiwQZaKrzNmkRIpsgDpHNX_T0_16WD3bn9N5etwFAmA'],
               success (res) {
-                //订阅成功
-                toast("提醒订阅成功");
-                console.log("requestSubscribeMessage res", res)
+                that.noticeAdd();
               },
               complete(res) {
-                console.log("requestSubscribeMessage res", res)
               }
             })
+
 
           }
         )
       },
 
       redeemCoupon(data) {
-        console.log("redeemCoupon", data)
         let param = {};
         param.bountySettingId = data.id;
         request(
@@ -247,8 +259,6 @@
                 }
               }
             });
-
-
           }
         )
       },
@@ -261,7 +271,6 @@
           param
         ).then(
           (response) => {
-            console.log("this response", response);
             this.activeStepIndex = response.daysCount - 1;
             this.bounty = response.bounty;
             this.daysCount = response.daysCount;
@@ -289,7 +298,6 @@
           param
         ).then(
           (response) => {
-            console.log("this response", response);
             this.signDetailList = response;
 
           }

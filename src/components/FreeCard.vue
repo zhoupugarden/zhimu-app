@@ -63,10 +63,7 @@
     position: relative;
     padding: 5px 15px;
     font-size: 12px;
-    /*color: @text-color;*/
     color: #34495e;
-    /*background-color: @background-color-light;*/
-    background-color: #fafafa;
     box-sizing: border-box;
     display:flex;
     justify-content: space-around;

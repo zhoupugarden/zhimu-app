@@ -14,8 +14,8 @@
   display: flex;
   margin: 10px 0px;
   padding-bottom: 60px;
+  padding-left: 10px;
 }
-
 
 .total-tags {
   display: flex;
@@ -26,8 +26,13 @@
   margin: 5px;
   padding: 5px;
 }
+.deliver-info_user {
+  font-size: 14px;
+  text-align: center;
+  padding: 10px 0px;
+}
 .deliver-info_time {
-  font-size: 12px;
+  font-size: 14px;
 }
 .deliver-info {
   font-size: 20px;

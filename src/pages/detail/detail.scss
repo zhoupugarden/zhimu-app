@@ -38,14 +38,17 @@
 }
 .van-popup__panel_attribute {
   display: flex;
-  padding: 10px 15px;
 }
 .extro-info__item_i {
   display: flex;
   align-items: center;
 }
 .van-popup__panel_price{
-  padding: 0px 10px;
+  font-size: 14px;
+  font-weight: bold;
+}
+.van-popup__panel_price::before{
+  content:'￥';
 }
 
 .zm-goods__review_detail {
@@ -82,7 +85,6 @@
   flex: 0 0 50%;
   padding: 5px 5px;
   font-size: 16px;
-  font-family: "Microsoft YaHei";
 }
 .attribute-extro-info:after {
   content:" ";
@@ -96,15 +98,13 @@
   display: flex;
   flex-flow: row wrap;
   align-content: flex-start;
-  padding: 10px 15px;
 }
 
 .zm-goods__extroInfo {
   margin: 5px 10px;
 }
 .zm-goods__price-value {
-  font-size: 18px;
-  font-family: "Microsoft YaHei";
+  font-size: 14px;
   padding-right: 5px;
 }
 .zm-goods__price-value:before {
@@ -112,7 +112,6 @@
   font-size: small;
 }
 .zm-goods__price-lineprice {
-  font-family: "Microsoft YaHei";
   padding-right: 5px;
   font-size: 10px;
   color: #CFD4DA;

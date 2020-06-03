@@ -6,28 +6,28 @@ import * as types from './mutation-types'
 //     commit(types.OPEN_ID, id)
 // }
 export default {
-
     addProductToCart:({state, commit}, data)=> {
-      console.log(data);
-      let cartItem = {};
-      if (data.skuId) {
-        cartItem = state.cartList.find(item => {
-          //
-          return item.skuId === data.skuId
+      console.log("addProductToCart",data);
+      let cartItem = state.cartList.find(item => {
+          return item.skuId === data.skuId;
           console.log("addProductToCart", item.skuId , data.skuId)
-        })
-      } else {
-        cartItem = state.cartList.find(item => {
-          //
-          return item.productId === data.productId
-          console.log("addProductToCart", item.productId , data.productId)
-        })
-      }
-      console.log(cartItem);
+        });
+      console.log("已存在商品信息", cartItem);
       if (!cartItem) {
-        commit(types.ADD_PRODUCT_TO_CART, data)
+        let cartItem = {};
+        cartItem.skuId = data.skuId;
+        cartItem.productId = data.productId;
+        cartItem.categoryId = data.categoryId;
+        cartItem.picUrl = data.picUrl;
+        cartItem.type = data.type;
+        cartItem.attributeName = data.attributeName;
+        cartItem.attributeValue = data.attributeValue;
+        cartItem.salePrice = data.salePrice;
+        cartItem.linePrice = data.linePrice;
+        cartItem.productName = data.productName;
+        commit(types.ADD_PRODUCT_TO_CART, cartItem)
       }else {
-        commit(types.INCREMENT_INVENTORY, data)
+        commit(types.INCREMENT_INVENTORY, data.skuId)
       }
     },
     addFreeCart:({state, commit}, data) => {
@@ -35,11 +35,11 @@ export default {
     },
 
     decrementInventory: ({commit}, data) => {
-      commit(types.DECREMENT_INVENTORY, data)
+      commit(types.DECREMENT_INVENTORY, data.skuId)
     },
 
     incrementInventory: ({commit}, data) => {
-      commit(types.INCREMENT_INVENTORY, data)
+      commit(types.INCREMENT_INVENTORY, data.skuId)
     },
 
     delProductFromCart:({commit}, {skuId}) => {

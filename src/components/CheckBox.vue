@@ -2,8 +2,9 @@
   <div style="position: relative;  width: 60px;">
       <img v-show="type === 'selected'" src="../asset/Check.png" class="box_image">
     <div class="box_container" :class="{active: type === 'selected'}" @click="selectedSKU">
-      <div style="font-size: 13px;">
-        {{name}}
+      <div style="font-size: 14px;">
+        <span v-show="skuItem.attributeValue">{{skuItem.attributeValue}}</span>
+        <span>{{skuItem.attributeName}}</span>
       </div>
     </div>
   </div>
@@ -13,8 +14,7 @@
   export default {
     name: "check-box",
     props: {
-      id: 0,
-      name: "",
+      skuItem:Object,
       type: "selected"
     },
     data() {
@@ -24,7 +24,7 @@
 
     methods: {
       selectedSKU() {
-        this.$emit('selectedSKU', this.id);
+        this.$emit('selectedSKU', this.skuItem.skuId);
       }
     }
   }
@@ -33,9 +33,9 @@
 <style lang="scss" scoped>
   .box_container {
     position: relative;
-    height: 22px;
-    font-size: 10px;
-    line-height: 20px;
+    height: 24px;
+    font-size: 14px;
+    line-height: 24px;
     text-align: center;
     background-color: #f2f2f2;
   }

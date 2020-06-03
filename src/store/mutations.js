@@ -7,8 +7,8 @@
 const mutations = {
     // [方法名](参数1,参数2...){方法}
     [types.ADD_PRODUCT_TO_CART](state, cartItem) {
-      console.log(cartItem)
       cartItem.quantity = 1;
+      console.log("mutations ADD_PRODUCT_TO_CART", cartItem);
       state.cartList.push(
         cartItem
       );
@@ -34,23 +34,15 @@ const mutations = {
       }
     },
 
-    [types.DECREMENT_INVENTORY](state, data) {
+    [types.DECREMENT_INVENTORY](state, skuId) {
       let cartItem = {};
-      if (data.skuId) {
-        cartItem = state.cartList.find(item => item.skuId === data.skuId);
-      } else {
-        cartItem = state.cartList.find(item => item.productId === data.productId);
-      }
+        cartItem = state.cartList.find(item => item.skuId === skuId);
       cartItem.quantity--;
       console.log("DECREMENT_INVENTORY", state.cartList, state.cartList.length)
     },
-    [types.INCREMENT_INVENTORY](state, data) {
+    [types.INCREMENT_INVENTORY](state, skuId) {
       let cartItem = {};
-      if (data.skuId) {
-        cartItem = state.cartList.find(item => item.skuId === data.skuId);
-      } else {
-        cartItem = state.cartList.find(item => item.productId === data.productId);
-      }
+        cartItem = state.cartList.find(item => item.skuId === skuId);
       cartItem.quantity++;
       console.log("INCREMENT_INVENTORY", state.cartList, state.cartList.length)
     },

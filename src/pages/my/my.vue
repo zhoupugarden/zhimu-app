@@ -14,9 +14,8 @@
               <van-button plain type="info" color="black" size="mini">每日签到</van-button>
             </div>
           </div>
-
           <div style="font-size: 12px;">{{basicInfo.phoneNo}}</div>
-          <div v-if="isVip" @click="navigateToMyVip">
+          <div v-if="!isVip" @click="navigateToMyVip">
             <span class="vip_tip_2">VIP</span>
             <span class="vip_tip">加入会员享受VIP福利</span>
           </div>

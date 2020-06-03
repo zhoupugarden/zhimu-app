@@ -82,7 +82,7 @@
 
     computed: {
       contentUrls() {
-        console.log("this.detail.picUrls", this.detail.contentUrls)
+        console.log("this.detail.picUrls", this.detail.contentUrls);
         return this.detail.contentUrls.split(',');
       },
       formatTime() {

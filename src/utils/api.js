@@ -1,20 +1,12 @@
 // 后端接口基础路径
-export const BASE_API_URL = 'https://api.zimcake.com/zm-mini-0.0.1-SNAPSHOT';
-// export const BASE_API_URL = 'http://localhost:8080';
-
-// 获取产品分类信息
-export const GET_PRODUCT_CATEGORY_URL = BASE_API_URL + '/productCategory/listAll';
-// 根据产品分类id获得所有产品信息
-export const GET_PRODUCT_BY_CATEGORY_ID = BASE_API_URL + '/product/listBriefProduct';
-
-// 获取所有分类信息及分类的产品简要信息
-export const GET_CATEGORY_AND_PRODUCT_BRIEF = BASE_API_URL + '/product/listProductAndCategory';
+// export const BASE_API_URL = 'https://api.zimcake.com/zm-mini';
+export const BASE_API_URL = 'http://localhost:8080';
 
 // 获取充值配置信息
 export const GET_CHARGE_CONFIG_INFO = BASE_API_URL + '/product/getChargeSkuDto';
 
 // 根据商品id获得商品详情
-export const GET_PRODUCT_DETAIL_BY_ID = BASE_API_URL + '/productDetail/list';
+export const GET_PRODUCT_DETAIL_BY_ID = BASE_API_URL + '/product/listDetailById';
 
 // 根据商品id获得商品SKU详情
 export const GET_PRODUCT_SKU_DETAIL_BY_ID = BASE_API_URL + '/product/listSKUDetailByProductId';
@@ -99,7 +91,7 @@ export const  POINT_REDEEM = BASE_API_URL + '/point/redeem';
 
 export const  SUBMIT_PROBLEM = BASE_API_URL + '/problem/submit';
 
-export const  PRODUCT_NOTICE = BASE_API_URL + '/product/notice';
+export const  PRODUCT_NOTICE = BASE_API_URL + '/notice/add';
 
 export const  GET_POINT_MALL = BASE_API_URL + '/pointmall/list';
 
@@ -112,6 +104,8 @@ export const  GET_FITTING_LIST = BASE_API_URL + '/fitting/list';
 export const  ORDER_PRESUBMIT = BASE_API_URL + '/order/presubmit';
 
 export const  CART_PRODUCT_CHECK = BASE_API_URL + '/cart/addCartCheck';
+
+
 
 
 

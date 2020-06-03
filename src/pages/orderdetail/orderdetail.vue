@@ -1,7 +1,7 @@
 <template>
   <div class="order-detail-container">
 
-    <van-tabs :active="active" @change="onChange">
+    <van-tabs color="#000000" :active="active" @change="onChange">
       <van-tab title="订单详情">
         <div>
           <div style="background-color: white">
@@ -80,6 +80,7 @@
         <div v-if = "orderInfo.orderStatus === 1" class="order-submit-button">
           <van-button custom-class="custom-button"
                       @click="orderPay"
+                      color="#000000"
                       type="primary"
           >立即支付</van-button>
         </div>
@@ -87,10 +88,10 @@
       </van-tab>
       <van-tab title="订单状态">
         <van-steps
+          active-color="#e64340"
           :steps="steps"
           :active="activeStepIndex"
           direction="vertical"
-          active-color="#f44"
         />
       </van-tab>
     </van-tabs>
@@ -212,12 +213,6 @@
             console.log("this response", response);
             this.orderInfo = response;
             this.orderProductDetailList = this.orderInfo.orderProductDetailList;
-          let status = this.orderInfo.orderStatus;
-          let pages = getCurrentPages();
-          let prePage = pages[pages.length - 2];
-          if (prePage.route === 'pages/ordersubmit/main' && status === 1) {
-            this.orderPay();
-          }
           }
         )
       }
@@ -243,8 +238,18 @@
       console.log("pageUrl", pages);
       let prePage = pages[pages.length - 2];
       if (prePage.route === 'pages/ordersubmit/main') {
+
         wx.switchTab({
-          url: '/pages/cart/main'
+          url: '/pages/home/main',
+          success(res) {
+            console.log("=========", res)
+          },
+          fail(res) {
+            console.log("=========", res)
+          },
+          complete(res) {
+            console.log("=========", res)
+          }
         })
       }
     }

@@ -6,10 +6,8 @@
   height: 100%;
 }
 .cart-no-container {
-  position: absolute;
-  top: 40%;
-  left: 40%;
   text-align: center;
+  padding: 50% 0;
 }
 
 .cart-container__bottom {
@@ -31,10 +29,11 @@
   left: 4%;
 }
 .cart-container__tip {
-  padding-top: 20px;
-  font-size: 50%;
   font-weight: lighter;
   text-align: center;
+}
+.van-popup__custom--container_cross {
+  margin: 5px 0px;
 }
 .cart-container__bottom--line {
   width: 100%;
@@ -65,8 +64,8 @@
 }
 .cart-container__fitting {
   padding-top: 10px;
-  margin-bottom: 200px;
-
+  background-color: white;
+  height: 200px;
 }
 .van-popup__custom--container_detail {
   display: flex;

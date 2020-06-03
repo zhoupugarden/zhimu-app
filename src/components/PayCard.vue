@@ -6,7 +6,7 @@
     </div>
     <div class="paycard-container_price">
       ￥{{item.salePrice}}
-      <van-button size="small" @click="addToCart">添加</van-button>
+      <van-button plain color="#000000" size="small" @click="addToCart">添加</van-button>
     </div>
   </div>
 </template>
@@ -15,7 +15,6 @@
   export default {
     props: {
       item:Object
-
     },
     data() {
       return {
@@ -36,10 +35,9 @@
     position: relative;
     width: 150px;
     font-size: 12px;
-    /*color: @text-color;*/
-    color: #34495e;
-    /*background-color: @background-color-light;*/
     box-sizing: border-box;
+    margin: 20px 0px;
+  }
   .paycard-container__pic {
     position: relative;
     box-sizing: border-box;
@@ -47,18 +45,14 @@
     height: 100px;
   }
   .paycard-container__name {
-    padding-top: 10px;
+    padding: 10px 0px;
     font-size: 14px;
   }
   .paycard-container_price {
-    font-weight: lighter;
-    font-size: small;
+    font-size: 14px;
     color: red;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  }
-
-
 </style>

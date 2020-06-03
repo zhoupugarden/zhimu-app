@@ -6,7 +6,8 @@
     "van-cell": "/static/vant/cell/index",
     "van-icon": "/static/vant/icon/index"
   },
-  "navigationBarTitleText": "我的"
+  "navigationBarTitleText": "我的",
+  "disableScroll": true
 }
 
 

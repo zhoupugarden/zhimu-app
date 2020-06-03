@@ -46,7 +46,7 @@
 
 </template>
 <script>
-  import {GET_PRODUCT_CATEGORY_URL,GET_PRODUCT_SKU_DETAIL_BY_ID,
+  import {GET_PRODUCT_SKU_DETAIL_BY_ID,
     GET_PRODUCT_BY_CATEGORY_ID, INDEX_LIST, INDEX_INFO} from '@/utils/api';
   import {request} from "@/utils/request";
   import card from '@/components/card';
@@ -130,7 +130,7 @@
     methods: {
       ...mapActions(
         [
-          'addProductToCart', 'addMerchantInfo', 'addDeliverConfig', 'addAdSettings'
+          'addProductToCart'
         ]
       ),
 
@@ -212,31 +212,7 @@
             console.log("this response", response);
           }
         )
-      },
-      indexInfo() {
-        request(
-          INDEX_INFO,
-          'GET'
-        ).then(
-          response => {
-            console.log("this response", response);
-            let config = response.zmDeliverConfig;
-            let settings = response.adSettings;
-            this.adSettings = response.adSettings;
-            if (this.adSettings.find(a => a.adType === 1002)) {
-              this.headAdSetting = this.adSettings.find(a => a.adType === 1002);
-            }
-            console.log("this.headAdSetting", this.headAdSetting);
-            this.popAdSetting = this.adSettings.find(a => a.adType === 1001);
-            let merchantInfo = response.zmMerchant;
-            this.merchantInfo = response.zmMerchant;
-            this.addMerchantInfo(merchantInfo);
-            this.addAdSettings(settings);
-            this.addDeliverConfig(config);
-          }
-        )
       }
-
     },
     onShow() {
       this.indexList();
@@ -244,11 +220,7 @@
       if (this.popCartActive === true) {
         this.closeActive();
       }
-    },
-    onLoad() {
-      this.indexInfo();
     }
-
     }
 
 </script>

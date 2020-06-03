@@ -24,6 +24,7 @@
       <van-field
         :value="address.receiverPhone"
         required
+        type="number"
         @change="receiverPhoneChange"
         clearable
         label="手机号"
@@ -35,6 +36,7 @@
     <div class="address-add-button">
       <div class="address-add-button_wrap">
         <van-button round
+                    color="#000000"
                     custom-class="custom-button"
                     @click="addOrUpdateAddress"
                     type="primary">下一步</van-button>
@@ -59,7 +61,7 @@
 
   import {ADD_NEW_ADDRESS, GET_ADDRESS_BY_ID, UPDATE_USER_ADDRESS} from '@/utils/api';
   import {request} from "@/utils/request";
-  import { mapGetters, mapState} from 'vuex';
+  import {  mapState} from 'vuex';
   export default {
 
   data() {

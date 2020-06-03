@@ -1,20 +1,17 @@
 <script>
-  import {wxLogin} from '@/utils/wxApi';
-  import {request} from "@/utils/request";
-  import {WX_LOGIN} from '@/utils/api';
   import {mapActions} from 'vuex';
+  import {request} from "@/utils/request";
 
 
   export default {
   created () {
-    let that = this;
     console.log("=========app.vue========");
 
-    wxLogin((res) => {
-      that.login(res)
-    });
+    //添加用户当前location地址
 
+    //添加广告配置、运费配置、商户信息配置
 
+    this.$store.dispatch('merchant/getMerchantData');
 
     let logs;
     if (mpvuePlatform === 'my') {
@@ -34,27 +31,29 @@
 
     ...mapActions(
       [
-        'storeToken'
+        'storeToken','addMerchantInfo', 'addDeliverConfig', 'addAdSettings'
       ]
 
     ),
 
-    login(res) {
-      console.log("======log=====", res);
-      let params = {};
-      params.wxCode = res.code;
+    indexInfo() {
+      let that = this;
       request(
-        WX_LOGIN,
-        'post',
-        params
+        INDEX_INFO,
+        'GET'
       ).then(
         response => {
-          console.log("=========response===", response);
-          let token = response;
-          this.storeToken(token);
+          console.log("this response", response);
+          let config = response.zmDeliverConfig;
+          let settings = response.adSettings;
+          let merchantInfo = response.zmMerchant;
+          that.addMerchantInfo(merchantInfo);
+          that.addAdSettings(settings);
+          that.addDeliverConfig(config);
         }
       )
     }
+
   },
 
   log () {

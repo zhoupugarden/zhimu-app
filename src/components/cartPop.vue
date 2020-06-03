@@ -8,18 +8,18 @@
                >
       <div class="van-popup__panel" :style="transformFront">
         <div style="position: relative">
-          <div style="padding-left: 10%; padding-bottom:10px;">
-            <div style="display: flex;align-items: center">
+          <div style="margin: 0 auto;width: 90%;">
+            <div style="display: flex;align-items: center;border-bottom: 1px solid #f2f2f2; ">
               <span class="van-popup__panel_price">
                 {{chooseSKU.salePrice}}
               </span>
               <span v-show="chooseSKU.promoteType===1004" class="zm-goods__price-lineprice">
                 {{chooseSKU.linePrice}}
               </span>
-              <span style="color: red; padding-left: 10px" v-show="chooseSKU.stock <= chooseSKU.warnStock">少量库存</span>
+              <span style="color: red; font-size: 10px; padding-left: 10px" v-show="chooseSKU.stock <= chooseSKU.warnStock">少量库存</span>
             </div>
             <div class="van-popup__panel_extro">
-              <div class="van-popup__panel_extro__item">
+              <div v-show="chooseSKU.cakeSize" class="van-popup__panel_extro__item">
                 <div style="display: flex">
                   <img src="../asset/cake_2.png" style="width: 20px; height: 20px; ">
                   <span class="font_setting">{{chooseSKU.cakeSize}}</span>
@@ -51,12 +51,11 @@
 
               </div>
             </div>
-            <div style="font-family: 'Microsoft YaHei'; font-size: 12px;padding:10px 0px;">规格</div>
+            <div style="font-family: 'Microsoft YaHei'; font-size: 14px;padding:10px 0px;">规格</div>
             <div  class="van-popup__panel_attribute">
-          <span style="padding-right: 5px;" v-for="(item, index) in productSKUs" :key="index">
+          <span style="margin-right: 5px;" v-for="(item, index) in productSKUs" :key="index">
                 <check-box
-                  :id="item.skuId"
-                  :name="item.attributeName"
+                  :skuItem="item"
                   :type="item.skuId === chooseSKU.skuId ? 'selected' : 'default'"
                   @selectedSKU="selectedSKU"
                 ></check-box>
@@ -64,7 +63,7 @@
             </div>
           </div>
           <div class="van-popup__panel_shopcart">
-            <van-button custom-class= "button-custom" color="#CDA65B" @click="addToCart">
+            <van-button custom-class= "button-custom" color="#000000" @click="addToCart">
               {{popupText}}
             </van-button>
           </div>
@@ -178,14 +177,11 @@
   watch: {
     productSKUs() {
       console.log("this.productSKUs", this.productSKUs);
-
-      this.chooseSKU = this.productSKUs.find(a => a.isPrime === true);
-
+      this.chooseSKU = this.productSKUs[0];
     },
   },
 
   computed: {
-
       transformFront() {
         if (this.active === 1 && this.popShow === true) {
           return "transform:" + "rotateY(180deg)";
@@ -226,7 +222,6 @@
     font-size: 13px;
     font-family: 'Microsoft YaHei';
     padding-left: 5px;
-    color: #888888;
   }
 
   .cart-pop-container {
@@ -249,6 +244,7 @@
     transition: all 1s;
     background-color: white;
     height: 100%;
+    width: 100%;
   }
 
   .van-popup__panel_price {
@@ -266,15 +262,6 @@
   .van-popup__panel_price:before {
     content:'￥';
   }
-  .van-popup__panel_price:after {
-    content:" ";
-    display:block;
-    margin:5px auto 0;
-    width:90%;
-    border-bottom:2px solid #F39B00;
-    transition:width .4s ease-in-out;
-  }
-
   .van-popup__panel_line {
     width:80%;
     margin:0 auto;

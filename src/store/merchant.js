@@ -28,8 +28,8 @@ const actions = {
       ).then(
         response => {
           console.log("====getMerchantData=====", response);
-          let merchantInfo = response.zmMerchant;
-          let deliverConfig = response.zmDeliverConfig;
+          let merchantInfo = response.merchantConfigDto;
+          let deliverConfig = response.deliverConfigDto;
           let adSettings = response.adSettings;
           context.commit('setMerchantData', {merchantInfo, deliverConfig, adSettings});
         }

@@ -19,13 +19,15 @@
         </div>
       <div class="zm-card__content">
         <div class="zm-card__title"> {{cardItem.productName}}</div>
-
-        <div v-if = "cardItem.attributeName" class="zm-card__attr">{{cardItem.attributeName}}</div>
-        <div v-else class="zm-card__attr">个</div>
+        <div v-if = "cardItem.attributeGroupId !== 1005" class="zm-card__attr">
+          <span v-show="cardItem.attributeValue">{{cardItem.attributeValue}}</span>
+          <span>{{cardItem.attributeName}}</span>
+        </div>
+        <div v-else class="zm-card__attr">{{cardItem.attributeName}}</div>
 
         <slot name="tags"></slot>
         <div class="zm-card__close">
-          <van-icon name="close" @click="removeProduct"/>
+          <van-icon name="cross" size="14px" @click="removeProduct"/>
         </div>
         <div class="zm-card__bottom">
           <view  class="zm-card__price price-class">￥{{ cardItem.salePrice }}</view>
@@ -51,11 +53,11 @@
     },
     methods: {
       removeProduct() {
-        console.log(this.cardItem)
+        console.log(this.cardItem);
         this.$emit('removeItem', this.cardItem)
       },
       increInventory() {
-        console.log(this.cardItem)
+        console.log(this.cardItem);
         this.$emit('increItem', this.cardItem)
       },
       decreInventory() {
