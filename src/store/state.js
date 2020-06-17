@@ -3,7 +3,7 @@ const state = {
     cartList:[],
     token:'',
     isLogin:0,
-    isVip:0,
+    isVip:false,
     freeList:[],
     currentLocation:{}
 }

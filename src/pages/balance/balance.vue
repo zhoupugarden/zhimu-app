@@ -28,7 +28,8 @@
   import BalanceItem from '@/components/BalanceItem';
   import {GET_BALANCE_DETAIL} from '@/utils/api';
   import {request} from "@/utils/request";
-  import { mapGetters} from 'vuex';
+  import {mapGetters} from 'vuex';
+  import {pageUrlEnum} from '@/utils/enums';
   export default {
     components: {
       BalanceItem
@@ -67,7 +68,7 @@
       } else {
         wx.navigateTo(
           {
-            url:'/pages/login/main'
+            url:pageUrlEnum.login_url
           }
         )
       }
@@ -76,14 +77,13 @@
       let pages = getCurrentPages();
       let prePage = pages[pages.length -2];
       let preUrl = prePage.route;
-      if (preUrl === "pages/login/main") {
+      if (preUrl === pageUrlEnum.login_url) {
         wx.switchTab({
-            url : "/pages/my/main"
+            url : pageUrlEnum.my_url
           }
         )
       }
     }
-
   }
 </script>
 

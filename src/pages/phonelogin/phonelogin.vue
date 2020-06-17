@@ -63,7 +63,7 @@
     'pages/my/main',
     'pages/cart/main',
     'pages/order/main',
-    'pages/index/main'
+    'pages/home/main'
   ];
 
 
@@ -90,7 +90,6 @@
       ),
 
       getCode(){
-        console.log("this.phoneNo", this.phoneNo);
         if (this.validPhoneNo(this.phoneNo)) {
           const TIME_COUNT = 60;
           if (!this.timer) {
@@ -111,7 +110,6 @@
       },
 
       validPhoneNo(num) {
-        console.log("phoneNo", num);
         let valid = true;
         if (null === num || '' === num) {
           this.errorMessage = '手机号码不能为空';
@@ -179,10 +177,9 @@
           response => {
             let token = response;
             that.storeToken(token);
-            that.storeIsLogin(1);
+            that.storeIsLogin(true);
             getAuth('scope.userLocation', async () => {
               let location = await getLocation();
-              console.log("=====", location);
               this.addCurrentLocation(location);
             });
             getAuth('scope.userInfo', async () => {
@@ -243,7 +240,6 @@
       login() {
         let that = this;
         wxLogin(async (res) => {
-          console.log("res=======", res);
           //发起网络请求
           let userLoginBo = {};
           userLoginBo.phoneNo = this.phoneNo;

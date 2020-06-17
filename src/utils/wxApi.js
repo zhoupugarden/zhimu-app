@@ -68,9 +68,11 @@ export  function subscribeMessage(subscribeType, callback) {
     wx.requestSubscribeMessage({
       tmplIds: subscribeType,
       success(res) {
-        if (res[subscribeType] === 'accept') {
+        console.log("success response======", res);
           callback(res);
-        }
+      },
+      fail(res) {
+        console.log("fail response======", res);
       }
     })
   })

@@ -153,6 +153,7 @@
   import {CHARGE, GET_CHARGE_CONFIG_INFO,MY_USER_INFO , MOCK_WX_PAY} from '@/utils/api';
   import Dialog from '../../../static/vant/dialog/dialog';
   import {request} from "@/utils/request";
+  import {pageUrlEnum} from "@/utils/enums";
 
   const popContents = [
     {
@@ -207,12 +208,10 @@
         ).then(
           response => {
             //  微信支付成功后，跳转到myvip页面
-            let url = "../my/main" ;
-            console.log("url",url);
             //支付成功后，设置vip标志
             this.storeIsVip(1);
             wx.switchTab({
-              url
+              url:pageUrlEnum.my_url
             });
           }
         )
@@ -223,7 +222,6 @@
           'GET'
         ).then(
           response => {
-            console.log("this response", response);
             this.productId = response.productId;
             this.skuId = response.skuId;
           }
@@ -235,14 +233,12 @@
         let params = {};
         params.productId = this.productId;
         params.skuId = this.skuId;
-        console.log("charge");
         request(
           CHARGE,
           'POST',
           params
         ).then(
           response => {
-            console.log("this response", response);
             let data = {};
             data.out_trade_no = response.orderNo;
             data.transaction_id = response.unifiedOrderNo;
@@ -261,19 +257,15 @@
       },
 
       showPopup(id) {
-        console.log("id",id);
         Object.assign(this.popContent, popContents[id]);
         this.popShow = true;
       },
       popupClose() {
-        console.log("popupClose")
         this.popShow = false;
       },
       navigateToBuy() {
-        var url = "/pages/buyvip/main";
-        console.log("url",url)
         wx.navigateTo({
-          url
+          url:pageUrlEnum.buy_vip_url
         });
       },
       getUserInfo() {
@@ -300,7 +292,7 @@
       this.getChargeProductInfo();
       if (!this.isLogin) {
         wx.navigateTo({
-          url:'/pages/login/main'
+          url:pageUrlEnum.login_url
         })
       } else {
         this.getUserInfo();
@@ -310,9 +302,9 @@
       let pages = getCurrentPages();
       let prePage = pages[pages.length -2];
       let preUrl = prePage.route;
-      if (preUrl === "pages/login/main") {
+      if (preUrl === pageUrlEnum.login_url) {
         wx.switchTab({
-            url : "/pages/my/main"
+            url : pageUrlEnum.my_url
           }
         )
       }

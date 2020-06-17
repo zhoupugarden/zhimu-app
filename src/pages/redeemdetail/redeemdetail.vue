@@ -34,8 +34,9 @@
 
 <script>
   import {POINT_REDEEM, GET_POINT_MALL_DETAIL} from '@/utils/api';
-  import { mapGetters} from 'vuex';
   import {request} from "@/utils/request";
+  import {pageUrlEnum} from "@/utils/enums";
+
   export default {
     data() {
       return {
@@ -51,13 +52,11 @@
           params
         ).then(
           response => {
-            console.log("response",response)
             this.redeemItem = response;
           }
         )
       },
       pointRedeem() {
-        console.log("pointRedeem", this.redeemItem)
         let param = {};
         param.pointMallId = this.redeemItem.id;
         request(
@@ -75,7 +74,7 @@
                 if(res.confirm) {
                   wx.navigateTo(
                     {
-                      url:'/pages/coupon/main'
+                      url:pageUrlEnum.coupon_url
                     }
                   )
                 }
@@ -88,7 +87,6 @@
 
     onShow() {
       let params = this.$root.$mp.query;
-      console.log(" detail: ", this.$root.$mp.query);
       this.getMallDetail(params);
     },
 

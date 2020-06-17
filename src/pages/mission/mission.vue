@@ -127,6 +127,7 @@
   import {request} from "@/utils/request";
   import {subscribeMessage} from '@/utils/wxApi';
   import {toast} from '../../utils/toast';
+  import {pageUrlEnum} from "@/utils/enums";
 
   export default {
     components: {
@@ -197,7 +198,6 @@
           params
         ).then(
           (response) => {
-            console.log("response ==== notice add", response);
             //订阅成功
             toast("签到提醒订阅成功");
           }
@@ -223,7 +223,9 @@
             wx.requestSubscribeMessage({
               tmplIds: ['NiwQZaKrzNmkRIpsgDpHNX_T0_16WD3bn9N5etwFAmA'],
               success (res) {
-                that.noticeAdd();
+                if (res[tmplIds] === 'accept') {
+                  that.noticeAdd();
+                }
               },
               complete(res) {
               }
@@ -253,7 +255,7 @@
                 if(res.confirm) {
                   wx.navigateTo(
                     {
-                      url:'/pages/coupon/main'
+                      url:pageUrlEnum.coupon_url
                     }
                   )
                 }

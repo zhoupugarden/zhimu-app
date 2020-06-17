@@ -98,6 +98,7 @@
 
   import {PAY_FITTING_LIST, GET_FITTING_LIST, CART_PRODUCT_CHECK} from '@/utils/api';
   import {request} from "@/utils/request";
+  import {pageUrlEnum} from "@/utils/enums";
 
   export default {
   components: {
@@ -213,7 +214,6 @@
       ]
     ),
     addFreeFitting(data) {
-      console.log("event", data);
       let params = {};
       params.fittingId = data.fittingId;
       this.addFreeCart(data);
@@ -226,16 +226,13 @@
         response => {
           this.payGood = response.fittingList;
           this.freeGood = response.freeFittingList;
-          console.log("this response", response);
         }
       )
     },
     cartProductCheck() {
       let params = {};
       let cartInfoList = [];
-      console.log(this.cartList);
       for(let product of this.cartList) {
-        console.log(product);
         let cartInfo = {};
         cartInfo.skuId = product.skuId;
         cartInfo.quantity = product.quantity;
@@ -248,11 +245,9 @@
         params
       ).then(
         (response) => {
-          console.log("response:", response);
           if (response) {
-            let url = "/pages/ordersubmit/main";
             wx.navigateTo({
-              url
+              url:pageUrlEnum.order_submit_url
             });
           }
         }
@@ -260,20 +255,15 @@
     },
 
     popUpClose() {
-      console.log("popUpClose");
       this.popShow = false;
     },
     popUpShow() {
       this.popShow = true;
     },
     navigateToSubmitOrLogin() {
-      let loginUrl = "/pages/login/main";
-      let url = "";
-      //add-free-cart
       if (!this.isLogin) {
-        url = loginUrl;
         wx.navigateTo({
-          url
+          url:pageUrlEnum.login_url
         });
       } else {
         this.cartProductCheck();
@@ -294,11 +284,9 @@
 
     },
     removeFreeItem(data) {
-      console.log("removeFreeItem", data);
       this.delFreeFromCart(data);
     },
     fieldChange(data) {
-      console.log("fieldChange: ", data);
       let productName = data.productName;
       let value = data.value;
       let freeItem = this.$store.state.freeList.find(i => i.productName === productName);
@@ -310,34 +298,25 @@
       if (this.totalCartList.length === 0) {
         this.totalPrice = 0.00;
       } else {
-        console.log("cartTotalPrice ");
-        console.log("totalCartList ", this.totalCartList);
         let tmpTotalPrice = 0;
         for (let index in this.totalCartList) {
-          console.log("item", this.totalCartList[index]);
           let item = this.totalCartList[index];
           let itemPrice = item.salePrice * item.quantity;
-          console.log("itemPrice", itemPrice);
           tmpTotalPrice = tmpTotalPrice + itemPrice;
         }
         this.totalPrice = tmpTotalPrice;
-        console.log("this.totalPrice", this.totalPrice)
       }
     },
 
     increItem(data) {
-      console.log(data);
       this.incrementInventory(data);
-      console.log("this.cartList", this.cartList);
       this.calcTotalPrice();
     },
     decreItem(data) {
-      console.log(data);
       this.decrementInventory(data);
       this.calcTotalPrice();
     },
     addGoodToCart(data) {
-      console.log("Card good",data);
       this.popShow = false;
       this.addProductToCart(data);
       this.calcTotalPrice();

@@ -84,6 +84,15 @@
                       type="primary"
           >立即支付</van-button>
         </div>
+
+          <div v-if="orderInfo.orderStatus === 2" class="order-submit-button">
+            <van-button custom-class="custom-button"
+                        @click="addNoticeMessage"
+                        color="#000000"
+                        type="primary"
+            >立即订阅</van-button>
+          </div>
+
         </div>
       </van-tab>
       <van-tab title="订单状态">
@@ -96,15 +105,20 @@
       </van-tab>
     </van-tabs>
     <van-dialog id="van-dialog" />
+    <van-toast  id="van-toast"/>
   </div>
 </template>
 
 <script>
 
   import ProductItem from '@/components/ProductItem';
-  import {GET_ORDER_DETAIL, GET_ORDER_LOG, PAY_ORDER, MOCK_WX_PAY} from '@/utils/api';
+  import {GET_ORDER_DETAIL,PRODUCT_NOTICE, GET_ORDER_LOG, PAY_ORDER, MOCK_WX_PAY} from '@/utils/api';
   import {request} from "@/utils/request";
   import Dialog from '../../../static/vant/dialog/dialog';
+  import {subscribeMessage} from '@/utils/wxApi';
+  import {toast} from '../../utils/toast';
+  import {pageUrlEnum} from '@/utils/enums'
+
 
   export default {
     components: {
@@ -125,7 +139,6 @@
     },
     methods: {
       onChange(event) {
-        console.log("event:", event);
         if (event.mp.detail.index === 1) {
           this.getOrderLog();
         }else {
@@ -145,7 +158,6 @@
           data
         ).then(
           response => {
-            console.log("支付订单响应：", response);
             //  在这里需要调用微信支付
             let data = {};
             data.out_trade_no = response.orderNo;
@@ -164,6 +176,48 @@
         )
       },
 
+      //先临时测试放在这里， 订阅消息只能在点击动作或真实支付回调后才能弹出，
+      addNoticeMessage() {
+        let that = this;
+        // 配送通知
+        let id = 'By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0';
+        // 评论通知
+        let id2 = 'NiwQZaKrzNmkRIpsgDpHNX_T0_16WD3bn9N5etwFAmA';
+        let tmplIds = [];
+        tmplIds.push(id);
+        tmplIds.push(id2);
+        subscribeMessage(tmplIds,  (res)=> {
+          //  添加后台通知
+          if (res[id] === 'accept') {
+            //配送通知
+            that.addNotice(2);
+          }
+          if (res[id2] === 'accept') {
+          //  评论提醒通知
+            that.addNotice(3);
+          }
+        });
+      },
+
+      addNotice(noticeType) {
+        let params = {};
+        params.orderNo = this.orderNo;
+        params.noticeType = noticeType;
+        request(
+          PRODUCT_NOTICE,
+          'POST',
+          params
+        ).then(
+          (response) => {
+            if (response.isRepeated === 1) {
+              toast("您已订阅, 请勿重复订阅", 3000)
+            } else {
+              toast("消息提醒订阅成功");
+            }
+          }
+        )
+      },
+
       mockWxPay(data) {
         request(
           MOCK_WX_PAY,
@@ -171,7 +225,6 @@
           data
         ).then(
           response => {
-            console.log("this response", response);
             //  微信支付成功后，跳转到myvip页面
             let params = {};
             params.orderNo = this.orderNo;
@@ -189,9 +242,7 @@
           params
         ).then(
           response => {
-            console.log("this response", response);
             this.steps = response;
-            console.log("this.steps.length ", this.steps.length)
             this.activeStepIndex = this.steps.length - 1;
           }
         )
@@ -210,7 +261,6 @@
           params
         ).then(
           response => {
-            console.log("this response", response);
             this.orderInfo = response;
             this.orderProductDetailList = this.orderInfo.orderProductDetailList;
           }
@@ -229,18 +279,15 @@
     },
     onShow() {
       let params = this.$root.$mp.query;
-      console.log("order detail: ", this.$root.$mp.query);
       this.getOrderDetail(params);
       this.orderNo = this.$root.$mp.query.orderNo;
     },
     onUnload() {
       let pages = getCurrentPages();
-      console.log("pageUrl", pages);
       let prePage = pages[pages.length - 2];
-      if (prePage.route === 'pages/ordersubmit/main') {
-
+      if (prePage.route === pageUrlEnum.order_submit_url) {
         wx.switchTab({
-          url: '/pages/home/main',
+          url: pageUrlEnum.home_url,
           success(res) {
             console.log("=========", res)
           },

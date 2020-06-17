@@ -49,7 +49,7 @@
 
 <script>
 
-  const defaultAdress = {
+  const defaultAddress = {
     receiverName:"",
     addressName:"请选择",
     roadName:"请选择",
@@ -62,6 +62,8 @@
   import {ADD_NEW_ADDRESS, GET_ADDRESS_BY_ID, UPDATE_USER_ADDRESS} from '@/utils/api';
   import {request} from "@/utils/request";
   import {  mapState} from 'vuex';
+  import {pageUrlEnum} from "@/utils/enums";
+
   export default {
 
   data() {
@@ -92,27 +94,21 @@
       ).then(
         response => {
           this.items = response;
-          console.log("this response", response);
-          let url = "/pages/myaddress/main" ;
-          console.log("url",url);
           let pages = getCurrentPages();
-          console.log("pageUrl", pages);
           let prePage = pages[pages.length - 3];
-          console.log("this.isNew === 'true'", this.isNew === 'true');
-          console.log("prePage === 'pages/ordersubmit/main'", prePage.route === 'pages/ordersubmit/main')
           if (this.isNew === 'true' && prePage.route === 'pages/ordersubmit/main') {
             wx.navigateBack(
               {
-                url:"/pages/ordersubmit/main"
+                url: pageUrlEnum.order_submit_url
               }
             )
           } else {
             wx.navigateBack({
-              url
+              url:pageUrlEnum.my_address_url
             });
           }
           // 操作后清空原有数据
-          this.address = Object.assign({}, defaultAdress);
+          this.address = Object.assign({}, defaultAddress);
         }
       )
     },
@@ -126,14 +122,11 @@
         params
       ).then(
         response => {
-          console.log("update response", response);
           // 操作后清空原有数据
-          this.address = Object.assign({}, defaultAdress);
+          this.address = Object.assign({}, defaultAddress);
           this.addressId = "";
-          let url = "../myaddress/main";
-          console.log("url",url)
           wx.navigateTo({
-            url
+            url:pageUrlEnum.my_address_url
           });
 
         }
@@ -149,11 +142,9 @@
       ).then(
         response => {
           this.address = response;
-          console.log("this response", response);
         }
       )
     },
-
 
     receiverNameChange(event) {
       this.address.receiverName = event.mp.detail;
@@ -166,7 +157,6 @@
     roadDetailChange(event) {
       this.address.roadDetail = event.mp.detail;
     },
-
 
     onChange(event) {
       console.log(event)
@@ -183,9 +173,7 @@
       let deltaLng = toRadians(lng1) - toRadians(lng2);
       dis = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(deltaLat / 2), 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(deltaLng / 2), 2)));
       let distance = dis * 6378137;
-      console.log("距离为：", distance);
       return distance.toFixed(2);
-
     function toRadians(d) {  return d * Math.PI / 180;}
   },
 
@@ -200,7 +188,6 @@
             wx.authorize({
               scope: 'scope.userLocation',
               success () {
-                console.log("用户已同意授权")
                 wx.chooseLocation({
                   success(resChoose) {
                     console.log(res)
@@ -257,8 +244,6 @@
           }
         }
       })
-
-
     }
   },
     computed: {
@@ -269,7 +254,6 @@
     },
     onShow() {
       let params = this.$root.$mp.query;
-      console.log("this.$root.$mp.query", params);
       if (params.isNew) {
         this.isNew = params.isNew;
       }
@@ -285,7 +269,7 @@
 
     },
     onUnload() {
-      this.address = Object.assign({}, defaultAdress);
+      this.address = Object.assign({}, defaultAddress);
     }
 
   }

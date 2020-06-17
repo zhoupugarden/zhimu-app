@@ -26,6 +26,8 @@
   import {GET_USER_ADDRESS,DEL_USER_ADDRESS} from '@/utils/api';
   import {request} from "@/utils/request";
   import { mapGetters} from 'vuex';
+  import {pageUrlEnum} from "@/utils/enums";
+
   export default {
   components: {
     ZhimuAddress
@@ -43,7 +45,6 @@
     },
     ondelAddress(data) {
       let that = this;
-      console.log("del address data", data);
       let params = {};
       params.addressId = data;
 
@@ -62,7 +63,7 @@
       );
     },
     updateAddress(data) {
-      console.log("updateAddress:", data)
+      console.log("updateAddress:", data);
     },
 
     listUserAddress() {
@@ -74,7 +75,6 @@
       ).then(
         response => {
           this.addressArray = response;
-          console.log("this response", response);
         }
       )
     },
@@ -87,14 +87,12 @@
         params
       ).then(
         response => {
-          console.log("this response", response);
           this.listUserAddress();
         }
       )
     },
 
     navigateToNew() {
-
       let length = this.addressArray.length;
       let url = "";
       if (length === 0) {
@@ -102,7 +100,6 @@
       } else {
         url = "/pages/newaddress/main?isNew=false";
       }
-      console.log("url",url)
       wx.navigateTo({
         url
       });
@@ -123,9 +120,9 @@
       let pages = getCurrentPages();
       let prePage = pages[pages.length -2];
       let preUrl = prePage.route;
-      if (preUrl === "pages/login/main") {
+      if (preUrl === pageUrlEnum.login_url) {
         wx.switchTab({
-            url : "/pages/my/main"
+            url : pageUrlEnum.my_url
           }
         )
       }

@@ -51,7 +51,7 @@
   import { mapGetters , mapActions} from 'vuex';
   import {GET_COMMENT_ORDER_INFO, SUBMIT_ORDER_COMMENT ,GET_OSS_CONFIG} from '@/utils/api';
   import {request} from "@/utils/request";
-
+  import {pageUrlEnum} from "@/utils/enums";
 
   const activeColor = "#f2826a";
   export default {
@@ -80,31 +80,25 @@
         ).then(
           response => {
             this.ossConfig = response;
-            console.log("this response", response);
           }
         )
       },
       chooseTag(event) {
-        console.log("changeTag", event);
         let tagId = event;
         if (this.choosedTag.indexOf(this.tagDescs[tagId]) === -1) {
-          console.log("不存在");
           this.choosedTag.push(this.tagDescs[tagId]);
           this.tagColor[tagId] = activeColor;
         }else {
           this.choosedTag.splice(this.choosedTag.indexOf(this.tagDescs[tagId]), 1);
           this.tagColor[tagId] = "";
         }
-        console.log(this.choosedTag)
       },
       activeTags(event) {
-        console.log("event", event)
         this.isActive=true;
-        this.rateValue = event.mp.detail
+        this.rateValue = event.mp.detail;
       },
 
       rateChange(data) {
-        console.log("rateChange", data)
         let productId = data.productId;
         let rateValue = data.rateValue;
         let commentItem = this.commentItems.find( a => a.productId === productId);
@@ -122,7 +116,6 @@
       },
 
       picUpload(data) {
-        console.log("picUpload", data);
         let productId = data.productId;
         let picUrl = data.picUrl;
         let commentItem = this.commentItems.find( a => a.productId === productId);
@@ -140,22 +133,15 @@
           tempItem.urls.push(picUrl);
           this.commentItems.push(tempItem);
         }
-        console.log("this.commentItems", this.commentItems)
 
       },
       deletePic(data) {
-        console.log("deletePic", data);
         let productId = data.productId;
         let index = data.index;
         let commentItem = this.commentItems.find( a => a.productId === productId);
         commentItem.urls.splice(index,1);
-
-        console.log("this.commentItems", this.commentItems)
-
       },
       contentChange(data) {
-        console.log("contentChange", data)
-
         let productId = data.productId;
         let content = data.content;
         let commentItem = this.commentItems.find( a => a.productId === productId);
@@ -170,7 +156,6 @@
       },
 
       onChangeSwitch(event) {
-        console.log(event);
         if (event.mp.detail) {
           this.isAnonymous = true;
         } else {
@@ -185,7 +170,6 @@
           params
         ).then(
           (response) => {
-            console.log("this.good response", response);
             this.orderInfo = response;
           }
         )
@@ -205,7 +189,6 @@
         ).then(
           (response) => {
             // 如果成功，清空数据，提示积分，确认后跳转订单列表
-            console.log("this.good response", response);
             //  提示获赠积分，跳转订单列表
             let pointCount = response.pointCount;
             let title = "";
@@ -223,7 +206,7 @@
                 if(res.confirm) {
                   wx.switchTab(
                     {
-                      url:'/pages/order/main'
+                      url:pageUrlEnum.order_url
                     }
                   )
                 }
@@ -242,14 +225,12 @@
       ),
     },
     onLoad() {
-      console.log("orderNo: ",this.$root.$mp.query);
       let params = this.$root.$mp.query;
       this.orderNo = params.orderNo;
       this.getCommentOrderInfo(params);
       this.getOssConfig();
     },
     onUnload() {
-      console.log("evaluation onUnload")
       this.isAnonymous = 0;
       this.isActive = false;
         this.rateValue = 0;

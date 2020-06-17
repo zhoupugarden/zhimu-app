@@ -63,7 +63,7 @@
       优惠券
     </div>
 
-    <div v-show="isVip !== 1" @click="navigateToBuyVip">
+    <div v-show="!isVip" @click="navigateToBuyVip">
       <span class="vip_tip_2">VIP</span>
       <span class="vip_tip">{{vipTip}}</span>
     </div>
@@ -178,7 +178,7 @@
   import {request} from "@/utils/request";
   import {formatYMD} from "@/utils/dateUtil";
   import Dialog from '../../../static/vant/dialog/dialog';
-
+  import {CouponRuleTypeEnum, pageUrlEnum} from "@/utils/enums";
 
   export default {
     components: {
@@ -235,10 +235,8 @@
         console.log("this.switchValue:", this.switchValue)
       },
       navigateToChooseAddress() {
-        var url = "../myaddress/main";
-        console.log("url",url)
         wx.navigateTo({
-          url
+          url:pageUrlEnum.my_address_url
         });
       },
       navigateToOrderDetail(orderNo) {
@@ -249,10 +247,8 @@
         });
       },
       navigateToBuyVip() {
-        var url = "../buyvip/main";
-        console.log("url",url)
         wx.navigateTo({
-          url
+          url:pageUrlEnum.buy_vip_url
         });
       },
       datePop() {
@@ -277,7 +273,6 @@
         this.productPopShow = false;
       },
       confirmPopup(event) {
-        console.log("val", event)
         const {detail, currentTarget} = event.mp;
         if (!isNaN(detail)) {
          console.log(formatYMD(detail));
@@ -302,7 +297,6 @@
         this.couponValue = 0.00;
       },
       chooseCouponItem(item) {
-        console.log("couponItem: ", item);
         let params = {};
         params.couponCode = item.couponCode;
         params.productItems = this.convertCartList(this.cartList);
@@ -313,10 +307,8 @@
         this.timePopShow = false;
       },
       confirmTimePop(event) {
-        console.log("event", event)
         const {detail, currentTarget} = event.mp;
         this.currentTime = detail.value;
-        console.log("currentTime", this.currentTime);
         this.timePopShow = false;
       },
       convertCartList(data) {
@@ -337,7 +329,6 @@
 
       preCheckCoupon(data) {
         let that = this;
-        console.log("preCheckCoupon ======");
         request(
           PRE_USE_COUPON,
           'POST',
@@ -345,7 +336,6 @@
         ).then(
           response => {
             this.items = response;
-            console.log("this response", response);
             if (!response.isApply) {
               toast(response.notApplyReason);
             } else {
@@ -358,7 +348,6 @@
       },
       validParams() {
         let result = false;
-        console.log("this.switchValue , this.addressId", this.switchValue, this.addressId)
         if (this.switchValue === 1 && this.addressId === 0) {
           wx.showModal({
             title: "提示",
@@ -391,7 +380,6 @@
         return result;
       },
       openMerchantLocation() {
-          console.log("openWxLocation===");
           let latitude = this.merchantInfo.latitude;
           let longitude = this.merchantInfo.longitude;
           wx.openLocation({
@@ -400,7 +388,6 @@
             scale: 18
           })
       },
-
 
       orderPreSubmit() {
         let params = {};
@@ -416,13 +403,11 @@
 
         ).then(
           response => {
-            console.log("orderPresubmit response", response);
             this.couponCanUseList = response.presubmitUser.couponList;
             this.balanceAmount = response.presubmitUser.balanceAmount;
             this.distance = response.presubmitUser.currentDistance;
             this.addressArray = response.presubmitUser.addressList;
             this.tmpDeliverValue = response.presubmitOrder.deliverFee;
-            console.log("tmpDeliverValue======", this.tmpDeliverValue);
             if (this.switchValue === 1) {
               this.deliverValue = this.tmpDeliverValue;
               this.deliverType = 1;
@@ -484,7 +469,6 @@
               that.mockWxPay(data);
             }).catch(() => {
               // on cancel
-              console.log("取消微信支付");
             //  进入订单详情页面
               that.navigateToOrderDetail(orderNo);
             });
@@ -499,7 +483,6 @@
           data
         ).then(
           response => {
-            console.log("this response", response);
             //  微信支付成功后，跳转到订单详情页面
             let orderNo = response.orderNo;
             this.navigateToOrderDetail(orderNo);
@@ -543,7 +526,6 @@
             this.checkoutFreeCartList();
           }
         )
-
       }
     },
     computed: {
@@ -573,13 +555,11 @@
           this.addressId = addressItem.id;
           return addressItem;
         }else {
-          console.log("this.addressId:", this.addressArray.filter(item => item.id === Number(this.addressId)))
           return this.addressArray.find(item => item.id === Number(this.addressId));
         }
       },
 
       useBalanceAmount() {
-        console.log("balanceMount, cartTotalPrice", this.balanceAmount , this.totalProductPrice);
         let totalAmount = this.deliverValue + this.totalProductPrice;
         if (this.balanceAmount >= totalAmount) {
           return totalAmount - this.couponValue;
@@ -589,9 +569,7 @@
       },
 
       restWxPayAmount() {
-        console.log("this.totalProductPrice , this.deliverValue,this.couponValue", this.totalProductPrice , this.deliverValue,this.couponValue);
         let needPayAmount = this.totalProductPrice + this.deliverValue - this.couponValue;
-        console.log("needPayAmount: this.useBalanceAmount", needPayAmount, this.useBalanceAmount);
         if (needPayAmount > this.balanceAmount) {
           return needPayAmount - this.balanceAmount;
         }else {
@@ -609,7 +587,6 @@
       },
       orderSubmitSwitchSelf() {
         if (this.switchValue === -1) {
-          console.log("switch:", this.switchValue)
           return 'switch-style'
         }else {
           return 'un-switch-style'
@@ -617,24 +594,23 @@
         }
       },
       chooseCouponTip() {
-        console.log("this.choosedCoupon=============", this.choosedCoupon);
         if (this.choosedCoupon != null) {
           switch (this.choosedCoupon.couponType) {
-            case 1:
+            case CouponRuleTypeEnum.full_reduction:
               return this.choosedCoupon.disAmount + "元优惠券";
-            case 2:
+            case CouponRuleTypeEnum.dis_count:
               return this.choosedCoupon.disCount + "折优惠券";
-            case 3:
+            case CouponRuleTypeEnum.free_freight:
               return "免邮券";
-            case 4:
+            case CouponRuleTypeEnum.off_line:
               return;
-            case 5:
+            case CouponRuleTypeEnum.redeem:
               return this.choosedCoupon.couponValue;
-            case 6:
+            case CouponRuleTypeEnum.promote_pound:
               return this.choosedCoupon.couponValue;
-            case 8:
+            case CouponRuleTypeEnum.one_by_one:
               return this.choosedCoupon.couponValue;
-            case 9:
+            case CouponRuleTypeEnum.sec_by_half:
               return this.choosedCoupon.couponValue;
             default:
               return;
@@ -651,7 +627,6 @@
     watch: {
       'switchValue': {
         handler(val) {
-          console.log("switchValue: ", val);
           if (val === 1) {
             this.deliverValue = this.tmpDeliverValue;
             this.deliverType = 1;
@@ -676,9 +651,8 @@
         //要把原有已选的值清空
         let params = this.$root.$mp.query;
         let pages = getCurrentPages();
-        console.log("ordersubmit onshow", pages);
       let prevPage = pages[pages.length - 2];
-      if (prevPage.route === 'pages/cart/main') {
+      if (prevPage.route === pageUrlEnum.cart_url) {
         this.orderPreSubmit();
       }
       console.log(this.$root.$mp.query);

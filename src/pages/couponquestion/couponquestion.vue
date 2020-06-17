@@ -21,14 +21,11 @@
   data() {
     return {
       active:0
-
     }
-
   },
   methods: {
     onChange(event) {
       console.log(event)
-
     }
   }
 

@@ -88,6 +88,7 @@
   import { mapGetters} from 'vuex';
   import {formatYMD} from "@/utils/dateUtil";
   import Dialog from '../../../static/vant/dialog/dialog';
+  import {pageUrlEnum} from "@/utils/enums";
 
   export default {
   data() {
@@ -110,17 +111,13 @@
 
   methods: {
     onInput(event) {
-      console.log("onInput event", event);
       this.birthDate = formatYMD(event.mp.detail);
       this.currentDate = new Date(event.mp.detail).getTime();
     },
     onChangeSex(event) {
-      console.log("this.valueSex", this.valueSex)
-      console.log("event", event);
       this.valueSex = event.mp.detail;
     },
     chooseBirthDay() {
-      console.log("chooseBirthDay", this.datePopShow);
       if (!this.disabled) {
         this.datePopShow=true;
       }else {
@@ -128,12 +125,10 @@
       }
     },
     confirmPopup(event) {
-      console.log("val", event);
       const {detail, currentTarget} = event.mp;
       if (!isNaN(detail)) {
         this.currentDate = detail;
         this.basicInfo.birthDate = formatYMD(this.currentDate);
-        console.log("this.birthDate", this.birthDate)
         this.datePopShow = false;
       }else {
         this.datePopShow = false;
@@ -159,7 +154,7 @@
           }).then(() => {
             // on close
             wx.switchTab({
-              url:"/pages/my/main"
+              url:pageUrlEnum.my_url
             })
           });
         }
@@ -175,7 +170,6 @@
       ).then(
         response => {
           this.basicInfo = response;
-          console.log("===response", response, this.basicInfo);
           this.valueSex = this.basicInfo.gender.toString();
           if (!this.basicInfo.birthDate) {
             this.birthDate = '';

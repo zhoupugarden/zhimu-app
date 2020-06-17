@@ -16,6 +16,7 @@
 
 <script>
   import {  mapActions } from 'vuex';
+  import {pageUrlEnum} from "@/utils/enums";
 
   export default {
   components: {
@@ -41,7 +42,7 @@
     },
 
     navigateToMyPage() {
-      let url = "/pages/my/main";
+      let url = pageUrlEnum.my_url;
       wx.switchTab(
         {
           url
@@ -50,10 +51,9 @@
     },
 
     navigateToMySetting() {
-      let url = "/pages/mysetting/main";
       wx.navigateTo(
         {
-          url
+          url:pageUrlEnum.my_setting_url
         }
       )
     }

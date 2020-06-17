@@ -3,7 +3,6 @@
     <div class="pointitem-left">
       <div >
         <span class="pointitem-type" >{{pointDetailItem.changeDesc}}</span>
-        <span class="pointitem-time" v-show="pointDetailItem.orderNoLastFour">(订单号：{{pointDetailItem.orderNoLastFour}})</span>
       </div>
       <div class="pointitem-time">
         {{pointDetailItem.changeDate}}

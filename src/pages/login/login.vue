@@ -27,6 +27,8 @@
 
   import {  mapState,  mapActions} from 'vuex';
   import {getLocation, getAuth, getUserWxInfo} from '@/utils/wxApi';
+  import {pageUrlEnum} from "@/utils/enums";
+
   export default {
 
     data() {
@@ -42,21 +44,17 @@
        navigateToWxLogin() {
          getAuth('scope.userLocation', async () => {
            let location = await getLocation();
-           console.log("=====", location);
            this.addCurrentLocation(location);
          });
          getAuth('scope.userInfo', async () => {
            let wxInfo = await getUserWxInfo();
-           console.log("==wxInfo===", wxInfo);
          })
 
       },
 
       navigateToUserLogin() {
-        let url = "/pages/phonelogin/main" ;
-        console.log("url",url);
         wx.navigateTo({
-          url
+          url:pageUrlEnum.phone_login_url
         });
       }
     },

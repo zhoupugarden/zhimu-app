@@ -8,7 +8,8 @@
     "van-cell": "/static/vant/cell/index",
     "van-steps": "/static/vant/steps/index",
     "van-card": "/static/vant/card/index",
-    "van-dialog": "/static/vant/dialog/index"
+    "van-dialog": "/static/vant/dialog/index",
+    "van-toast": "/static/vant/toast/index"
   },
   "navigationBarTextStyle": "black",
   "navigationBarTitleText": "订单详情"

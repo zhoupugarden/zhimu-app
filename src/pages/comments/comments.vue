@@ -100,7 +100,6 @@
           params
         ).then(
           (response) => {
-            console.log("this.good response", response);
             this.comments = response;
           }
         )
@@ -112,7 +111,6 @@
           data
         ).then(
           (response) => {
-            console.log("this.good response", response);
             this.commentItemList = response.list;
             this.totalPage = response.totalPage;
           }
@@ -126,7 +124,6 @@
           data
         ).then(
           (response) => {
-            console.log("this.good response", response);
             let tmplist = response.list;
             this.commentItemList = this.commentItemList.concat(tmplist);
           }
@@ -220,11 +217,8 @@
     },
     onReachBottom() {
       //要做个判断， 如果size已经小于10， 则不再分页查询
-      console.log("到达底部");
-
       if (this.pageNum === this.totalPage) {
         console.log("this.pageNum, this.totalPage", this.pageNum, this.totalPage);
-
         toast("没有更多评论");
         return;
       }
@@ -244,7 +238,6 @@
     },
 
     onLoad() {
-      console.log("productID: ",this.$root.$mp.query);
       let params = this.$root.$mp.query;
       this.productId = params.productId;
       this.getProductComment(params);

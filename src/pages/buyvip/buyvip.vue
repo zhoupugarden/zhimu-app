@@ -29,6 +29,8 @@
   import {CHARGE, GET_CHARGE_CONFIG_INFO, MOCK_WX_PAY} from '@/utils/api';
   import {request} from "@/utils/request";
 
+  import {pageUrlEnum} from "@/utils/enums"
+
   export default {
     components: {
       PrivilegeItem
@@ -47,12 +49,9 @@
           data
         ).then(
           response => {
-            console.log("this response", response);
           //  微信支付成功后，跳转到myvip页面
-            let url = "../myvip/main" ;
-            console.log("url",url);
             wx.redirectTo({
-              url
+              url:pageUrlEnum.my_vip_url
             });
           }
         )

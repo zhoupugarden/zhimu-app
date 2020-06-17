@@ -65,6 +65,7 @@
   import {SUBMIT_PROBLEM} from '@/utils/api';
   import {request} from "@/utils/request";
 
+  import {pageUrlEnum} from "@/utils/enums";
 
   export default {
   components: {
@@ -99,11 +100,9 @@
     },
 
     onCancel(event) {
-      console.log("onCancel", event)
       this.popup = false
     },
     onConfirm(event) {
-      console.log("onConfirm", event);
       this.complaintType = event.mp.detail.value;
       this.popup = false
     },
@@ -135,7 +134,7 @@
               if(res.confirm) {
                 wx.navigateBack(
                   {
-                    url:'/pages/help/main'
+                    url:pageUrlEnum.help_url
                   }
                 )
               }

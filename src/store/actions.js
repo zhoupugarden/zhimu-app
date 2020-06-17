@@ -62,8 +62,8 @@ export default {
   storeIsLogin: ({commit}, isLogin) => {
       commit(types.IS_LOGIN, isLogin)
     },
-    storeIsVip: ({commit}, level) => {
-    commit(types.IS_VIP, level)
+    storeIsVip: ({commit}, vip) => {
+    commit(types.IS_VIP, vip)
   },
     checkoutCartList: ({commit}) => {
       commit(types.CHECK_OUT_CART)

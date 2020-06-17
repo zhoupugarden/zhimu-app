@@ -28,14 +28,14 @@
           <h3 class="group-title">{{categoryNameList[index].name}}</h3>
           <ul>
             <li v-for="(item, j) in products" :key="item.id" class="menu-item">
-              <card :cardInfo="item"
-                    @popCart="onPopCart"></card>
+              <product-card :cardInfo="item"
+                    @popCart="onPopCart"></product-card>
             </li>
           </ul>
         </div>
       </scroll-view>
     </div>
-    <div v-show = "merchantInfo.status === 1003 || merchantInfo.status === 1004" class="rest_notice">
+    <div v-show = "merchantInfo.status === merchantStatusEnum.closing || merchantInfo.status === merchantStatusEnum.resting" class="rest_notice">
       {{restNotice}}
     </div>
     <!--弹出框-->
@@ -48,17 +48,16 @@
 </template>
 
 <script>
-
+  import ProductCard from '@/components/ProductCard';
   import {INDEX_LIST,GET_PRODUCT_DETAIL_BY_ID} from '@/utils/api';
   import {request} from "@/utils/request";
-  import card from '@/components/card';
   import cartPop from '@/components/cartPop';
   import {mapState, mapActions} from 'vuex';
-
+  import {merchantStatusEnum} from '@/utils/enums'
 
   export default {
     components: {
-      card,cartPop
+      ProductCard,cartPop
     },
     data(){
       return {
@@ -67,7 +66,8 @@
         scrollTop: 0,
         popCartActive:false,
         productSku:[],
-        productInfo:{}
+        productInfo:{},
+        merchantStatusEnum:merchantStatusEnum
       }
     },
     computed: {
@@ -87,9 +87,9 @@
       },
 
       restNotice() {
-        if (this.merchantInfo.status === 1003) {
+        if (this.merchantInfo.status === merchantStatusEnum.closing) {
           return "休息中，" + "营业时间 " + this.merchantInfo.openTime + "-" + this.merchantInfo.closeTime
-        }else if (this.merchantInfo.status === 1004) {
+        }else if (this.merchantInfo.status === merchantStatusEnum.resting) {
           return "休假中，" + "休假时间 " + this.merchantInfo.restStartDate + "到" + this.merchantInfo.restEndDate
         }else {
           return '';
@@ -174,16 +174,14 @@
       },
 
       navigateToActivity() {
-        if (this.adHeadSettings.isNavigate === 1) {
+        if (this.adHeadSettings.isNavigate) {
           let url = this.adHeadSettings.navigateUrl;
-          console.log("url",url)
           wx.navigateTo({
             url
           });
         } else {
-          console.log("不需要调整");
+          console.log("不需要跳转");
         }
-
       }
     },
     watch: {

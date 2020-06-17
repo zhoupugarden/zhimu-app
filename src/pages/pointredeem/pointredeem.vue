@@ -34,8 +34,8 @@
 <script>
   import RedeemItem from '@/components/RedeemItem';
   import {POINT_REDEEM, MY_USER_INFO, GET_POINT_MALL } from '@/utils/api';
-  import { mapGetters} from 'vuex';
   import {request} from "@/utils/request";
+  import {pageUrlEnum} from "@/utils/enums";
 
   export default {
     components: {
@@ -55,15 +55,13 @@
     },
     methods: {
       navigateToPoint() {
-        var url = "/pages/point/main";
         wx.navigateTo({
-          url
+          url:pageUrlEnum.point_url
         });
       },
       navigateToCoupon() {
-        var url = "/pages/coupon/main";
         wx.navigateTo({
-          url
+          url:pageUrlEnum.coupon_url
         });
       },
 
@@ -86,14 +84,12 @@
           'GET',
         ).then(
           response => {
-            console.log("response",response)
             this.redeemItems = response;
           }
         )
       },
 
       pointRedeem(data) {
-        console.log("pointRedeem", data)
         let param = {};
         param.pointMallId = data.id;
         request(
@@ -112,7 +108,7 @@
                 if(res.confirm) {
                   wx.navigateTo(
                     {
-                      url:'/pages/coupon/main'
+                      url:pageUrlEnum.coupon_url
                     }
                   )
                 }
@@ -133,9 +129,9 @@
       let pages = getCurrentPages();
       let prePage = pages[pages.length -2];
       let preUrl = prePage.route;
-      if (preUrl === "pages/login/main") {
+      if (preUrl === pageUrlEnum.login_url) {
         wx.switchTab({
-            url : "/pages/my/main"
+            url : pageUrlEnum.my_url
           }
         )
       }

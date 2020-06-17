@@ -32,12 +32,12 @@
         </van-tab>
         <van-tab title="待评价">
           <div v-for="(item, index) in orderItems" :key = "index" class="order-list">
-            <order-card :orderInfo="item" ></order-card>
+            <order-card :orderInfo="item"></order-card>
           </div>
         </van-tab>
         <van-tab title="待付款">
           <div v-for="(item, index) in orderItems" :key = "index" class="order-list">
-            <order-card :orderInfo="item" ></order-card>
+            <order-card :orderInfo="item"></order-card>
           </div>
         </van-tab>
       </van-tabs>
@@ -66,6 +66,8 @@
   import {request} from "@/utils/request";
   import { mapGetters} from 'vuex';
   import {toast} from '../../utils/toast';
+
+  import {pageUrlEnum} from "@/utils/enums";
 
   export default {
 
@@ -98,7 +100,7 @@
         params.orderStatus = this.orderStatus;
       }
       if (this.active === 1) {
-        this.orderStatus = 5;
+        this.orderStatus = 7;
         params.orderStatus = this.orderStatus;
       }
       if (this.active === 2) {
@@ -117,7 +119,6 @@
         data
       ).then(
         response => {
-          console.log("this response", response);
           //  微信支付成功后，跳转到myvip页面
           let params = {};
           params.orderNo = this.orderNo;
@@ -128,10 +129,8 @@
     },
 
     navigateToLogin() {
-      var url = "../login/main";
-      console.log("url",url);
       wx.navigateTo({
-        url
+        url:pageUrlEnum.login_url
       });
     },
     getOrderListByUserId(params) {
@@ -142,10 +141,8 @@
       ).then(
         response => {
           if (params.pageNum > 1) {
-            console.log("orderlist", response);
             this.orderItems = this.orderItems.concat(response.list);
           } else {
-            console.log("orderlist", response);
             this.orderItems = response.list;
             this.totalPage = response.totalPage;
           }
@@ -179,14 +176,10 @@
       //要做个判断， 如果size已经小于10， 则不再分页查询
       console.log("到达底部");
       if (this.pageNum === this.totalPage && this.pageNum !== 1) {
-        console.log("this.pageNum, this.totalPage", this.pageNum, this.totalPage);
-
         toast("没有更多订单");
         return;
       }
       if (this.pageNum === this.totalPage && this.pageNum === 1) {
-        console.log("this.pageNum, this.totalPage", this.pageNum, this.totalPage);
-
         return;
       }
 

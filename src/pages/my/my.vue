@@ -82,6 +82,7 @@
   import { mapState , mapActions} from 'vuex';
   import {MY_USER_INFO} from '@/utils/api';
   import {request} from "@/utils/request";
+  import {pageUrlEnum} from "@/utils/enums";
 
   const originBasicInfo = {
     avatarUrl:"/static/images/avatar.png",
@@ -116,10 +117,8 @@
     ),
 
     navigateToVip() {
-      let url = "../vip/main" ;
-      console.log("url",url)
       wx.navigateTo({
-        url
+        url:pageUrlEnum.vip_url
       });
     },
 
@@ -131,40 +130,31 @@
 
     navToSetting() {
       if (!this.isLogin) {
-        console.log("当前用户没有登录")
       } else {
-        let url = "../setting/main" ;
-        console.log("url",url);
         wx.navigateTo({
-          url
+          url:pageUrlEnum.setting_url
         });
       }
     },
 
     navigateToLogin() {
-      let url = "/pages/login/main" ;
-      console.log("url",url)
       wx.navigateTo({
-        url
+        url:pageUrlEnum.login_url
       });
     },
 
     navigateToPoint() {
       if (!this.isLogin) {
-        let url = "../login/main";
-        console.log("当前用户没有登录");
         let pages = getCurrentPages(); 				//前两句不要忘记写
         let currentPage = pages[pages.length - 1]; 	//前两句不要忘记写
         currentPage.route = "pages/point/main";
         console.log(pages);
         wx.navigateTo({
-          url
+          url:pageUrlEnum.login_url
         });
       } else {
-        let url = "../point/main" ;
-        console.log("url",url);
         wx.navigateTo({
-          url
+          url:pageUrlEnum.point_url
         });
       }
     },
@@ -172,120 +162,94 @@
 
     navigateMyAddress() {
       if (!this.isLogin) {
-        let url = "../login/main";
-        console.log("当前用户没有登录");
         let pages = getCurrentPages(); 				//前两句不要忘记写
         let currentPage = pages[pages.length - 1]; 	//前两句不要忘记写
         currentPage.route = "pages/myaddress/main";
-        console.log(pages);
         wx.navigateTo({
-          url
+          url:pageUrlEnum.login_url
         });
       } else {
-        let url = "../myaddress/main" ;
-        console.log("url",url);
         wx.navigateTo({
-          url
+          url:pageUrlEnum.my_address_url
         });
       }
     },
 
     navigatePointRedeem() {
     if (!this.isLogin) {
-      let url = "../login/main";
-      console.log("当前用户没有登录");
       let pages = getCurrentPages(); 				//前两句不要忘记写
       let currentPage = pages[pages.length - 1]; 	//前两句不要忘记写
       currentPage.route = "pages/pointredeem/main";
       console.log(pages);
       wx.navigateTo({
-        url
+        url:pageUrlEnum.login_url
       });
     } else {
-      let url = "../pointredeem/main" ;
-      console.log("url",url);
       wx.navigateTo({
-        url
+        url:pageUrlEnum.point_redeem_url
       });
     }
   },
     navigateToMyVip() {
-      console.log("navigateToMyVip")
     if (!this.isLogin) {
-      let url = "../login/main";
-      console.log("当前用户没有登录");
       let pages = getCurrentPages(); 				//前两句不要忘记写
       let currentPage = pages[pages.length - 1]; 	//前两句不要忘记写
 
-      if (this.basicInfo.level && this.basicInfo.level === 1) {
+      if (this.basicInfo.vip) {
         currentPage.route = "pages/vip/main";
       } else {
         currentPage.route = "pages/starvip/main";
       }
       console.log(pages);
       wx.navigateTo({
-        url
-      });
-    } else if (this.basicInfo.level === 0) {
-      let url = "../starvip/main" ;
-      console.log("url",url);
+        url:pageUrlEnum.login_url
+      })
+    } else if (!this.basicInfo.vip) {
       wx.navigateTo({
-        url
+        url:pageUrlEnum.star_vip_url
       });
     }
     else {
-      let url = "../vip/main" ;
-      console.log("url",url);
       wx.navigateTo({
-        url
+        url:pageUrlEnum.vip_url
       });
     }
   },
 
     navigateToBalance() {
       if (!this.isLogin) {
-        let url = "../login/main";
-        console.log("当前用户没有登录");
         let pages = getCurrentPages(); 				//前两句不要忘记写
         let currentPage = pages[pages.length - 1]; 	//前两句不要忘记写
         currentPage.route = "pages/balance/main";
         console.log(pages);
         wx.navigateTo({
-          url
+          url:pageUrlEnum.login_url
         });
       } else {
-        let url = "../balance/main" ;
-        console.log("url",url);
         wx.navigateTo({
-          url
+          url:pageUrlEnum.balance_url
         });
       }
 
     },
     navigateToCoupon() {
       if (!this.isLogin) {
-        let url = "../login/main";
-        console.log("当前用户没有登录");
         let pages = getCurrentPages(); 				//前两句不要忘记写
         let currentPage = pages[pages.length - 1]; 	//前两句不要忘记写
         currentPage.route = "pages/coupon/main";
         console.log(pages);
         wx.navigateTo({
-          url
+          url:pageUrlEnum.login_url
         });
       } else {
-        let url = "../coupon/main";
-        console.log("url",url);
         wx.navigateTo({
-          url
+          url:pageUrlEnum.coupon_url
         });
       }
     },
     navigateToMission() {
-      let url = "../mission/main" ;
-      console.log("url",url);
       wx.navigateTo({
-        url
+        url:pageUrlEnum.mission_url
       });
     },
     navigateToStarVip() {
@@ -345,9 +309,9 @@
           params
         ).then(
           response => {
-            console.log("response",response)
-            this.storeIsVip(response.level);
             this.basicInfo = response;
+            this.storeIsVip(response.vip);
+
           }
         )
     }
@@ -361,8 +325,7 @@
 
 
     onShow() {
-    console.log("=====this.isLogin=====", this.isLogin);
-    if (this.isLogin === 1) {
+    if (this.isLogin) {
       this.getUserInfo();
     } else {
       this.basicInfo = Object.assign({}, originBasicInfo);

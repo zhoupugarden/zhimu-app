@@ -1,6 +1,5 @@
 <template>
   <div class="balanceitem-container">
-
     <div class="balanceitem-left">
       <div class="balanceitem-type">
         {{balanceDetailItem.changeDesc}}
@@ -18,15 +17,14 @@
       <div class="balanceitem-time">
         余额：{{balanceDetailItem.balanceAmount}}
       </div>
-
     </div>
-
-
-
   </div>
 </template>
 
 <script>
+
+  import {merchantStatusEnum} from '@/utils/enums'
+
   export default {
     name: "balance-item",
     props: {
@@ -34,6 +32,7 @@
     },
     data() {
       return {
+        merchantStatus:merchantStatusEnum
       }
     },
     computed: {
@@ -57,9 +56,9 @@
         }
       }
     }
-
   }
 </script>
+
 
 <style lang="scss" scoped>
   .balanceitem-container {

@@ -35,12 +35,10 @@
 
 <script>
   import CouponItem from '@/components/CouponItem';
-  import CouponItemm from '@/components/CouponItemm';
-  import { mapGetters} from 'vuex';
-
-
+  import {couponStatusEnum} from '@/utils/enums';
   import {GET_COUPON_BY_USER_ID} from '@/utils/api';
   import {request} from "@/utils/request";
+  import {pageUrlEnum} from '@/utils/enums'
 
   export default {
     components: {
@@ -53,18 +51,12 @@
       }
     },
     methods: {
-
       onChange(event) {
-        console.log("event", event);
         this.active = event.mp.detail.index;
       },
-
-
       navgateToPointRedeem() {
-        var url = "/pages/pointredeem/main";
-        console.log("url",url)
         wx.navigateTo({
-          url
+          url:pageUrlEnum.point_redeem_url
         });
       },
 
@@ -76,7 +68,6 @@
         ).then(
           response => {
             this.couponList = response;
-            console.log("this response", response);
           }
         )
       }
@@ -84,17 +75,17 @@
     computed: {
       couponValidList() {
         return this.couponList.filter(item => {
-          return item.status === 1
+          return item.status === couponStatusEnum.valid.value;
         })
       },
       couponUsedList() {
         return this.couponList.filter(item => {
-          return item.status === 3
+          return item.status === couponStatusEnum.used.value;
         })
       },
       couponInvalidList() {
         return this.couponList.filter(item => {
-          return item.status === 2
+          return item.status === couponStatusEnum.expired.value;
         })
       },
     },
@@ -110,12 +101,10 @@
       let prePage = pages[pages.length -2];
       let preUrl = prePage.route;
         wx.switchTab({
-            url : "/pages/my/main"
+            url : pageUrlEnum.my_url
           }
         )
     }
-
-
 
   }
 </script>

@@ -41,6 +41,8 @@
   import {GET_POINT_DETAIL} from '@/utils/api';
   import { mapGetters} from 'vuex';
   import {request} from "@/utils/request";
+  import {pageUrlEnum} from "@/utils/enums";
+
   export default {
     components: {
       PointItem
@@ -62,7 +64,6 @@
       ).then(
         response => {
           this.pointRecords = response;
-          console.log("this response", response);
         }
       )
     }
@@ -78,9 +79,9 @@
       let pages = getCurrentPages();
       let prePage = pages[pages.length -2];
       let preUrl = prePage.route;
-      if (preUrl === "pages/login/main") {
+      if (preUrl === pageUrlEnum.login_url) {
         wx.switchTab({
-            url : "/pages/my/main"
+            url : pageUrlEnum.my_url
           }
         )
       }

@@ -1,11 +1,26 @@
 import {INDEX_INFO} from '@/utils/api';
 import {request} from "@/utils/request";
 
-
 const state = {
-  merchantInfo:{},
-  deliverConfig:{},
-  adHeadSettings:null
+  merchantInfo:{
+    status:null,
+    openTime:null,
+    closeTime:null,
+    restStartDate:null,
+    restEndDate:null
+  },
+  deliverConfig:{
+    beginPrice:null,
+    beginFee:null,
+    secPrice:null,
+    secFee:null,
+    freePrice:null
+  },
+  adHeadSettings: {
+    imgUrl:null,
+    isNavigate:false,
+    navigateUrl:null
+  }
 };
 
 
@@ -27,7 +42,6 @@ const actions = {
         'get'
       ).then(
         response => {
-          console.log("====getMerchantData=====", response);
           let merchantInfo = response.merchantConfigDto;
           let deliverConfig = response.deliverConfigDto;
           let adSettings = response.adSettings;

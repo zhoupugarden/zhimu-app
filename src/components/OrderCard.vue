@@ -31,7 +31,7 @@
        <div v-show="orderInfo.orderStatus === 1">
          <van-button  color="#000000" size="small" type="primary" @click="payOrder">立即支付</van-button>
        </div>
-      <div v-show="orderInfo.orderStatus === 5 && orderInfo.isComment === 0">
+      <div v-show="orderInfo.orderStatus === 7 && orderInfo.isComment === 0">
         <van-button color="#000000" size="small" type="primary" @click="navigateToEvaluation">评价得积分</van-button>
       </div>
     </div>
@@ -152,11 +152,14 @@
         if (this.orderInfo.orderStatus === 1) {
           return "待支付";
         }
-        if (this.orderInfo.orderStatus === 2) {
+        if (this.orderInfo.orderStatus === 2 || this.orderInfo.orderStatus === 3 || this.orderInfo.orderStatus === 4) {
           return "已支付";
         }
         if (this.orderInfo.orderStatus === 5) {
           return "已配送";
+        }
+        if (this.orderInfo.orderStatus === 7) {
+          return "已收货";
         }
         if (this.orderInfo.orderStatus === 99) {
           return "订单取消";
@@ -165,10 +168,13 @@
           return "订单完成";
         }
         if (this.orderInfo.orderStatus === 101) {
-          return "退款完成";
+          return "订单关闭";
         }
-        if (this.orderInfo.orderStatus === 3 || this.orderInfo.orderStatus === 4) {
-          return "已支付";
+        if (this.orderInfo.orderStatus === 201) {
+          return "退款中";
+        }
+        if (this.orderInfo.orderStatus === 202) {
+          return "退款完成";
         }
       }
     }

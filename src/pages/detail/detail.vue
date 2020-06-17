@@ -22,7 +22,7 @@
           </div>
         </div>
       </div>
-      <div @click="navigateToBuyVip" v-if="isVip !== 1" class="vip_tip_class">
+      <div @click="navigateToBuyVip" v-if="!isVip" class="vip_tip_class">
         <div style="font-size: 12px;">
           {{vipTip}}
         </div>
@@ -305,6 +305,7 @@
   import CheckBox from '@/components/CheckBox';
   import {toast} from '../../utils/toast';
   import {subscribeMessage} from '@/utils/wxApi';
+  import {pageUrlEnum, pmsOnlineStatusEnum} from "@/utils/enums";
 
   export default {
     components: {
@@ -338,30 +339,26 @@
       ]
     ),
     selectedSKU(id) {
-      console.log("selectedSKU: ", id);
       this.chooseSKU = this.productSKUs.find(
         function (sku) {
           return sku.skuId === id;
         }
       );
-      console.log("this.chooseSKU :", this.chooseSKU);
-      console.log("this.productSKUs :", this.productSKUs);
     },
 
     addCart() {
-      console.log("addCart====")
       let that = this;
       if (!this.online) {
         this.popShow = false;
         //   弹起到货提醒的订阅
-
         let that = this;
         let id = 'By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0';
         let tmplIds = [];
         tmplIds.push(id);
         subscribeMessage(tmplIds,  (res)=> {
-          console.log("res===========",res);
-          that.addProductNotice();
+          if (res[id]) {
+            that.addProductNotice();
+          }
         });
 
       }else {
@@ -372,9 +369,8 @@
     },
     onClickCartIcon() {
       //调不到bar关联的菜单
-      var url = "../cart/main";
       wx.switchTab({
-        url
+        url:pageUrlEnum.cart_url
       });
     },
     onAddCartButton() {
@@ -395,24 +391,22 @@
         let tmplIds = [];
         tmplIds.push(id);
         subscribeMessage(tmplIds,  (res)=> {
-          console.log("res===========",res);
-          that.addProductNotice();
+          if (res[id] === 'accept') {
+            that.addProductNotice();
+          }
         });
 
       }else {
         this.addProductToCart(this.chooseSKU);
         this.popShow = false;
-        var url = "../cart/main";
         wx.switchTab({
-          url
+          url:pageUrlEnum.cart_url
         });
       }
     },
     navigateToBuyVip() {
-      var url = "/pages/buyvip/main";
-      console.log("url",url)
       wx.navigateTo({
-        url
+        url:pageUrlEnum.buy_vip_url
       });
     },
 
@@ -467,7 +461,7 @@
         params
       ).then(
         (response) => {
-          if (response.isRepeated === 1) {
+          if (response.isRepeated) {
             toast("您已订阅, 有货时我们将为您发送到货提醒通知", 3000)
           } else {
             this.isNoticed = true;
@@ -504,7 +498,7 @@
       },
     computed: {
       online() {
-        if (this.productInfo.onlineStatus === 1001 && this.productInfo.stock > 0) {
+        if (this.productInfo.onlineStatus === pmsOnlineStatusEnum.on_line && this.productInfo.stock > 0) {
           return true;
         }else {
           return false;

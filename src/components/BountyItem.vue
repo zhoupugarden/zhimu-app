@@ -16,14 +16,12 @@
           需{{item.bountyCount}}元奖励金
       </div>
       <div>
-
         <div @click="bountyRedeem" class="self-button_class">
           立即兑换
         </div>
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -32,7 +30,6 @@
     props: {
       item:Object
     },
-
     methods: {
       bountyRedeem() {
         let that = this;
@@ -48,7 +45,6 @@
             }
           }
         });
-
       }
     }
   }

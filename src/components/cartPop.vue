@@ -100,7 +100,6 @@
 
 <script>
   import CheckBox from '@/components/CheckBox';
-  import {mapState} from 'vuex';
 
   export default {
   name: 'cart-pop',
@@ -125,11 +124,9 @@
   },
 
   methods: {
-
     closeActive() {
       this.active = 0;
     },
-
     navigateToCart() {
       this.$emit('popUpClose');
       this.popShow = false;

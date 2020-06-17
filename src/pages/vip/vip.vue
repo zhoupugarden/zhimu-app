@@ -184,12 +184,10 @@
     },
     methods: {
       showPopup(id) {
-        console.log("id",id);
         Object.assign(this.popContent, popContents[id]);
         this.popShow = true;
       },
       popupClose() {
-        console.log("popupClose")
         this.popShow = false;
       },
       getUserInfo() {
@@ -200,7 +198,6 @@
           params
         ).then(
           response => {
-            console.log("response",response);
             this.userInfo = response;
           }
         )

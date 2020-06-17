@@ -21,7 +21,7 @@
           </div>
         </div>
         <div>
-          <div v-if = "cardInfo.onlineStatus === 1001 && cardInfo.stock > 0" @click="popCart" class="zm-detail__icon">
+          <div v-if = "pmsOnlineStatus.on_line === cardInfo.onlineStatus && cardInfo.stock > 0" @click="popCart" class="zm-detail__icon">
             <div v-if="cardInfo.skuCount > 1" class="choose_attribute">
               选规格
             </div>
@@ -35,42 +35,57 @@
         </div>
       </div>
     </div>
-    <van-toast  id="van-toast"/>
+    <van-toast id="van-toast"/>
   </div>
 </template>
 
 <script>
   import { PRODUCT_NOTICE } from '@/utils/api';
+  import { mapState } from 'vuex';
   import {request} from "@/utils/request";
   import {toast} from '../utils/toast';
   import {subscribeMessage} from '@/utils/wxApi';
+  import {pmsOnlineStatusEnum} from '@/utils/enums'
 
   export default {
+    name: "product-card",
     props: {
       cardInfo:Object
     },
     data () {
       return {
-        data: {
-        }
+          pmsOnlineStatus:pmsOnlineStatusEnum
       }
     },
     methods: {
-      productNotice() {
-        let that = this;
-        let id = 'By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0';
-        let tmplIds = [];
-        tmplIds.push(id);
-        subscribeMessage(tmplIds,  (res)=> {
-          console.log("res===========",res);
-          that.addProductNotice();
+      navigateToLogin() {
+        let url = "/pages/login/main" ;
+        console.log("url",url)
+        wx.navigateTo({
+          url
         });
+      },
 
+      productNotice() {
+        if (!this.isLogin) {
+          this.navigateToLogin();
+        } else {
+          let that = this;
+          let id = 'By9NVDZM5spRmqLOVnHtBG1CooMzmh3g0ds48Oic4W0';
+          let tmplIds = [];
+          tmplIds.push(id);
+          subscribeMessage(tmplIds,  (res)=> {
+            console.log("res===========",res);
+            if (res[id] === 'accept') {
+              that.addProductNotice();
+            }
+          });
+        }
       },
       addProductNotice() {
-        console.log("addProductNotice====");
         let params = {};
         params.productId = this.cardInfo.id;
+        params.noticeType = 1;
         request(
           PRODUCT_NOTICE,
           'POST',
@@ -80,7 +95,6 @@
             if (response.isRepeated === 1) {
               toast("您已订阅, 有货时我们将为您发送到货提醒通知", 3000)
             } else {
-              this.isNoticed = true;
               toast("商品到货提醒订阅成功");
             }
           }
@@ -89,7 +103,6 @@
 
       navigateToProduct() {
         let url = "/pages/detail/main?productId=" + this.cardInfo.id;
-        console.log("url",url)
         wx.navigateTo({
           url
         });
@@ -111,7 +124,11 @@
         } else {
           return 1
         }
-      }
+      },
+      ...mapState({
+        isLogin: state => state.isLogin,
+        isVip: state => state.isVip
+      }),
 
     }
   }

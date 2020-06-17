@@ -85,8 +85,8 @@ const mutations = {
     [types.IS_LOGIN](state, isLogin) {
       state.isLogin = isLogin;
     },
-  [types.IS_VIP](state, level) {
-    state.isVip = level;
+  [types.IS_VIP](state, vip) {
+    state.isVip = vip;
   },
 
   [types.ADD_CURRENT_LOCATION](state, locationItem) {
