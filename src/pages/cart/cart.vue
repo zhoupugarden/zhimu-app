@@ -6,7 +6,16 @@
     </div>
     <div v-else>
       <div class="cart-container__detail">
-        <div v-for="(item, index) in cartList" :key="index">
+        <div v-for="(item, index) in cartProductList" :key="index">
+          <cart-card
+            @increItem="increItem"
+            @decreItem="decreItem"
+            @removeItem="removeItem"
+            :quantity="item.quantity"
+            :cardItem="item"></cart-card>
+        </div>
+
+        <div v-for="(item, index) in cartFittingList" :key="index">
           <cart-card
             @increItem="increItem"
             @decreItem="decreItem"
@@ -32,6 +41,7 @@
                        @delFromCart="removeFreeItem"
                        @fieldChange="fieldChange"
                        :freeItem="item_"
+                       :extroValue="birthAge"
             ></free-card>
           </div>
         </div>
@@ -84,8 +94,39 @@
           </div>
         </div>
       </van-popup>
-
     </div>
+
+    <div>
+      <van-popup
+                 :show="agePopShow"
+                 @close="popUpClose"
+      >
+        <div class="age-popup">
+          <div style="font-weight: bold; ">
+            蜡烛数字
+          </div>
+            <div style="width: 200px; margin: 0 auto;">
+              <van-field
+                clearable
+                :value="birthAge"
+                placeholder="请输入蜡烛数字"
+                border="false"
+                @change="birthAgeChange"
+              />
+            </div>
+          <div>
+            <span style="margin-right: 100px;"><van-button size="small" @click="agePopUpClose">取消</van-button></span>
+            <span><van-button color="#353535" size="small" @click="confirmBirthAge">确认</van-button></span>
+          </div>
+        </div>
+      </van-popup>
+    </div>
+
+
+
+
+
+    <van-toast  id="van-toast"/>
   </div>
 </template>
 
@@ -94,11 +135,13 @@
   import FreeCard from '@/components/FreeCard';
   import PayCard from '@/components/PayCard';
   import { mapGetters, mapActions ,mapState} from 'vuex';
-  import { SET_OPEN_ID } from '@/store/mutation-types';
 
-  import {PAY_FITTING_LIST, GET_FITTING_LIST, CART_PRODUCT_CHECK} from '@/utils/api';
+  import { GET_FITTING_LIST, CART_PRODUCT_CHECK} from '@/utils/api';
   import {request} from "@/utils/request";
-  import {pageUrlEnum} from "@/utils/enums";
+  import {pageUrlEnum, freeFittingEnum} from "@/utils/enums";
+  import {toast} from '@/utils/toast';
+
+  import numeral from 'numeral';
 
   export default {
   components: {
@@ -108,24 +151,16 @@
   data() {
     return {
       popShow:false,
+      agePopShow:false,
+      birthAge:"",
       payGood: [],
-      birthNum: "",
       totalPrice: 0,
       remark:"",
       totalCartList:[],
-      freeGood:[]
+      freeGood:[],
+      freeCandleData:null,
     }
   },
-    watch: {
-      totalCartList: {
-        handler(val, oldVal) {
-          console.log("val : ", val);
-          console.log("oldVal : ", oldVal);
-        },
-        deep:true
-      }
-    },
-
   computed: {
     ...mapGetters(
       [
@@ -133,7 +168,9 @@
         'cartTotalPrice',
         'isExistCake',
         'isLogin',
-        'cartList'
+        'cartList',
+        'cartProductList',
+        'cartFittingList'
       ]
     ),
     ...mapState({
@@ -142,7 +179,6 @@
     }),
 
     freeList() {
-      console.log("this.$store.state.freeList", this.$store.state.freeList)
         return this.$store.getters.freeCartList
     },
 
@@ -151,7 +187,6 @@
         i => i.type === 1
       );
       if (cake) {
-        console.log("cake", cake);
         return true;
       } else {
         return false;
@@ -216,8 +251,27 @@
     addFreeFitting(data) {
       let params = {};
       params.fittingId = data.fittingId;
-      this.addFreeCart(data);
+      console.log("data", data);
+      if (data.fittingId === freeFittingEnum.num_candle.value) {
+        this.freeCandleData = data;
+        this.agePopShow = true;
+      }else {
+        this.addFreeCart(data);
+      }
     },
+
+    birthAgeChange(event) {
+      console.log("event", event);
+      this.birthAge = event.mp.detail;
+    },
+
+    confirmBirthAge() {
+      let data = this.freeCandleData;
+      this.addFreeCart(data);
+      this.agePopUpClose();
+    },
+
+
     getFittingList() {
       request(
         GET_FITTING_LIST,
@@ -259,6 +313,10 @@
     },
     popUpShow() {
       this.popShow = true;
+    },
+
+    agePopUpClose() {
+      this.agePopShow = false;
     },
     navigateToSubmitOrLogin() {
       if (!this.isLogin) {
@@ -304,7 +362,7 @@
           let itemPrice = item.salePrice * item.quantity;
           tmpTotalPrice = tmpTotalPrice + itemPrice;
         }
-        this.totalPrice = tmpTotalPrice;
+        this.totalPrice = tmpTotalPrice.toFixed(2);
       }
     },
 

@@ -116,7 +116,7 @@
 <style lang="scss">
   .cell-balance-class {
     font-size: 12px;
-    color: green;
+    color: #09BB07;
   }
   .van-tabs__custom {
     width: 100%;

@@ -32,13 +32,6 @@
           </div>
         </div>
 
-        <div class="my-basic-info__go">
-          <van-button round color="grey"
-                      custom-class="mini-button"
-                      @click="navigateToStarVip"
-                      size="mini">开通星球会员></van-button>
-        </div>
-
       </div>
       <div class="my-wallet-info">
 
@@ -83,6 +76,8 @@
   import {MY_USER_INFO} from '@/utils/api';
   import {request} from "@/utils/request";
   import {pageUrlEnum} from "@/utils/enums";
+  import { getLogger } from "@/utils/log";
+  let logger = getLogger(pageUrlEnum.my_url);
 
   const originBasicInfo = {
     avatarUrl:"/static/images/avatar.png",
@@ -138,8 +133,12 @@
     },
 
     navigateToLogin() {
+      console.log("pageUrlEnum.login_url", pageUrlEnum.login_url);
       wx.navigateTo({
-        url:pageUrlEnum.login_url
+        url:pageUrlEnum.login_url,
+        complete(res) {
+          console.log("res", res)
+        }
       });
     },
 
@@ -252,12 +251,6 @@
         url:pageUrlEnum.mission_url
       });
     },
-    navigateToStarVip() {
-      let url = "/pages/demo/main" ;
-      wx.navigateTo({
-        url
-      });
-    },
     navigateToGetUserInfo() {
       wx.getSetting({
         success(res) {
@@ -325,6 +318,8 @@
 
 
     onShow() {
+      logger.ERROR(pageUrlEnum.my_url, "++++++++++++++hhhhhhhhhhhhhhhhhhh+++++++++++++++");
+
     if (this.isLogin) {
       this.getUserInfo();
     } else {

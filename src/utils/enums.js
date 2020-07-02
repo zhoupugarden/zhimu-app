@@ -386,7 +386,7 @@ export let freeFittingEnum = {
   },
   cutlery: {
     value:1004,
-    desc:"餐具"
+    desc:"额外餐具"
   },
   fire: {
     value:1005,
@@ -398,6 +398,33 @@ export let freeFittingEnum = {
   }
 };
 
+export let evaluationEnum = {
+  very_bad : {
+    value:1,
+    desc:"非常差"
+  },
+  bad: {
+    value:2,
+    desc:"差"
+  },
+  middle: {
+    value:3,
+    desc:"一般"
+  },
+  good: {
+    value:4,
+    desc:"好"
+  },
+  very_good: {
+    value:5,
+    desc:"非常好"
+  }
+
+};
+
+
+
+
 export let merchantStatusEnum = {
   ready_open: 1001,
   opening: 1002,
@@ -407,34 +434,34 @@ export let merchantStatusEnum = {
 };
 
 export let pageUrlEnum = {
-  home_url: "pages/home/main",
-  order_url: "pages/order/main",
-  cart_url: "pages/cart/main",
-  my_url: "pages/my/main",
-  detail_url: "pages/detail/main",
-  my_setting_url: "pages/mysetting/main",
-  help_url: "pages/help/main",
-  my_address_url: "pages/myaddress/main",
-  new_address_url: "pages/newaddress/main",
-  balance_question_url: "pages/balancequestion/main",
-  coupon_question_url: "pages/couponquestion/main",
-  member_question_url: "pages/memberquestion/main",
-  complaint_url: "pages/complaint/main",
-  point_url: "pages/point/main",
-  balance_url: "pages/balance/main",
-  coupon_url: "pages/coupon/main",
-  my_vip_url: "pages/myvip/main",
-  buy_vip_url: "pages/buyvip/main",
-  point_redeem_url: "pages/pointredeem/main",
-  point_help_url: "pages/pointhelp/main",
-  order_submit_url: "pages/ordersubmit/main",
-  order_detail_url: "pages/orderdetail/main",
-  mission_url: "pages/mission/main",
-  login_url: "pages/login/main",
-  phone_login_url: "pages/phonelogin/main",
-  comment_url: "pages/comments/main",
-  setting_url: "pages/setting/main",
-  evaluation_url: "pages/evaluation/main",
-  vip_url: "pages/vip/main",
-  star_vip_url: "pages/starvip/main"
+  home_url: "/pages/home/main",
+  order_url: "/pages/order/main",
+  cart_url: "/pages/cart/main",
+  my_url: "/pages/my/main",
+  detail_url: "/pages/detail/main",
+  my_setting_url: "/pages/mysetting/main",
+  help_url: "/pages/help/main",
+  my_address_url: "/pages/myaddress/main",
+  new_address_url: "/pages/newaddress/main",
+  balance_question_url: "/pages/balancequestion/main",
+  coupon_question_url: "/pages/couponquestion/main",
+  member_question_url: "/pages/memberquestion/main",
+  complaint_url: "/pages/complaint/main",
+  point_url: "/pages/point/main",
+  balance_url: "/pages/balance/main",
+  coupon_url: "/pages/coupon/main",
+  my_vip_url: "/pages/myvip/main",
+  buy_vip_url: "/pages/buyvip/main",
+  point_redeem_url: "/pages/pointredeem/main",
+  point_help_url: "/pages/pointhelp/main",
+  order_submit_url: "/pages/ordersubmit/main",
+  order_detail_url: "/pages/orderdetail/main",
+  mission_url: "/pages/mission/main",
+  login_url: "/pages/login/main",
+  phone_login_url: "/pages/phonelogin/main",
+  comment_url: "/pages/comments/main",
+  setting_url: "/pages/setting/main",
+  evaluation_url: "/pages/evaluation/main",
+  vip_url: "/pages/vip/main",
+  star_vip_url: "/pages/starvip/main"
 };

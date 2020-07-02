@@ -29,6 +29,7 @@
   left: 4%;
 }
 .cart-container__tip {
+  padding-bottom: 100px;
   font-weight: lighter;
   text-align: center;
 }
@@ -81,6 +82,16 @@
   margin-left: 0;
 }
 .van-popup__custom--container_detail_item {
+}
+
+.age-popup {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: space-around;
+  width: 300px;
+  height: 300px;
+  padding: 20px 10px;
 }
 
 

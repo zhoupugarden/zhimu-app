@@ -16,8 +16,6 @@
     "pages/point/main",
     "pages/balance/main",
     "pages/coupon/main",
-    "pages/myvip/main",
-    "pages/buyvip/main",
     "pages/pointredeem/main",
     "pages/redeemdetail/main",
     "pages/pointhelp/main",

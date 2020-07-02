@@ -13,8 +13,9 @@
       ></van-card>
     </div>
     <div class="evaluation-score">
-      <span style="font-size: 14px;">商品味道：</span>
-      <van-rate size="14" :value="rateValue" @change="rateChange" />
+      <span style="font-size: 12px;">商品味道：</span>
+      <span style="padding: 0px 10px;"><van-rate color="#e64340" size="14" :value="rateValue" @change="rateChange" /></span>
+      <span style="font-size: 12px; color: #e64340; font-weight: bold;">{{rateDesc}}</span>
     </div>
     <div class="evaluation-comment">
       <van-field
@@ -40,6 +41,7 @@
   import Upload from '@/components/Upload';
   import {UploadAliyunOss} from "@/utils/UploadAliyunOss";
   import {request} from "@/utils/request";
+  import {evaluationEnum} from '@/utils/enums'
 
   export default {
 
@@ -56,18 +58,17 @@
     data() {
       return {
         rateValue: 0,
+        rateDesc:"",
         srcList:[],
         content:""
       }
     },
     methods: {
-
       uploadPic(params) {
         this.$emit("picUpload", params)
       },
       choosedPics(data) {
         let that = this;
-        console.log("data: ", data);
         let params = {};
         params.productId = that.itemInfo.productId;
         params.picUrls = [];
@@ -98,14 +99,19 @@
         this.$emit("deletePic", params);
       },
       rateChange(event) {
-        console.log(event);
         let data = {};
         data.productId = this.itemInfo.productId;
         data.rateValue = event.mp.detail;
+        let rateResult = Object.values(evaluationEnum).find(
+          item => {
+            return item.value === data.rateValue;
+
+          }
+        );
+        this.rateDesc = rateResult.desc;
         this.$emit("rateChange", data);
       },
       contentChange(event) {
-        console.log(event);
         let data = {};
         data.productId = this.itemInfo.productId;
         data.content = event.mp.detail;

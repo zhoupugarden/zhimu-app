@@ -23,6 +23,9 @@
 </template>
 
 <script>
+
+  import {pageUrlEnum} from "@/utils/enums";
+
   export default {
     props: {
       addressInfo:Object
@@ -37,19 +40,19 @@
         let pages = getCurrentPages();
         console.log("pageUrl", pages);
         let prePage = pages[1];
-        if (prePage.route === 'pages/ordersubmit/main') {
+        if ('/' + prePage.route === pageUrlEnum.order_submit_url) {
           prePage.setData({addressId:this.addressInfo.id})
           wx.redirectTo({
-            url: '/' + prePage.route + '?addressId=' + this.addressInfo.id
+            url: pageUrlEnum.order_submit_url + '?addressId=' + this.addressInfo.id
           })
         }
       },
       removeAddress() {
         this.$emit("removeAddress", this.addressInfo.id);
+        this.addressInfo = {};
       },
       updateAddress() {
-        let url = "../newaddress/main?addressId=" + this.addressInfo.id;
-        console.log("url",url)
+        let url = pageUrlEnum.new_address_url + "?addressId=" + this.addressInfo.id;
         wx.navigateTo({
           url
         });

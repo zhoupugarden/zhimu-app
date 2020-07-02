@@ -96,7 +96,7 @@
           this.items = response;
           let pages = getCurrentPages();
           let prePage = pages[pages.length - 3];
-          if (this.isNew === 'true' && prePage.route === 'pages/ordersubmit/main') {
+          if (this.isNew === 'true' && '/' + prePage.route === pageUrlEnum.order_submit_url) {
             wx.navigateBack(
               {
                 url: pageUrlEnum.order_submit_url
@@ -229,7 +229,7 @@
                 that.address.latitude = resChoose.latitude;
                 that.address.longitude = resChoose.longitude;
                 let distance = that.getDistance(that.address.latitude, that.address.longitude);
-                if (distance > this.merchantInfo.deliverScope * 1000) {
+                if (distance > that.merchantInfo.deliverScope * 1000) {
                 //  大于可配送范围
                   wx.showModal(
                     {
@@ -247,7 +247,6 @@
     }
   },
     computed: {
-
       ...mapState({
         merchantInfo: state=>state.merchant.merchantInfo
       }),

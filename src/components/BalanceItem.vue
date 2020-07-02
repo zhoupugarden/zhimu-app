@@ -1,5 +1,6 @@
 <template>
   <div class="balanceitem-container">
+
     <div class="balanceitem-left">
       <div class="balanceitem-type">
         {{balanceDetailItem.changeDesc}}
@@ -8,7 +9,7 @@
         {{balanceDetailItem.changeDate}}
       </div>
     </div>
-    <div>
+    <div class="balanceitem-right">
       <div
         style="padding-right: 10px; font-size: 12px;"
         :style="{color : activeColor}">
@@ -50,9 +51,9 @@
       },
       activeColor() {
         if (this.balanceDetailItem.changeType === 1) {
-          return "green";
+          return "#09BB07";
         } else {
-          return "red";
+          return "#e64340";
         }
       }
     }
@@ -68,12 +69,19 @@
     height: 50px;
     align-items: center;
     font-size: 14px;
+    border-bottom: 1px solid #f2f2f2;
   }
   .balanceitem-left {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     padding-left: 10px;
+  }
+  .balanceitem-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
   }
   .redActive {
     color: red;

@@ -49,7 +49,6 @@
         ).then(
           response => {
             this.balanceRecords = response;
-            console.log("this response", response);
           }
         )
       }
@@ -74,6 +73,7 @@
       }
     },
     onUnload() {
+      //未登录->登录页面->余额页面->我的主页
       let pages = getCurrentPages();
       let prePage = pages[pages.length -2];
       let preUrl = prePage.route;

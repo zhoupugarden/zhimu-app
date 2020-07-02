@@ -31,6 +31,15 @@
                   <span class="font_setting">{{chooseSKU.capacity}}</span>
                 </div>
               </div>
+
+
+              <div v-show="chooseSKU.weight" class="van-popup__panel_extro__item">
+                <div style="display: flex">
+                  <img src="../asset/weight.png" style="width: 20px; height: 20px; ">
+                  <span class="font_setting">{{chooseSKU.weight}}</span>
+                </div>
+              </div>
+
               <div v-show="chooseSKU.copies" class="van-popup__panel_extro__item">
                 <div style="display: flex">
                   <img src="../asset/time.png" style="width: 20px; height: 20px; ">
@@ -43,7 +52,7 @@
                   <span class="font_setting">{{cutleryDesc}}</span>
                 </div>
               </div>
-              <div class="van-popup__panel_extro__item">
+              <div v-show="productInfo.deliverTime" class="van-popup__panel_extro__item">
                 <div style="display: flex">
                   <img src="../asset/cutlery.png" style="width: 20px; height: 20px; ">
                   <span class="font_setting">{{deliverTime}}</span>
@@ -101,6 +110,8 @@
 <script>
   import CheckBox from '@/components/CheckBox';
 
+  import {deliverTimeEnum} from '@/utils/enums';
+
   export default {
   name: 'cart-pop',
     components: {
@@ -109,17 +120,14 @@
   props: {
     popShow: Boolean,
     productSKUs: Array,
-    productId:Number,
-    popupText: {
-      type: String,
-      default:"加入购物车"
-    }
+    productInfo:Object
   },
   data() {
     return {
       chooseSKU:{},
       active:0,
-      cutlery:0
+      cutlery:0,
+      popupText:"加入购物车"
     }
   },
 
@@ -173,7 +181,6 @@
 
   watch: {
     productSKUs() {
-      console.log("this.productSKUs", this.productSKUs);
       this.chooseSKU = this.productSKUs[0];
     },
   },
@@ -195,13 +202,16 @@
       },
 
     deliverTime() {
-      if (this.chooseSKU.deliverTime === 1001 || this.chooseSKU.deliverTime === 1002) {
-        return "现货下单立即配送";
+      if (this.productInfo.deliverTime === deliverTimeEnum.RIGHT_NOW.value) {
+        return deliverTimeEnum.RIGHT_NOW.desc;
+      } else if (this.productInfo.deliverTime === deliverTimeEnum.EVERY_DAY.value) {
+        return deliverTimeEnum.EVERY_DAY.desc;
       } else {
         // 如果跨夜统一为第二天营业时间配送
-          return "最早明天10点可配送";
-        }
+        return "最早明天10点可配送";
+      }
     },
+
     cutleryDesc() {
         if (!this.chooseSKU.cutlery) {
           return "";

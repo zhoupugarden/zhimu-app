@@ -117,7 +117,7 @@
   import Dialog from '../../../static/vant/dialog/dialog';
   import {subscribeMessage} from '@/utils/wxApi';
   import {toast} from '../../utils/toast';
-  import {pageUrlEnum} from '@/utils/enums'
+  import {pageUrlEnum, orderStatusEnum} from '@/utils/enums'
 
 
   export default {
@@ -269,7 +269,7 @@
     },
     computed: {
       deliverDesc() {
-        if (this.orderInfo.orderStatus === 4) {
+        if (this.orderInfo.orderStatus === orderStatusEnum.make_done) {
           return "由骑手：" + this.orderInfo.deliverName + "为您配送" + "联系电话：" + this.orderInfo.deliverPhone;
         } else {
           return "正在为你安排配送小哥";
@@ -285,18 +285,9 @@
     onUnload() {
       let pages = getCurrentPages();
       let prePage = pages[pages.length - 2];
-      if (prePage.route === pageUrlEnum.order_submit_url) {
+      if ('/' + prePage.route === pageUrlEnum.order_submit_url) {
         wx.switchTab({
           url: pageUrlEnum.home_url,
-          success(res) {
-            console.log("=========", res)
-          },
-          fail(res) {
-            console.log("=========", res)
-          },
-          complete(res) {
-            console.log("=========", res)
-          }
         })
       }
     }

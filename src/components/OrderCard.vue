@@ -25,13 +25,13 @@
       </div>
     </div>
     <div class="order-card__operation">
-      <div style="padding: 5px" v-show="orderInfo.orderStatus === 1">
+      <div style="padding: 5px" v-show="orderInfo.orderStatus === orderStatusEnum.INIT.value">
         <van-button size="small" @click="cancelOrder">取消订单</van-button>
       </div>
-       <div v-show="orderInfo.orderStatus === 1">
+       <div v-show="orderInfo.orderStatus === orderStatusEnum.INIT.value">
          <van-button  color="#000000" size="small" type="primary" @click="payOrder">立即支付</van-button>
        </div>
-      <div v-show="orderInfo.orderStatus === 7 && orderInfo.isComment === 0">
+      <div v-show="orderInfo.orderStatus === orderStatusEnum.have_signed.value && !orderInfo.isComment">
         <van-button color="#000000" size="small" type="primary" @click="navigateToEvaluation">评价得积分</van-button>
       </div>
     </div>
@@ -46,25 +46,27 @@
   import {CANCEL_ORDER,MOCK_WX_PAY, PAY_ORDER} from '@/utils/api';
   import {request} from "@/utils/request";
   import Dialog from '../../static/vant/dialog/dialog';
+
+  import {pageUrlEnum, orderStatusEnum} from "@/utils/enums";
+
   export default {
     props: {
       orderInfo:Object
     },
     data() {
       return {
+        orderStatusEnum:orderStatusEnum
       }
     },
     methods: {
       navigateToOrderDetail() {
-        var url = "/pages/orderdetail/main?orderNo=" + this.orderInfo.orderNo;
-        console.log("url",url);
+        let url = pageUrlEnum.order_detail_url + "?orderNo=" + this.orderInfo.orderNo;
         wx.navigateTo({
           url
         });
       },
       navigateToEvaluation() {
-        var url = "/pages/evaluation/main?orderNo=" + this.orderInfo.orderNo;
-        console.log("url",url);
+        let url = pageUrlEnum.evaluation_url + "?orderNo=" + this.orderInfo.orderNo;
         wx.navigateTo({
           url
         });
@@ -85,7 +87,7 @@
               ).then(
                 response => {
                   console.log("取消订单响应：", response);
-                  that.orderInfo.orderStatus = 99;
+                  that.orderInfo.orderStatus = orderStatusEnum.cancelled;
                   that.orderInfo.orderStatusDesc = "已取消";
                 }
               )
@@ -105,10 +107,9 @@
         ).then(
           response => {
             console.log("this response", response);
-            //  微信支付成功后，跳转到myvip页面
             let params = {};
             params.orderNo = this.orderNo;
-            that.orderInfo.orderStatus = 2;
+            that.orderInfo.orderStatus = orderStatusEnum.has_pay;
             that.orderInfo.orderStatusDesc = "已支付";
           }
         )
@@ -124,7 +125,6 @@
           data
         ).then(
           response => {
-            console.log("支付订单响应：", response);
           //  在这里需要调用微信支付
             let params = {};
             params.unifiedOrderNo = response.unifiedOrderNo;
@@ -149,32 +149,32 @@
     },
     computed: {
       orderStatusDesc() {
-        if (this.orderInfo.orderStatus === 1) {
-          return "待支付";
+        if (this.orderInfo.orderStatus === orderStatusEnum.INIT.value) {
+          return orderStatusEnum.INIT.desc;
         }
-        if (this.orderInfo.orderStatus === 2 || this.orderInfo.orderStatus === 3 || this.orderInfo.orderStatus === 4) {
-          return "已支付";
+        if (this.orderInfo.orderStatus === orderStatusEnum.has_pay.value || this.orderInfo.orderStatus === orderStatusEnum.make_done.value || this.orderInfo.orderStatus === orderStatusEnum.accepted.value) {
+          return orderStatusEnum.has_pay.desc;
         }
-        if (this.orderInfo.orderStatus === 5) {
-          return "已配送";
+        if (this.orderInfo.orderStatus === orderStatusEnum.deliverd.value) {
+          return orderStatusEnum.deliverd.desc;
         }
-        if (this.orderInfo.orderStatus === 7) {
-          return "已收货";
+        if (this.orderInfo.orderStatus === orderStatusEnum.have_signed.value) {
+          return orderStatusEnum.have_signed.desc;
         }
-        if (this.orderInfo.orderStatus === 99) {
-          return "订单取消";
+        if (this.orderInfo.orderStatus === orderStatusEnum.cancelled.value) {
+          return orderStatusEnum.cancelled.desc;
         }
-        if (this.orderInfo.orderStatus === 100) {
-          return "订单完成";
+        if (this.orderInfo.orderStatus === orderStatusEnum.closed.value) {
+          return orderStatusEnum.closed.desc;
         }
-        if (this.orderInfo.orderStatus === 101) {
-          return "订单关闭";
+        if (this.orderInfo.orderStatus === orderStatusEnum.closed_auto.value) {
+          return orderStatusEnum.closed_auto.desc;
         }
-        if (this.orderInfo.orderStatus === 201) {
-          return "退款中";
+        if (this.orderInfo.orderStatus === orderStatusEnum.refunding.value) {
+          return orderStatusEnum.refunding.desc;
         }
-        if (this.orderInfo.orderStatus === 202) {
-          return "退款完成";
+        if (this.orderInfo.orderStatus === orderStatusEnum.refund.value) {
+          return orderStatusEnum.refund.desc;
         }
       }
     }

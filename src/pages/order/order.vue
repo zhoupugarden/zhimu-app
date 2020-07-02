@@ -65,9 +65,8 @@
   import {ADD_NEW_ADDRESS,GET_ORDER_LIST,MOCK_WX_PAY} from '@/utils/api';
   import {request} from "@/utils/request";
   import { mapGetters} from 'vuex';
-  import {toast} from '../../utils/toast';
-
-  import {pageUrlEnum} from "@/utils/enums";
+  import {toast} from '@/utils/toast';
+  import {pageUrlEnum, orderStatusEnum} from "@/utils/enums";
 
   export default {
 
@@ -100,11 +99,11 @@
         params.orderStatus = this.orderStatus;
       }
       if (this.active === 1) {
-        this.orderStatus = 7;
+        this.orderStatus = orderStatusEnum.have_signed.value;
         params.orderStatus = this.orderStatus;
       }
       if (this.active === 2) {
-        this.orderStatus = 1;
+        this.orderStatus = orderStatusEnum.INIT.value;
         params.orderStatus = this.orderStatus;
       }
 
@@ -122,7 +121,7 @@
           //  微信支付成功后，跳转到myvip页面
           let params = {};
           params.orderNo = this.orderNo;
-          that.orderInfo.orderStatus = 2;
+          that.orderInfo.orderStatus = orderStatusEnum.has_pay;
           that.orderInfo.orderStatusDesc = "已支付";
         }
       )

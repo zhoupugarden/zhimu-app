@@ -43,9 +43,7 @@
     },
     data() {
       return {
-        balanceRecords: {
-          total: 798
-        },
+
         pointTotal:0,
         userInfo: {},
 

@@ -8,7 +8,7 @@
         {{pointDetailItem.changeDate}}
       </div>
     </div>
-    <div>
+    <div class="pointitem-right">
       <div
         style="padding-right: 10px; font-size: 12px;"
         :style="{color : activeColor}">
@@ -33,7 +33,7 @@
     data() {
       return {
         flag: this.pointDetailItem.changeType === 1 ? "+":"-",
-        activeColor:this.pointDetailItem.changeType === 1 ? "green":"red"
+        activeColor:this.pointDetailItem.changeType === 1 ? "#09BB07":"#e64340"
       }
     }
 
@@ -48,12 +48,19 @@
     height: 50px;
     align-items: center;
     font-size: 14px;
+    border-bottom: 1px solid #f2f2f2;
   }
   .pointitem-left {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     padding-left: 10px;
+  }
+  .pointitem-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
   }
   .redActive {
     color: red;

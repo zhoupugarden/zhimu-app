@@ -1,3 +1,5 @@
+import {categoryTypeEnum} from '@/utils/enums';
+
 // 用gettter取数据到组件里,是数据的映射
 
 // // getter可充当计算属性
@@ -7,6 +9,10 @@
 export default {
     openId: state => state.openId,
     cartList: state => state.cartList,
+
+    cartFittingList: state => state.cartList.filter(a => a.type === categoryTypeEnum.FITTING.value),
+    cartProductList: state => state.cartList.filter(a => a.type !== categoryTypeEnum.FITTING.value),
+
     token:state => state.token,
     currentLocation:state => state.currentLocation,
     isLogin: state => state.isLogin,

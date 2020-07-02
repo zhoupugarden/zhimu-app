@@ -6,7 +6,7 @@
         <div style="color: #b2b2b2; padding: 10px;">
           当前积分
         </div>
-        <div style="color: green">
+        <div style="color: #09BB07">
           <van-cell
             title="积分说明"
             title-class="cell-point-class"

@@ -64,7 +64,7 @@
           </div>
 
         </div>
-        <div v-show="deliverTime" class="extro-info__item">
+        <div v-show="chooseSKU.deliverTime" class="extro-info__item">
           <div class="extro-info__item_i">
             <img src="../../asset/time.png" style="width: 20px; height: 20px; ">
             <span class="font_setting">{{deliverTime}}</span>
@@ -102,7 +102,7 @@
         <van-tab title="详情">
           <div class="zm-goods__detail">
             <!--如何消除图片与图片间的空隙-->
-            <div v-for="item in urls">
+            <div v-for="(item, index) in urls" :key="index">
               <image :src="item" mode="widthFix" class="zm-goods__detail-img"></image>
             </div>
           </div>
@@ -198,13 +198,13 @@
         />
         <van-goods-action-button
           text="加入购物车"
-          plain
-          type="warning"
+          color="#e64340"
+          custom-class="button-custom"
           @click="onAddCartButton"
         />
         <van-goods-action-button
           text="立即购买"
-          plain
+          color="#353535"
           @click="onBuyClickButton"
         />
       </van-goods-action>
@@ -225,7 +225,7 @@
               {{chooseSKU.linePrice}}
             </span>
           </div>
-          <span v-if="productInfo.stock <= productInfo.warnStock" style="color: red; font-size: 12px; padding-left: 10px;">少量库存</span>
+          <span v-if="productInfo.stock <= productInfo.warnStock" style="color: #e64340; font-size: 12px; padding-left: 10px;">少量库存</span>
         </div>
         <div class="van-popup__panel_extro">
           <div v-show="chooseSKU.cakeSize" class="van-popup__panel_extro__item">
@@ -240,6 +240,15 @@
               <span class="font_setting">{{chooseSKU.capacity}}</span>
             </div>
           </div>
+
+          <div v-show="chooseSKU.weight" class="van-popup__panel_extro__item">
+            <div class="extro-info__item_i">
+              <img src="../../asset/weight.png" style="width: 20px; height: 20px; ">
+              <span class="font_setting">{{chooseSKU.weight}}</span>
+            </div>
+          </div>
+
+
           <div v-show="chooseSKU.copies" class="van-popup__panel_extro__item">
             <div class="extro-info__item_i">
               <img src="../../asset/time.png" style="width: 20px; height: 20px; ">
@@ -253,7 +262,7 @@
             </div>
           </div>
 
-          <div v-show="chooseSKU.deliverTime" class="van-popup__panel_extro__item">
+          <div v-show="productInfo.deliverTime" class="van-popup__panel_extro__item">
             <div class="extro-info__item_i">
               <img src="../../asset/cutlery.png" style="width: 20px; height: 20px; ">
               <span class="font_setting">{{deliverTime}}</span>
@@ -276,7 +285,7 @@
           <van-goods-action>
             <van-goods-action-button
               :text="popupText"
-              type="warning"
+              color="#353535"
               @click="addCart"
             />
           </van-goods-action>
@@ -285,13 +294,15 @@
           <van-goods-action>
             <van-goods-action-button
               :text="popupText"
-              type="warning"
+              color="#353535"
               @click="addToBuy"
             />
           </van-goods-action>
         </div>
       </div>
     </van-popup>
+
+
 
     <van-toast  id="van-toast"/>
   </div>
@@ -305,7 +316,7 @@
   import CheckBox from '@/components/CheckBox';
   import {toast} from '../../utils/toast';
   import {subscribeMessage} from '@/utils/wxApi';
-  import {pageUrlEnum, pmsOnlineStatusEnum} from "@/utils/enums";
+  import {pageUrlEnum, pmsOnlineStatusEnum, deliverTimeEnum} from "@/utils/enums";
 
   export default {
     components: {
@@ -319,7 +330,6 @@
       productInfo: {},
       starCommentInfo:{},
       popShow:false,
-      outShowUp:false,
       urls: [],
       productSKUs: [],
       chooseSKU :{},
@@ -327,7 +337,6 @@
       comment: null,
       commentContent:"",
       commentUrl:"",
-      phoneNo:"",
       isNoticed:false,
     }
   },
@@ -430,6 +439,7 @@
           this.starCommentInfo = response.starCommentDto;
           this.productSKUs = response.skuDtoList;
           this.chooseSKU = this.productSKUs[0];
+
           wx.setNavigationBarTitle({
             title: this.productInfo.name
           });
@@ -442,14 +452,6 @@
     },
     popUpClose() {
       this.popShow = false;
-    },
-
-    phoneNoChange(event) {
-      this.phoneNo = event.mp.detail;
-    },
-
-    outShowClose() {
-      this.outShowUp = false;
     },
 
     addProductNotice() {
@@ -491,7 +493,6 @@
 
       //    将数据还原，后续用Obejct.assign
       this.popShow = false;
-      this.outShowUp = false;
       this.phoneNo = "";
       this.isNoticed = false;
 
@@ -533,9 +534,10 @@
         }
       },
       deliverTime() {
-        let hour = this.chooseSKU.deliverTime;
-        if (this.chooseSKU.deliverTime === 1001 || this.chooseSKU.deliverTime === 1002) {
-          return "现货下单立即配送";
+        if (this.productInfo.deliverTime === deliverTimeEnum.RIGHT_NOW.value) {
+          return deliverTimeEnum.RIGHT_NOW.desc;
+        } else if (this.productInfo.deliverTime === deliverTimeEnum.EVERY_DAY.value) {
+          return deliverTimeEnum.EVERY_DAY.desc;
         } else {
           // 如果跨夜统一为第二天营业时间配送
           return "最早明天10点可配送";
@@ -581,6 +583,7 @@
 
   .button-custom {
     width: 100%;
+    color: #09BB07;
   }
   .zm-goods__review {
     background-color: white;
@@ -601,7 +604,7 @@
   }
   .zm-goods__review_value {
     font-size: small;
-    color: red !important;
+    color: #e64340 !important;
   }
   .zm-goods__actions {
     position: fixed;
@@ -618,6 +621,11 @@
     height: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  /*覆盖原有的goodAction样式*/
+  .van-info {
+    background-color: #353535 !important;
   }
 
 </style>

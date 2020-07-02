@@ -9,9 +9,9 @@
       </div>
     </div>
     <div class="order-submit-address">
-      <div v-if="switchValue === 1" class="order-submit-address__deliver" @click="navigateToChooseAddress">
+      <div v-if="defaultParams.switchValue === 1" class="order-submit-address__deliver" @click="navigateToChooseAddress">
         <div class="order-submit-address__deliver-info">
-          <div v-if="addressArray.length === 0" style="padding: 10px 15px; font-size: 14px;">
+          <div v-if="!currentAddress.id" style="padding: 10px 15px; font-size: 14px;">
             点击添加地址
           </div>
           <div v-else>
@@ -86,7 +86,7 @@
         <van-cell-group>
           <van-cell :title="productCount + '件商品'" :value= " flag + totalProductPrice" />
           <van-cell title="余额" :value= " '-' + flag + useBalanceAmount" />
-          <van-cell title="优惠券" :value= " '-' + flag + couponValue" />
+          <van-cell title="优惠券" :value= " '-' + flag + choosedCoupon.couponValue" />
           <van-cell title="配送费" :value= "flag + deliverValue" />
         </van-cell-group>
     </div>
@@ -100,7 +100,7 @@
     </div>
 
 
-    <van-popup :show="timePopShow" position="bottom">
+    <van-popup :show="popShowParams.timePopShow" position="bottom">
       <van-picker show-toolbar
                   overlay="true"
                   @cancel="cancelTimePop"
@@ -109,7 +109,7 @@
     </van-popup>
 
 
-    <van-popup :show="datePopShow" position="bottom">
+    <van-popup :show="popShowParams.datePopShow" position="bottom">
       <van-datetime-picker
         type="date"
         date-type="date"
@@ -121,14 +121,14 @@
       />
     </van-popup>
 
-    <van-popup :show="timePopShow" position="bottom">
+    <van-popup :show="popShowParams.timePopShow" position="bottom">
       <van-picker show-toolbar
                   @cancel="cancelTimePop"
                   @confirm="confirmTimePop"
         :columns="timeColumns" />
     </van-popup>
 
-      <van-popup :show="couponPopShow"
+      <van-popup :show="popShowParams.couponPopShow"
                  custom-style="height:80%; background-color: #f2f2f2;"
                  @close="closeCouponPopup"
                  position="bottom">
@@ -153,7 +153,7 @@
       </van-popup>
 
 
-    <van-popup :show="productPopShow"
+    <van-popup :show="popShowParams.productPopShow"
                custom-style="height:80%"
                @close="closeProductPopup"
                position="bottom">
@@ -169,16 +169,57 @@
 
 <script>
   const ZERO_AMOUNT = 0;
-
   import CouponItem from '@/components/CouponItem';
   import ProductItem from '@/components/ProductItem';
   import {toast} from '../../utils/toast';
   import { mapGetters, mapActions, mapState } from 'vuex';
-  import {GET_COUPON_BY_USER_ID, PAY_ORDER, MOCK_WX_PAY, ORDER_PRESUBMIT, GET_USER_ADDRESS, MY_USER_INFO,ORDER_SUBMIT, PRE_USE_COUPON} from '@/utils/api';
+  import {GET_COUPON_BY_USER_ID, PAY_ORDER, MOCK_WX_PAY, ORDER_PRESUBMIT, GET_ADDRESS_BY_ID, MY_USER_INFO,ORDER_SUBMIT, PRE_USE_COUPON} from '@/utils/api';
   import {request} from "@/utils/request";
   import {formatYMD} from "@/utils/dateUtil";
   import Dialog from '../../../static/vant/dialog/dialog';
   import {CouponRuleTypeEnum, pageUrlEnum} from "@/utils/enums";
+
+  const defaultParamsValue = {
+    switchValue: 1,
+    deliverType:1,
+  };
+
+  const defaultPopShowParams = {
+    datePopShow:false,
+    timePopShow:false,
+    couponPopShow:false,
+    productPopShow:false
+  };
+
+  const defaultAddress = {
+    id : null,
+    receiverName:"",
+    receiverPhone:"",
+    addressName:"",
+    roadDetail:""
+  };
+
+  const defaultChooseCoupon = {
+    couponCode:"",
+    couponValue:0,
+    couponType:null,
+    couponName:"",
+    couponLimit:"",
+    disAmount:null,
+    minAmount:null,
+    disCount:null,
+    maxAmount:null
+  };
+
+
+  const presubmitResponse = {
+    presubmitUser:null,
+    presubmitTime:null,
+    presubmitOrder:null,
+    presubmitProduct:null
+  };
+
+
 
   export default {
     components: {
@@ -186,17 +227,12 @@
     },
     data() {
       return {
-        flag:'￥',
-        switchValue: 1,
-        deliverType:1,
-        addressId:0,
+        flag : '￥',
+        defaultParams: Object.assign({}, defaultParamsValue),
         couponCanUseList:[],
-        choosedCoupon: null,
         addressArray: [],
-        datePopShow:false,
-        timePopShow:false,
-        couponPopShow:false,
-        productPopShow:false,
+        choosedCoupon: Object.assign({}, defaultChooseCoupon),
+        popShowParams: Object.assign({}, defaultPopShowParams),
         currentDate: new Date().getTime(),
         formatDate: "",
         currentTime: null,
@@ -205,10 +241,8 @@
         timeColumns:[],
         allTimes:[],
         balanceValue:"0",
-        userInfo:{},
         vipTip:"",
         totalProductPrice:0.00,
-        couponValue: ZERO_AMOUNT,
         balanceAmount:0.00,
         distance:null,
         deliverValue:ZERO_AMOUNT,
@@ -217,7 +251,8 @@
         productCount:0,
         productAmount:0.00,
         promoteItemList:[],
-        cartProductListName:""
+        cartProductListName:"",
+        currentAddress: Object.assign({}, defaultAddress)
       }
     },
     methods: {
@@ -231,8 +266,14 @@
         ]
       ),
       switchOther() {
-        this.switchValue = this.switchValue * -1;
-        console.log("this.switchValue:", this.switchValue)
+        this.defaultParams.switchValue = this.defaultParams.switchValue * -1;
+
+        if (this.defaultParams.switchValue > 0) {
+          this.defaultParams.deliverType = 1;
+        } else {
+          this.defaultParams.deliverType = 99;
+        }
+
       },
       navigateToChooseAddress() {
         wx.navigateTo({
@@ -240,37 +281,38 @@
         });
       },
       navigateToOrderDetail(orderNo) {
-        var url = "../orderdetail/main?orderNo=" + orderNo;
-        console.log("url",url)
+
+        var url = pageUrlEnum.order_detail_url + "?orderNo=" + orderNo;
         wx.redirectTo({
           url
         });
       },
       navigateToBuyVip() {
         wx.navigateTo({
-          url:pageUrlEnum.buy_vip_url
+          url:pageUrlEnum.star_vip_url
         });
       },
+
       datePop() {
-        this.datePopShow = true;
+        this.popShowParams.datePopShow = true;
       },
       timePop() {
-        this.timePopShow = true;
+        this.popShowParams.timePopShow = true;
       },
       couponPop() {
-        this.couponPopShow = true;
+        this.popShowParams.couponPopShow = true;
       },
       cancelPopup() {
-        this.datePopShow = false;
+        this.popShowParams.datePopShow = false;
       },
       closeCouponPopup() {
-        this.couponPopShow = false;
+        this.popShowParams.couponPopShow = false;
       },
       productPop() {
-        this.productPopShow = true;
+        this.popShowParams.productPopShow = true;
       },
       closeProductPopup() {
-        this.productPopShow = false;
+        this.popShowParams.productPopShow = false;
       },
       confirmPopup(event) {
         const {detail, currentTarget} = event.mp;
@@ -278,7 +320,7 @@
          console.log(formatYMD(detail));
           this.formatDate = formatYMD(detail);
           this.currentDate = detail;
-          this.datePopShow = false;
+          this.popShowParams.datePopShow = false;
           if (detail > new Date().getTime()) {
             this.isOverToday = false;
             this.timeColumns = this.allTimes;
@@ -288,13 +330,12 @@
           }
 
         }else {
-          this.datePopShow = false;
+          this.popShowParams.datePopShow = false;
         }
       },
       noUseCoupon() {
-        this.couponPopShow = false;
-        this.choosedCoupon = null;
-        this.couponValue = 0.00;
+        this.popShowParams.couponPopShow = false;
+        this.choosedCoupon = Object.assign({}, defaultChooseCoupon);
       },
       chooseCouponItem(item) {
         let params = {};
@@ -304,12 +345,12 @@
       },
 
       cancelTimePop() {
-        this.timePopShow = false;
+        this.popShowParams.timePopShow = false;
       },
       confirmTimePop(event) {
         const {detail, currentTarget} = event.mp;
         this.currentTime = detail.value;
-        this.timePopShow = false;
+        this.popShowParams.timePopShow = false;
       },
       convertCartList(data) {
         let productItems = [];
@@ -339,16 +380,32 @@
             if (!response.isApply) {
               toast(response.notApplyReason);
             } else {
-              that.couponPopShow = false;
-              that.couponValue = response.couponAmount;
+              that.popShowParams.couponPopShow = false;
               that.choosedCoupon = that.couponCanUseList.find(item => item.couponCode === response.couponCode);
+              that.choosedCoupon.couponValue = response.couponAmount;
             }
           }
         )
       },
+
+      listUserAddress(addressId) {
+        let params = {};
+        params.addressId = addressId;
+        request(
+          GET_ADDRESS_BY_ID,
+          'GET',
+          params
+        ).then(
+          response => {
+            this.currentAddress = response;
+          }
+        )
+      },
+
       validParams() {
         let result = false;
-        if (this.switchValue === 1 && this.addressId === 0) {
+        //选择的配送，但还没填写配送地址
+        if (this.defaultParams.switchValue === 1 && !this.currentAddress.id) {
           wx.showModal({
             title: "提示",
             content: '亲,请先选择收货地址',
@@ -360,6 +417,7 @@
               }
             }
           });
+          return result;
         }
         if (this.isOverToday === true) {
           wx.showModal({
@@ -373,11 +431,12 @@
               }
             }
           });
+          return result;
         }
         else {
           result = true;
+          return result;
         }
-        return result;
       },
       openMerchantLocation() {
           let latitude = this.merchantInfo.latitude;
@@ -391,7 +450,7 @@
 
       orderPreSubmit() {
         let params = {};
-        params.deliverType = this.deliverType;
+        params.deliverType = this.defaultParams.deliverType;
         params.fittingList = this.freeCartList;
         params.productList = this.cartList;
         params.latitude = this.currentLocation.latitude;
@@ -403,14 +462,22 @@
 
         ).then(
           response => {
+
             this.couponCanUseList = response.presubmitUser.couponList;
             this.balanceAmount = response.presubmitUser.balanceAmount;
             this.distance = response.presubmitUser.currentDistance;
             this.addressArray = response.presubmitUser.addressList;
+
+            //用户如果有配置过地址， 初始化使用默认的地址
+            if (this.addressArray.length > 0) {
+              console.log("debug 先后顺序");
+              this.currentAddress = this.addressArray.find(item => item.isDefault);
+            }
+
             this.tmpDeliverValue = response.presubmitOrder.deliverFee;
-            if (this.switchValue === 1) {
+            if (this.defaultParams.switchValue === 1) {
               this.deliverValue = this.tmpDeliverValue;
-              this.deliverType = 1;
+              this.defaultParams.deliverType = 1;
             }
             this.vipTip = response.presubmitOrder.vipTip;
             let strMinDate = response.presubmitTime.minDate;
@@ -496,11 +563,11 @@
           return;
         }
         let params = {};
-        params.addressId = this.addressId;
+        params.addressId = this.currentAddress.id;
         params.deliverDate = this.formatDate;
         params.deliverTime = this.currentTime;
-        params.deliverType = this.deliverType;
-        if (this.choosedCoupon != null) {
+        params.deliverType = this.defaultParams.deliverType;
+        if (this.choosedCoupon.couponCode != null) {
           params.couponCode = this.choosedCoupon.couponCode;
         }
         params.productItems = this.convertCartList(this.cartList);
@@ -531,7 +598,7 @@
     computed: {
       ...mapGetters(
         [
-           'currentLocation', 'isVip','cartList','freeCartList', 'cartTotalCount','cartTotalPrice','merchantInfo'
+           'currentLocation', 'isVip','cartList','freeCartList','merchantInfo'
         ]
       ),
       ...mapState(
@@ -539,37 +606,18 @@
           merchantInfo: state=>state.merchant.merchantInfo,
         }
       ),
-      currentAddress() {
-        if (this.switchValue === -1) {
-          return "";
-        }
-        if (this.addressArray.length === 0) {
-          return "";
-        }
-        if(this.addressId !== 0 && this.addressArray.length === 0) {
-          this.addressId = 0;
-        }
-        if(this.addressId === 0 && this.addressArray.length > 0) {
-          //取最新添加的地址
-          let addressItem =  this.addressArray[this.addressArray.length - 1];
-          this.addressId = addressItem.id;
-          return addressItem;
-        }else {
-          return this.addressArray.find(item => item.id === Number(this.addressId));
-        }
-      },
 
       useBalanceAmount() {
         let totalAmount = this.deliverValue + this.totalProductPrice;
         if (this.balanceAmount >= totalAmount) {
-          return totalAmount - this.couponValue;
+          return totalAmount - this.choosedCoupon.couponValue;
         } else {
           return this.balanceAmount;
         }
       },
 
       restWxPayAmount() {
-        let needPayAmount = this.totalProductPrice + this.deliverValue - this.couponValue;
+        let needPayAmount = this.totalProductPrice + this.deliverValue - this.choosedCoupon.couponValue;
         if (needPayAmount > this.balanceAmount) {
           return needPayAmount - this.balanceAmount;
         }else {
@@ -577,16 +625,16 @@
         }
       },
 
+
       orderSubmitSwitchDeliver() {
-        if (this.switchValue === 1) {
-          console.log("switch:", this.switchValue)
+        if (this.defaultParams.switchValue === 1) {
           return 'switch-style'
         }else {
           return 'un-switch-style'
         }
       },
       orderSubmitSwitchSelf() {
-        if (this.switchValue === -1) {
+        if (this.defaultParams.switchValue === -1) {
           return 'switch-style'
         }else {
           return 'un-switch-style'
@@ -594,7 +642,7 @@
         }
       },
       chooseCouponTip() {
-        if (this.choosedCoupon != null) {
+        if (this.choosedCoupon.couponCode) {
           switch (this.choosedCoupon.couponType) {
             case CouponRuleTypeEnum.full_reduction:
               return this.choosedCoupon.disAmount + "元优惠券";
@@ -624,46 +672,30 @@
         }
       }
     },
-    watch: {
-      'switchValue': {
-        handler(val) {
-          if (val === 1) {
-            this.deliverValue = this.tmpDeliverValue;
-            this.deliverType = 1;
-          } else {
-            this.deliverValue = ZERO_AMOUNT;
-            this.deliverType = 99;
-          }
-
-        },
-        deep:true,
-        immediate: true
-
-      }
-
-    },
     onShow() {
-      //初始化页面的数据
-      this.choosedCoupon = null;
-      this.couponPopShow = false;
-      this.productPopShow = false;
-      this.couponValue = ZERO_AMOUNT;
         //要把原有已选的值清空
+      console.log("this.$root.$mp.query", this.$root.$mp.query);
         let params = this.$root.$mp.query;
         let pages = getCurrentPages();
       let prevPage = pages[pages.length - 2];
-      if (prevPage.route === pageUrlEnum.cart_url) {
+      //如果是从购物车跳转过来的，进行订单预提交(路由中保存的是相对地址， 需要加上'/')
+      if ('/' + prevPage.route === pageUrlEnum.cart_url) {
         this.orderPreSubmit();
       }
-      console.log(this.$root.$mp.query);
-        //有三种路径，1 从购物车页面进来，2重新选择地址后返回 3 支付完成后返回
+        //有两种种路径，1 从购物车页面进来，2重新选择地址后返回
         if (null != params.addressId) {
-          this.addressId = params.addressId;
+          //获取用户地址
+          this.listUserAddress(params.addressId);
+          console.log("this.currentAddress", this.currentAddress);
         }
-      //  还原配送方式
-      this.switchValue = 1;
-      this.deliverType = 1;
+    },
+    onUnload() {
+      //还原数据
+      this.popShowParams = Object.assign({}, defaultPopShowParams);
+      this.choosedCoupon = Object.assign({}, defaultChooseCoupon);
+      this.currentAddress = Object.assign({}, defaultAddress);
     }
+
 
   }
 </script>

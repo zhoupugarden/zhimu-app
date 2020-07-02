@@ -7,7 +7,8 @@
           </div>
         </div>
         <div class="total-score">
-          <van-rate size="14px" :value="rateValue" @change="activeTags"/>
+          <span style="padding: 0px 10px;"><van-rate color="#e64340" size="14px" :value="serviceRateValue" @change="activeTags"/></span>
+          <span style="font-size: 12px; color: #e64340; font-weight: bold;">{{serviceRateDesc}}</span>
         </div>
         <div v-if="isActive" class="total-tags">
           <div v-for="(item, index) in tagDescs" :key="index" >
@@ -15,7 +16,7 @@
           </div>
         </div>
     </div>
-    <div v-for= "(item, index) in orderInfo.orderCommentDetailList" class="evaluation-detail">
+    <div v-for= "(item, index) in orderInfo.orderCommentDetailList" :key="index" class="evaluation-detail">
       <evaluation-item :itemInfo="item"
                        :ossConfig="ossConfig"
                        @rateChange="rateChange"
@@ -51,7 +52,7 @@
   import { mapGetters , mapActions} from 'vuex';
   import {GET_COMMENT_ORDER_INFO, SUBMIT_ORDER_COMMENT ,GET_OSS_CONFIG} from '@/utils/api';
   import {request} from "@/utils/request";
-  import {pageUrlEnum} from "@/utils/enums";
+  import {pageUrlEnum, evaluationEnum} from "@/utils/enums";
 
   const activeColor = "#f2826a";
   export default {
@@ -63,7 +64,8 @@
         isAnonymous:false,
         orderInfo: {},
         isActive:false,
-        rateValue: 0,
+        serviceRateValue: 0,
+        serviceRateDesc:"",
         tagDescs:["骑手服务好", "准时送达", "风雨无阻", "蛋糕完好", "送货上门"],
         tagColor:["","","","",""],
         choosedTag:[],
@@ -95,7 +97,13 @@
       },
       activeTags(event) {
         this.isActive=true;
-        this.rateValue = event.mp.detail;
+        this.serviceRateValue = event.mp.detail;
+          let rateResult = Object.values(evaluationEnum).find(
+          item => {
+            return item.value === this.serviceRateValue;
+          }
+        );
+        this.serviceRateDesc = rateResult.desc;
       },
 
       rateChange(data) {
@@ -178,7 +186,7 @@
       submitOrderComment() {
         let commentBo = {};
         commentBo.orderNo = this.orderNo;
-        commentBo.deliverScore = this.rateValue;
+        commentBo.deliverScore = this.serviceRateValue;
         commentBo.itemBos = this.commentItems;
         commentBo.tags = this.choosedTag;
         commentBo.isAnonymous = this.isAnonymous;
@@ -233,7 +241,8 @@
     onUnload() {
       this.isAnonymous = 0;
       this.isActive = false;
-        this.rateValue = 0;
+        this.serviceRateValue = 0;
+        this.serviceRateDesc = "";
         this.choosedTag= [];
         this.commentItems = [];
     }

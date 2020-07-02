@@ -23,7 +23,7 @@
 </template>
 <script>
   import ZhimuAddress from '@/components/ZhimuAddress';
-  import {GET_USER_ADDRESS,DEL_USER_ADDRESS} from '@/utils/api';
+  import {GET_USER_ADDRESS,DEL_USER_ADDRESS, UPDATE_USER_ADDRESS} from '@/utils/api';
   import {request} from "@/utils/request";
   import { mapGetters} from 'vuex';
   import {pageUrlEnum} from "@/utils/enums";
@@ -64,6 +64,18 @@
     },
     updateAddress(data) {
       console.log("updateAddress:", data);
+      let params = {};
+      request(
+        UPDATE_USER_ADDRESS,
+        'POST',
+        params
+      ).then(
+        response => {
+          this.listUserAddress();
+        }
+      )
+
+
     },
 
     listUserAddress() {
@@ -120,7 +132,7 @@
       let pages = getCurrentPages();
       let prePage = pages[pages.length -2];
       let preUrl = prePage.route;
-      if (preUrl === pageUrlEnum.login_url) {
+      if ('/' + preUrl === pageUrlEnum.login_url) {
         wx.switchTab({
             url : pageUrlEnum.my_url
           }

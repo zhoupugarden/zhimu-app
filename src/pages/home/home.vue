@@ -4,15 +4,15 @@
        <!--菜单导航-->
       <scroll-view class="menu-nav" :scroll-y="true"
                    :scroll-into-view="'nav'+selectIndex">
-        <li v-for="(item, index) in categoryNameList" :key="item.id"
+        <li v-for="(item, index) in categoryNameList" :key="index"
             :id="'nav'+index"
             class="nav-item"
             :class="{active: selectIndex==index}"
             @click="selectMenuAction(index)">
-          <div v-show="item.hasNew" class="nav_item_tag">
+          <div v-if="item.hasNew" class="nav_item_tag">
             new
           </div>
-          <div>{{item.name}}</div>
+          <div style="line-height:50px;">{{item.name}}</div>
         </li>
       </scroll-view>
       <!-- 菜单内容 -->
@@ -27,7 +27,7 @@
         <div style="border-bottom: 1px dashed #b2b2b2;" v-for="(products, index) in productMenuList" :key="index" :id="'group'+index">
           <h3 class="group-title">{{categoryNameList[index].name}}</h3>
           <ul>
-            <li v-for="(item, j) in products" :key="item.id" class="menu-item">
+            <li v-for="(item, _index) in products" :key="_index" class="menu-item">
               <product-card :cardInfo="item"
                     @popCart="onPopCart"></product-card>
             </li>
@@ -41,6 +41,7 @@
     <!--弹出框-->
     <div>
       <cart-pop :popShow="popCartActive"
+                :productInfo="productInfo"
                 :productSKUs="productSku"
                 @popUpClose="closeActive" @addProductToCart="addToCart"></cart-pop>
     </div>
@@ -82,7 +83,7 @@
         let heightArr = this.productMenuList.map(item=>{
           return item.length*240+30;
         });
-        console.log(heightArr);
+        console.log("heightArr", heightArr);
         return heightArr;
       },
 
@@ -108,25 +109,30 @@
       selectMenuAction(index){
         // 设置选中的菜单
         this.menuIndex = index;
-        console.log("index, this.selectIndex", index, this.selectIndex, this.selectIndex==index);
       },
       // 菜单的滚动事件
       menuListScrollAction(ev){
+
+        console.log("ev.mp.detail.scrollTop", ev.mp.detail.scrollTop);
+        console.log("ev.mp.detail.scrollHeight", ev.mp.detail.scrollHeight);
+
         let top = ev.mp.detail.scrollTop;
+        let height = ev.mp.detail.scrollHeight;
         let index = 0;
         if(top >= 0){
-          for(let i = 0; i < this.heightArr.length; i++){
-            let min = 0;
-            for(let j = 0; j < i; j++){
-              min += this.heightArr[j];
-            }
-            let max = 0;
-            if(i === this.heightArr.length - 1){
-              //    return;
-              index = this.heightArr.length - 1;
-            }else{
+
+          let tail = 2 * 240 + 30;
+
+          if (top + tail >= height) {
+            index = this.heightArr.length;
+          } else {
+            for(let i = 0; i < this.heightArr.length; i++){
+              let min = 0;
+              for(let j = 0; j < i; j++){
+                min += this.heightArr[j];
+              }
+              let max = 0;
               max = min + this.heightArr[i];
-              //    console.log(min, max);
               if( top>= min && top < max){
                 index = i;
                 break;
@@ -184,17 +190,18 @@
         }
       }
     },
-    watch: {
-      active(val) {
-        console.log("active----", val);
-      }
-    },
     onShow(){
       this.$store.dispatch('home/getHomeData');
+      this.$store.dispatch('merchant/getMerchantData');
       if (this.adHeadSettings) {
         this.menuIndex = 100;
       }
+    },
+    onUnload() {
+      //退出后关闭页面
+      this.popCartActive = false;
     }
+
   }
 </script>
 
