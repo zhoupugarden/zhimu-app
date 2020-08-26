@@ -53,13 +53,13 @@ export default {
     commit(types.UPDATE_FREE_FROM_CART, data)
     },
 
-  storeToken: ({commit}, token) => {
+    storeToken: ({commit}, token) => {
       commit(types.TOKEN, token)
     },
     logout: ({commit}) => {
       commit(types.LOG_OUT)
     },
-  storeIsLogin: ({commit}, isLogin) => {
+    storeIsLogin: ({commit}, isLogin) => {
       commit(types.IS_LOGIN, isLogin)
     },
     storeIsVip: ({commit}, vip) => {
@@ -68,11 +68,11 @@ export default {
     checkoutCartList: ({commit}) => {
       commit(types.CHECK_OUT_CART)
     },
-  checkoutFreeCartList: ({commit}) => {
+    checkoutFreeCartList: ({commit}) => {
     commit(types.CHECK_OUT_FREE_CART)
   },
 
-  addCurrentLocation: ({state, commit}, data) => {
+    addCurrentLocation: ({state, commit}, data) => {
       commit(types.ADD_CURRENT_LOCATION, data)
   }
 

@@ -80,6 +80,7 @@ const mutations = {
     },
     [types.LOG_OUT](state) {
       state.isLogin = 0;
+      state.isVip = false;
     },
 
     [types.IS_LOGIN](state, isLogin) {

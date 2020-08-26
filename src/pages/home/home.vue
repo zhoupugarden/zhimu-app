@@ -50,7 +50,7 @@
 
 <script>
   import ProductCard from '@/components/ProductCard';
-  import {INDEX_LIST,GET_PRODUCT_DETAIL_BY_ID} from '@/utils/api';
+  import {GET_PRODUCT_DETAIL_BY_ID} from '@/utils/api';
   import {request} from "@/utils/request";
   import cartPop from '@/components/cartPop';
   import {mapState, mapActions} from 'vuex';
@@ -156,7 +156,6 @@
           }
         )
       },
-
 
       onPopCart(data) {
         this.popCartActive = false;

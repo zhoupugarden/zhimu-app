@@ -5,18 +5,20 @@
         :value="address.receiverName"
         @change="receiverNameChange"
         required
+        maxlength="7"
         clearable
         label="联系人"
         placeholder="收货人姓名"
       />
 
-      <van-cell title="地址" is-link :value="address.addressName" @click="clickChooseLocation"/>
+      <van-cell title="地址" is-link  :value="address.addressName" @click="clickChooseLocation"/>
 
       <van-field
         :value="address.roadDetail"
         required
         @change="roadDetailChange"
         clearable
+        maxlength="100"
         label="门牌号"
         placeholder="单元楼号,门牌号"
       />
@@ -25,6 +27,7 @@
         :value="address.receiverPhone"
         required
         type="number"
+        maxlength="11"
         @change="receiverPhoneChange"
         clearable
         label="手机号"
@@ -51,10 +54,10 @@
 
   const defaultAddress = {
     receiverName:"",
-    addressName:"请选择",
-    roadName:"请选择",
+    addressName:"请点击选择",
+    roadName:"",
     roadDetail:"",
-    receiverPhone:"",
+    receiverPhone:null,
     latitude:null,
     longitude:null
   }
@@ -69,12 +72,10 @@
   data() {
     return {
       active:0,
-      address: {},
+      address: Object.assign({}, defaultAddress),
       isNew:false,
       addressId:""
-
     }
-
   },
   methods: {
     addOrUpdateAddress() {
@@ -107,8 +108,6 @@
               url:pageUrlEnum.my_address_url
             });
           }
-          // 操作后清空原有数据
-          this.address = Object.assign({}, defaultAddress);
         }
       )
     },
@@ -123,12 +122,10 @@
       ).then(
         response => {
           // 操作后清空原有数据
-          this.address = Object.assign({}, defaultAddress);
           this.addressId = "";
-          wx.navigateTo({
+          wx.navigateBack({
             url:pageUrlEnum.my_address_url
           });
-
         }
       )
     },
@@ -265,12 +262,7 @@
 
         })
       }
-
-    },
-    onUnload() {
-      this.address = Object.assign({}, defaultAddress);
     }
-
   }
 </script>
 

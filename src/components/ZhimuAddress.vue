@@ -1,6 +1,6 @@
 <template>
-  <div class="address-container">
-    <div class="address-info" @click="backToOrderSubmit">
+  <div class="address-container" @click="backToOrderSubmit">
+    <div class="address-info">
       <div class="address-info_road">
         {{addressInfo.addressName}}
       </div>
@@ -49,7 +49,6 @@
       },
       removeAddress() {
         this.$emit("removeAddress", this.addressInfo.id);
-        this.addressInfo = {};
       },
       updateAddress() {
         let url = pageUrlEnum.new_address_url + "?addressId=" + this.addressInfo.id;
@@ -78,10 +77,16 @@
     display: flex;
     font-size: 14px;
     flex-direction: column;
-    align-items: center;
     justify-content: space-around;
     padding: 0px 15px;
+    width: 70%;
   }
+
+  .address-info_number {
+    width: 70%;
+    word-wrap: break-word;
+  }
+
   .address-operation {
     display: flex;
     flex-direction: column;

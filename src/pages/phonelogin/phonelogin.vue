@@ -201,8 +201,9 @@
       },
 
       backToPage() {
+        console.log("backToPage");
         let pages = getCurrentPages();
-          let curPage = pages[pages.length - 3];
+          let curPage = pages[pages.length - 2];
           let route = curPage.route;
         if (tabUrls.find(
           item => {
@@ -216,9 +217,9 @@
           )
 
         }else {
-          wx.redirectTo(
+          wx.navigateBack(
             {
-              url: '/' + route
+              delta:1
             }
           )
         }

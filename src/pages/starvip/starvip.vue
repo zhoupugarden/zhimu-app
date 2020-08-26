@@ -118,7 +118,7 @@
           500元
         </span>
       </div>
-        <div style="background-color: #d9b56e;color: white;"  @click="charge" class="button-font">
+        <div style="background-color: #d9b56e;color: white;"  @click="chargeBefore" class="button-font">
         去支付
       </div>
       </div>
@@ -187,7 +187,6 @@
         popContent: {
 
         },
-        userInfo:{},
         productId:"",
         skuId:""
 
@@ -256,6 +255,16 @@
         )
       },
 
+      chargeBefore() {
+        if (!this.isLogin) {
+          wx.navigateTo({
+            url:pageUrlEnum.login_url
+          })
+        }else {
+          this.charge();
+        }
+      },
+
       showPopup(id) {
         Object.assign(this.popContent, popContents[id]);
         this.popShow = true;
@@ -263,23 +272,6 @@
       popupClose() {
         this.popShow = false;
       },
-      navigateToBuy() {
-        wx.navigateTo({
-          url:pageUrlEnum.buy_vip_url
-        });
-      },
-      getUserInfo() {
-        let params = {};
-        request(
-          MY_USER_INFO,
-          'GET',
-          params
-        ).then(
-          response => {
-            this.userInfo = response;
-          }
-        )
-      }
     },
     computed: {
       ...mapGetters(
@@ -290,13 +282,6 @@
     },
     onShow() {
       this.getChargeProductInfo();
-      if (!this.isLogin) {
-        wx.navigateTo({
-          url:pageUrlEnum.login_url
-        })
-      } else {
-        this.getUserInfo();
-      }
     },
     onUnload() {
       let pages = getCurrentPages();

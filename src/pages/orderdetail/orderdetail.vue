@@ -60,8 +60,9 @@
         </div>
         <div class="order-deliver-info">
           <van-cell-group>
-            <van-cell title="期望时间" :value="orderInfo.expectDeliverTime" />
-            <van-cell title="配送地址" :value="orderInfo.expectDeliverAddress" />
+            <van-cell title="期望时间" :value="orderExpectDeliverTime" />
+            <van-cell v-if=" orderInfo.deliverType === 1 " title="配送地址" :value="orderInfo.expectDeliverAddress" />
+            <van-cell v-else title="商家地址" :value="orderInfo.expectDeliverAddress" />
             <van-cell title="配送服务" :value="deliverDesc" />
           </van-cell-group>
         </div>
@@ -117,7 +118,7 @@
   import Dialog from '../../../static/vant/dialog/dialog';
   import {subscribeMessage} from '@/utils/wxApi';
   import {toast} from '../../utils/toast';
-  import {pageUrlEnum, orderStatusEnum} from '@/utils/enums'
+  import {pageUrlEnum, orderStatusEnum, deliverTypeEnum} from '@/utils/enums'
 
 
   export default {
@@ -268,11 +269,21 @@
       }
     },
     computed: {
+      orderExpectDeliverTime() {
+        if (this.orderInfo.expectDeliverTime) {
+          return this.orderInfo.expectDeliverDate + '  ' + this.orderInfo.expectDeliverTime;
+        }else {
+          return this.orderInfo.expectDeliverDate + '  ' + '全天';
+        }
+      },
+
+
+
       deliverDesc() {
-        if (this.orderInfo.orderStatus === orderStatusEnum.make_done) {
-          return "由骑手：" + this.orderInfo.deliverName + "为您配送" + "联系电话：" + this.orderInfo.deliverPhone;
+        if (this.orderInfo.deliverType === deliverTypeEnum.self_deliver.value) {
+          return "自提";
         } else {
-          return "正在为你安排配送小哥";
+          return "商家配送";
         }
 
       }

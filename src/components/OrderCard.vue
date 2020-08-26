@@ -87,8 +87,8 @@
               ).then(
                 response => {
                   console.log("取消订单响应：", response);
-                  that.orderInfo.orderStatus = orderStatusEnum.cancelled;
-                  that.orderInfo.orderStatusDesc = "已取消";
+                  that.orderInfo.orderStatus = orderStatusEnum.cancelled.value;
+                  that.orderInfo.orderStatusDesc = orderStatusEnum.cancelled.desc;
                 }
               )
             } else {

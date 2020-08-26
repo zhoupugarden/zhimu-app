@@ -312,6 +312,12 @@ export let CouponSourceEnum = {
     desc:"VIP生日专享"
   }
 };
+export let noticeTypeEnum = {
+  product_notice: 1,
+  order_deliver_notice: 2,
+  order_comment_notice: 3,
+  sign_notice: 4
+};
 
 export let couponStatusEnum = {
   valid: {
@@ -419,7 +425,6 @@ export let evaluationEnum = {
     value:5,
     desc:"非常好"
   }
-
 };
 
 
@@ -451,7 +456,6 @@ export let pageUrlEnum = {
   balance_url: "/pages/balance/main",
   coupon_url: "/pages/coupon/main",
   my_vip_url: "/pages/myvip/main",
-  buy_vip_url: "/pages/buyvip/main",
   point_redeem_url: "/pages/pointredeem/main",
   point_help_url: "/pages/pointhelp/main",
   order_submit_url: "/pages/ordersubmit/main",

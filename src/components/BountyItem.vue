@@ -4,8 +4,11 @@
       <div v-if="item.couponRuleType === 1" style="color: white; font-size: 14px; font-weight: bold; padding: 5px;">
         {{"优惠券￥" + item.couponDisAmountValue + "元"}}
       </div>
-      <div v-else style="color: white; font-size: 14px; font-weight: bold; padding: 5px;">
+      <div v-if="item.couponRuleType === 2" style="color: white; font-size: 14px; font-weight: bold; padding: 5px;">
         {{"优惠券" + item.couponDisCountValue + "折"}}
+      </div>
+      <div v-if="item.couponRuleType === 3" style="color: white; font-size: 14px; font-weight: bold; padding: 5px;">
+        {{"免邮券"}}
       </div>
       <div style="color: white; font-size: 12px;padding-bottom: 5px">
         {{item.couponLimitDesc}}

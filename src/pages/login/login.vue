@@ -53,7 +53,7 @@
       },
 
       navigateToUserLogin() {
-        wx.navigateTo({
+        wx.redirectTo({
           url:pageUrlEnum.phone_login_url
         });
       }

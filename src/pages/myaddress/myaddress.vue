@@ -74,8 +74,6 @@
           this.listUserAddress();
         }
       )
-
-
     },
 
     listUserAddress() {
@@ -132,6 +130,7 @@
       let pages = getCurrentPages();
       let prePage = pages[pages.length -2];
       let preUrl = prePage.route;
+      console.log("preUrl", preUrl);
       if ('/' + preUrl === pageUrlEnum.login_url) {
         wx.switchTab({
             url : pageUrlEnum.my_url

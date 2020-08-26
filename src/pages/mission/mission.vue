@@ -127,7 +127,7 @@
   import {request} from "@/utils/request";
   import {subscribeMessage} from '@/utils/wxApi';
   import {toast} from '../../utils/toast';
-  import {pageUrlEnum} from "@/utils/enums";
+  import {pageUrlEnum, noticeTypeEnum} from "@/utils/enums";
 
   export default {
     components: {
@@ -191,7 +191,7 @@
       },
       noticeAdd() {
         let params = {};
-        params.noticeType = 4;
+        params.noticeType = noticeTypeEnum.sign_notice;
         request(
           PRODUCT_NOTICE,
           'post',
@@ -220,14 +220,19 @@
             this.bounty = response.bounty;
             this.daysCount = response.daysCount;
             this.sign = true;
+            let id = 'NiwQZaKrzNmkRIpsgDpHNX_T0_16WD3bn9N5etwFAmA';
+            let tmplIds = [];
+            tmplIds.push(id);
             wx.requestSubscribeMessage({
-              tmplIds: ['NiwQZaKrzNmkRIpsgDpHNX_T0_16WD3bn9N5etwFAmA'],
+              tmplIds,
               success (res) {
-                if (res[tmplIds] === 'accept') {
+                console.log("========", res);
+                if (res[id] === 'accept') {
                   that.noticeAdd();
                 }
               },
               complete(res) {
+                console.log("========", res);
               }
             })
 

@@ -1,6 +1,6 @@
 // 后端接口基础路径
-export const BASE_API_URL = 'https://api.zimcake.com/zm-mini-0.0.1-SNAPSHOT';
-// export const BASE_API_URL = 'http://localhost:8080';
+// export const BASE_API_URL = 'https://api.zimcake.com/zm-mini-0.0.1-SNAPSHOT';
+export const BASE_API_URL = 'http://localhost:8080';
 // export const BASE_API_URL = 'http://47.101.175.89:8080/zm-mini-0.0.1-SNAPSHOT';
 
 // 获取充值配置信息

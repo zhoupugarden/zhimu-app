@@ -462,8 +462,11 @@
 
         ).then(
           response => {
-
             this.couponCanUseList = response.presubmitUser.couponList;
+
+            console.log("this.couponCanUseList", this.couponCanUseList);
+
+
             this.balanceAmount = response.presubmitUser.balanceAmount;
             this.distance = response.presubmitUser.currentDistance;
             this.addressArray = response.presubmitUser.addressList;

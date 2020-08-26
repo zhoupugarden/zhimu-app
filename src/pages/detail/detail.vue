@@ -90,7 +90,7 @@
           </div>
         </van-cell>
         <van-cell>
-          <div class="zm-goods__fresh">
+          <div v-show="productInfo.freshCondition" class="zm-goods__fresh">
             <span style="float: left; font-size: 12px;">保鲜条件：</span>
             <span style="float: left; font-size: 12px;">{{productInfo.freshCondition}}</span>
           </div>
@@ -316,7 +316,7 @@
   import CheckBox from '@/components/CheckBox';
   import {toast} from '../../utils/toast';
   import {subscribeMessage} from '@/utils/wxApi';
-  import {pageUrlEnum, pmsOnlineStatusEnum, deliverTimeEnum} from "@/utils/enums";
+  import {pageUrlEnum, pmsOnlineStatusEnum, noticeTypeEnum, deliverTimeEnum} from "@/utils/enums";
 
   export default {
     components: {
@@ -338,6 +338,7 @@
       commentContent:"",
       commentUrl:"",
       isNoticed:false,
+      productId:null
     }
   },
   //如何支持pathVariable 的请求？？
@@ -371,7 +372,13 @@
         });
 
       }else {
-        this.addProductToCart(this.chooseSKU);
+        let data = this.chooseSKU;
+        data.picUrl = this.productInfo.headPicUrl;
+        data.type = this.productInfo.type;
+        data.categoryId = this.productInfo.categoryId;
+        data.productName = this.productInfo.name;
+        this.addProductToCart(data);
+        console.log("this.chooseSKU", this.chooseSKU);
         this.popShow = false;
         toast("成功添加购物车");
       }
@@ -383,7 +390,7 @@
       });
     },
     onAddCartButton() {
-      if (this.productInfo.stock > 0) {
+      if (this.productInfo.onlineStatus === pmsOnlineStatusEnum.on_line) {
         this.popupText = "加入购物车";
      }else {
         this.popupText = "到货通知";
@@ -406,7 +413,12 @@
         });
 
       }else {
-        this.addProductToCart(this.chooseSKU);
+        let data = this.chooseSKU;
+        data.picUrl = this.productInfo.headPicUrl;
+        data.type = this.productInfo.type;
+        data.categoryId = this.productInfo.categoryId;
+        data.productName = this.productInfo.name;
+        this.addProductToCart(data);
         this.popShow = false;
         wx.switchTab({
           url:pageUrlEnum.cart_url
@@ -414,8 +426,9 @@
       }
     },
     navigateToBuyVip() {
+      console.log("navigateToBuyVip");
       wx.navigateTo({
-        url:pageUrlEnum.buy_vip_url
+        url:pageUrlEnum.star_vip_url
       });
     },
 
@@ -456,6 +469,7 @@
 
     addProductNotice() {
       let params = {};
+      params.noticeType = noticeTypeEnum.product_notice;
       params.productId = this.productInfo.id;
       request(
         PRODUCT_NOTICE,
@@ -486,10 +500,11 @@
 
     onShow() {
           let params = {};
-          params.productId = this.$root.$mp.query.productId;
-          //后续可以将这两个请求合并成一个
+          this.productId = this.$root.$mp.query.productId;
+          params.productId = this.productId;
+      //后续可以将这两个请求合并成一个
           this.getProductDetail(params);
-          this.commentUrl = "/pages/comments/main?productId=" + this.$root.$mp.query.productId;
+          this.commentUrl = "/pages/comments/main?productId=" + this.productId;
 
       //    将数据还原，后续用Obejct.assign
       this.popShow = false;
@@ -520,7 +535,13 @@
       },
 
       attribute() {
-        return "已选择：" + this.chooseSKU.attributeValue +  this.chooseSKU.attributeName;
+        if (this.chooseSKU.attributeValue) {
+          return "已选择：" + this.chooseSKU.attributeValue +  this.chooseSKU.attributeName;
+        }else {
+          return "已选择："  +  this.chooseSKU.attributeName;
+        }
+
+
       },
       vipTip() {
         let freeAmount = this.chooseSKU.salePrice * 0.1;

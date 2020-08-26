@@ -2,25 +2,51 @@
   <div class="product-item-container">
     <!--限时促销-->
     <div style="width: 100%" v-if="productItemInfo.promote === 1004">
-      <van-card
-        :num="productItemInfo.quantity"
-        :price="productItemInfo.salePrice"
-        :desc="productItemInfo.attributeName"
-        :origin-price="productItemInfo.linePrice"
-        :title="productItemInfo.name"
-        :thumb="productItemInfo.imgUrl"
-        custom-class="root-custom-class"
-      ></van-card>
+      <div v-if="productItemInfo.attributeValue">
+        <van-card
+          :num="productItemInfo.quantity"
+          :price="productItemInfo.salePrice"
+          :desc="productItemInfo.attributeValue + productItemInfo.attributeName"
+          :origin-price="productItemInfo.linePrice"
+          :title="productItemInfo.name"
+          :thumb="productItemInfo.imgUrl"
+          custom-class="root-custom-class"
+        ></van-card>
+      </div>
+      <div v-else>
+        <van-card
+          :num="productItemInfo.quantity"
+          :price="productItemInfo.salePrice"
+          :desc="productItemInfo.attributeName"
+          :origin-price="productItemInfo.linePrice"
+          :title="productItemInfo.name"
+          :thumb="productItemInfo.imgUrl"
+          custom-class="root-custom-class"
+        ></van-card>
+      </div>
     </div>
     <div style="width: 100%" v-else>
-      <van-card
-        :num="productItemInfo.quantity"
-        :price="productItemInfo.salePrice"
-        :desc="productItemInfo.attributeValue + productItemInfo.attributeName"
-        :title="productItemInfo.name"
-        :thumb="productItemInfo.imgUrl"
-        custom-class="root-custom-class"
-      ></van-card>
+      <div v-if="productItemInfo.attributeValue">
+        <van-card
+          :num="productItemInfo.quantity"
+          :price="productItemInfo.salePrice"
+          :desc="productItemInfo.attributeValue + productItemInfo.attributeName"
+          :title="productItemInfo.name"
+          :thumb="productItemInfo.imgUrl"
+          custom-class="root-custom-class"
+        ></van-card>
+      </div>
+      <div v-else>
+        <van-card
+          :num="productItemInfo.quantity"
+          :price="productItemInfo.salePrice"
+          :desc="productItemInfo.attributeName"
+          :title="productItemInfo.name"
+          :thumb="productItemInfo.imgUrl"
+          custom-class="root-custom-class"
+        ></van-card>
+      </div>
+
     </div>
 
 

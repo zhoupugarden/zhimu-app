@@ -17,12 +17,6 @@
           label="用户名"
           bind:click-icon="onClickIcon"
         />
-        <van-field
-          :value="basicInfo.phoneNo"
-          readonly
-          clearable
-          label="手机号"
-        />
 
         <div class="sex-flex">
          <div>
@@ -48,7 +42,6 @@
         </div>
         <div @click="chooseBirthDay">
           <van-field
-            readonly
             label="生日"
             placeholder="请输入生日信息，保存后不可修改"
             :value="basicInfo.birthDate"
@@ -118,12 +111,8 @@
       this.valueSex = event.mp.detail;
     },
     chooseBirthDay() {
-      if (!this.disabled) {
         this.datePopShow=true;
-      }else {
-        return;
-      }
-    },
+      },
     confirmPopup(event) {
       const {detail, currentTarget} = event.mp;
       if (!isNaN(detail)) {

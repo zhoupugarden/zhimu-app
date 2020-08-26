@@ -2,7 +2,15 @@
   <div class="freecard-container">
     <img :src="freeItem.fittingUrl" class="freecard-container__pic">
     <div class="freecard-container__name">
-      {{freeItem.fittingName}} ({{extroValue}}) / ￥ 0.00
+      <span>
+        {{freeItem.fittingName}}
+      </span>
+      <span v-show="freeItem.fittingId === 1002">
+        ({{extroValue}})
+      </span>
+      <span>
+         / ￥ 0.00
+      </span>
     </div>
 
     <van-stepper :value="valueCount" @change="fieldChange" />

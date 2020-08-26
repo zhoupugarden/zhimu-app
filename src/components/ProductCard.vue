@@ -45,7 +45,7 @@
   import {request} from "@/utils/request";
   import {toast} from '../utils/toast';
   import {subscribeMessage} from '@/utils/wxApi';
-  import {pmsOnlineStatusEnum} from '@/utils/enums'
+  import {pmsOnlineStatusEnum, noticeTypeEnum} from '@/utils/enums'
 
   export default {
     name: "product-card",
@@ -75,7 +75,6 @@
           let tmplIds = [];
           tmplIds.push(id);
           subscribeMessage(tmplIds,  (res)=> {
-            console.log("res===========",res);
             if (res[id] === 'accept') {
               that.addProductNotice();
             }
@@ -85,7 +84,7 @@
       addProductNotice() {
         let params = {};
         params.productId = this.cardInfo.id;
-        params.noticeType = 1;
+        params.noticeType = noticeTypeEnum.product_notice;
         request(
           PRODUCT_NOTICE,
           'POST',
@@ -233,7 +232,6 @@
         color: white;
         font-size: 14px;
         text-align: center;
-        line-height: 18px;
       }
 
 
