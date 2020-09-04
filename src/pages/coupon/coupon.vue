@@ -94,17 +94,17 @@
       this.getCoupon(data);
     },
 
-    onUnload() {
-      this.active = 0;
-      this.couponList = [];
-      let pages = getCurrentPages();
-      let prePage = pages[pages.length -2];
-      let preUrl = prePage.route;
-        wx.switchTab({
-            url : pageUrlEnum.my_url
-          }
-        )
-    }
+    // onUnload() {
+    //   this.active = 0;
+    //   this.couponList = [];
+    //   let pages = getCurrentPages();
+    //   let prePage = pages[pages.length -2];
+    //   let preUrl = prePage.route;
+    //     wx.switchTab({
+    //         url : pageUrlEnum.my_url
+    //       }
+    //     )
+    // }
 
   }
 </script>

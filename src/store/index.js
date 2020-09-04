@@ -27,14 +27,14 @@ export default new Vuex.Store({
                 removeItem: key => {}
             },
           reducer(val) {
-              console.log("=====createPersistedState========", val);
               return {
                 cartList:val.cartList,
                 merchantInfo:val.merchant.merchantInfo,
                 deliverConfig:val.merchant.deliverConfig,
                 token:val.token,
                 isLogin:val.isLogin,
-                currentLocation:val.currentLocation
+                currentLocation:val.currentLocation,
+                freeList:val.freeList
               }
           }
         })

@@ -121,11 +121,6 @@
         </div>
       </van-popup>
     </div>
-
-
-
-
-
     <van-toast  id="van-toast"/>
   </div>
 </template>
@@ -141,7 +136,6 @@
   import {pageUrlEnum, freeFittingEnum} from "@/utils/enums";
   import {toast} from '@/utils/toast';
 
-  import numeral from 'numeral';
 
   export default {
   components: {

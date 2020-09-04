@@ -14,12 +14,12 @@
     </div>
     <div class="evaluation-score">
       <span style="font-size: 12px;">商品味道：</span>
-      <span style="padding: 0px 10px;"><van-rate color="#e64340" size="14" :value="rateValue" @change="rateChange" /></span>
-      <span style="font-size: 12px; color: #e64340; font-weight: bold;">{{rateDesc}}</span>
+      <span style="padding: 0px 10px;"><van-rate color="#e64340" size="14" :value="params.rateValue" @change="rateChange" /></span>
+      <span style="font-size: 12px; color: #e64340; font-weight: bold;">{{params.rateDesc}}</span>
     </div>
     <div class="evaluation-comment">
       <van-field
-        :value="content"
+        :value="params.content"
         type="textarea"
         placeholder="亲，蛋糕的味道如何，对包装服务等还满意吗？"
         border="true"
@@ -28,7 +28,7 @@
         custom-style="height: 100px;backgroud-color: darkgray;border: 1px solid darkgray;"
       />
     </div>
-    <upload width="120rpx" height="120rpx" max="3" @choosed="choosedPics" @delete="deleted" :srcs= "srcList"></upload>
+    <upload width="120rpx" height="120rpx" max="3" @choosed="choosedPics" @delete="deleted" :srcs= "params.srcList"></upload>
       <div class="point-tip">
         有图评价另有积分加送哦:)
       </div>
@@ -40,8 +40,16 @@
 
   import Upload from '@/components/Upload';
   import {UploadAliyunOss} from "@/utils/UploadAliyunOss";
-  import {request} from "@/utils/request";
   import {evaluationEnum} from '@/utils/enums'
+
+  const  defaultParams = {
+    rateValue: 0,
+    rateDesc:"",
+    srcList:[],
+    content:""
+  };
+
+
 
   export default {
 
@@ -57,10 +65,7 @@
     name: "EvaluationItem",
     data() {
       return {
-        rateValue: 0,
-        rateDesc:"",
-        srcList:[],
-        content:""
+        params : Object.assign({}, defaultParams)
       }
     },
     methods: {
@@ -105,17 +110,16 @@
         let rateResult = Object.values(evaluationEnum).find(
           item => {
             return item.value === data.rateValue;
-
           }
         );
-        this.rateDesc = rateResult.desc;
+        this.params.rateDesc = rateResult.desc;
         this.$emit("rateChange", data);
       },
       contentChange(event) {
         let data = {};
         data.productId = this.itemInfo.productId;
         data.content = event.mp.detail;
-        this.content = event.mp.detail;
+        this.params.content = event.mp.detail;
         this.$emit("fieldChange", data)
       }
     }

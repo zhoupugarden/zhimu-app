@@ -5,27 +5,31 @@
         <img :src="redeemItem.imgUrl" class="redeemdetail-pic-item">
       </div>
       <div class="redeemdetail-header-content">
-        <div style=" font-size: 16px;  font-family: 'Microsoft YaHei'">
-          {{redeemItem.couponName}}
+        <div style=" font-size: 14px;">
+          {{redeemItem.redeemName}}
         </div>
-        <div style="color: #CDA65B; font-size: 14px; font-weight: bold; font-family: 'Microsoft YaHei'">
+        <div style="color: #FFC300; font-size: 14px; font-weight: bold; ">
           {{redeemItem.pointCount}}积分
         </div>
       </div>
     </div>
 
     <div class="redeemdetail-desc">
-      <div style="font-size: 18px; font-weight: bold; font-family: 'Microsoft YaHei'">兑换说明</div>
-      {{redeemItem.redeemDesc}}
+      <div style="font-size: 14px; font-weight: bold; padding-top: 10px;">兑换说明</div>
+      <div style="font-size: 12px;padding-bottom: 10px;">
+        {{redeemItem.redeemDesc}}
+      </div>
     </div>
     <div class="redeemdetail-operation">
-      <div style="width: 60%;  ">
-        需{{redeemItem.pointCount}}积分
+      <div style="font-size: 14px; width: 60%; width: 60%;display: flex;align-items: center;justify-content: center;">
+        <div>
+          需{{redeemItem.pointCount}}积分
+        </div>
       </div>
       <div style="width: 40%">
         <van-button custom-class = "redeem-detail-class"
                     @click="pointRedeem"
-                    type="primary" size="normal">兑换</van-button>
+                    color="#FFC300" size="normal">兑换</van-button>
       </div>
     </div>
 

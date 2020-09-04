@@ -621,8 +621,9 @@
 
       restWxPayAmount() {
         let needPayAmount = this.totalProductPrice + this.deliverValue - this.choosedCoupon.couponValue;
+
         if (needPayAmount > this.balanceAmount) {
-          return needPayAmount - this.balanceAmount;
+          return (needPayAmount - this.balanceAmount).toFixed(2);
         }else {
           return 0.00;
         }

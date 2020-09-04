@@ -4,7 +4,7 @@
       <img :src="redeemItem.imgUrl" class="redeem-item-img">
 
     <div class="redeem-item-name">
-        {{redeemItem.couponName}}
+        {{redeemItem.redeemName}}
     </div>
 
     <div class="redeem-item-point">
@@ -51,7 +51,7 @@
     border-radius: 5px;
   }
   .redeem-item-name {
-    font-size: 16px;
+    font-size: 12px;
     padding: 10px 0px;
   }
   .redeem-item-point {

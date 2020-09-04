@@ -31,7 +31,7 @@
        <div v-show="orderInfo.orderStatus === orderStatusEnum.INIT.value">
          <van-button  color="#000000" size="small" type="primary" @click="payOrder">立即支付</van-button>
        </div>
-      <div v-show="orderInfo.orderStatus === orderStatusEnum.have_signed.value && !orderInfo.isComment">
+      <div v-show="orderInfo.isComment === orderCommentStatusEnum.open_comment.value">
         <van-button color="#000000" size="small" type="primary" @click="navigateToEvaluation">评价得积分</van-button>
       </div>
     </div>
@@ -47,7 +47,7 @@
   import {request} from "@/utils/request";
   import Dialog from '../../static/vant/dialog/dialog';
 
-  import {pageUrlEnum, orderStatusEnum} from "@/utils/enums";
+  import {pageUrlEnum, orderStatusEnum, orderCommentStatusEnum} from "@/utils/enums";
 
   export default {
     props: {
@@ -55,7 +55,8 @@
     },
     data() {
       return {
-        orderStatusEnum:orderStatusEnum
+        orderStatusEnum:orderStatusEnum,
+        orderCommentStatusEnum:orderCommentStatusEnum
       }
     },
     methods: {
@@ -157,6 +158,9 @@
         }
         if (this.orderInfo.orderStatus === orderStatusEnum.deliverd.value) {
           return orderStatusEnum.deliverd.desc;
+        }
+        if (this.orderInfo.orderStatus === orderStatusEnum.self_deliverd.value) {
+          return orderStatusEnum.self_deliverd.desc;
         }
         if (this.orderInfo.orderStatus === orderStatusEnum.have_signed.value) {
           return orderStatusEnum.have_signed.desc;

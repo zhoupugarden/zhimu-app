@@ -17,7 +17,7 @@ export let orderStatusEnum = {
   },
   deliverd: {
     value : 5,
-    desc :"已配送"
+    desc :"正在配送"
   },
   self_deliverd: {
     value : 6,
@@ -49,6 +49,24 @@ export let orderStatusEnum = {
   }
 };
 
+export let orderCommentStatusEnum = {
+  init_comment: {
+    value: 0,
+    desc: "初始状态，不可评价"
+  },
+  open_comment: {
+    value: 1,
+    desc: "等待评价"
+  },
+  commented: {
+    value: 2,
+    desc: "已评价"
+  },
+  close_comment: {
+    value: 99,
+    desc: "关闭评价"
+  },
+};
 
 export let deliverTypeEnum = {
   merchant_deliver: {

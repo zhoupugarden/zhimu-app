@@ -108,23 +108,20 @@
       // 菜单导航的点击事件
       selectMenuAction(index){
         // 设置选中的菜单
-        this.menuIndex = index;
+          this.menuIndex = index;
       },
       // 菜单的滚动事件
       menuListScrollAction(ev){
-
-        console.log("ev.mp.detail.scrollTop", ev.mp.detail.scrollTop);
-        console.log("ev.mp.detail.scrollHeight", ev.mp.detail.scrollHeight);
-
         let top = ev.mp.detail.scrollTop;
         let height = ev.mp.detail.scrollHeight;
         let index = 0;
         if(top >= 0){
-
-          let tail = 2 * 240 + 30;
-
+          //点击最后一个 menuIndex，需要特殊处理 额外加50
+          let tail = 2 * 240 + 30 + 50;
+          console.log("============", top, tail, top+tail, height);
           if (top + tail >= height) {
-            index = this.heightArr.length;
+            index = this.heightArr.length - 1;
+            console.log("============");
           } else {
             for(let i = 0; i < this.heightArr.length; i++){
               let min = 0;
@@ -133,14 +130,18 @@
               }
               let max = 0;
               max = min + this.heightArr[i];
-              if( top>= min && top < max){
+              if(top >= min && top < max){
                 index = i;
                 break;
               }
             }
           }
         }
-        this.selectIndex = index;
+          this.selectIndex = index;
+
+        console.log("this.selectIndex", this.selectIndex);
+        console.log("this.menuIndex", this.menuIndex);
+        console.log("this.heightArr.length", this.heightArr.length);
       },
 
       getProductDetail(data) {

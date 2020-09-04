@@ -14,7 +14,6 @@
       </div>
     </div>
     </div>
-
     <div v-else>
       <van-tabs :active="active"
                 animated
@@ -41,12 +40,12 @@
           </div>
         </van-tab>
       </van-tabs>
-
+      <div style="text-align: center; margin: 10px 0px; font-size: 14px; color: #b2b2b2;" v-show="pageNum === totalPage && !hasNoOrder">
+        没有更多了~
+      </div>
     </div>
     <van-dialog id="van-dialog" />
-
-
-    <div v-show="hasNoOrder && isLogin" style="position: absolute; top: 30%; left:40%;">
+    <div v-show="hasNoOrder" style="position: absolute; top: 30%; left:40%;">
       <div >
         <img src="../../asset/order_2.png" style="width: 40px; height: 40px; padding-left: 10px; ">
       </div>
@@ -54,19 +53,18 @@
         暂无订单
       </div>
     </div>
-
     <van-toast  id="van-toast"/>
   </div>
-
 </template>
 
 <script>
   import OrderCard from '@/components/OrderCard';
-  import {ADD_NEW_ADDRESS,GET_ORDER_LIST,MOCK_WX_PAY} from '@/utils/api';
+  import {GET_ORDER_LIST,MOCK_WX_PAY} from '@/utils/api';
   import {request} from "@/utils/request";
   import { mapGetters} from 'vuex';
   import {toast} from '@/utils/toast';
   import {pageUrlEnum, orderStatusEnum} from "@/utils/enums";
+  import {orderCommentStatusEnum} from "../../utils/enums";
 
   export default {
 
@@ -77,6 +75,7 @@
   data() {
     return {
       active:0,
+      clickIndex:0,
       orderItems:[],
       waitCommentItems:[],
       waitPayItems:[],
@@ -84,27 +83,30 @@
       pageNum:1,
       totalPage:1,
       orderStatus:"",
+      orderCommentStatus: "",
+      hasNoOrder: false
     }
 
   },
   methods: {
     onChange(event) {
+      console.log("event", event);
       this.pageNum = 1;
-      this.active = event.mp.detail.index;
+      this.clickIndex = event.mp.detail.index;
       let params = {};
       params.pageNum = this.pageNum;
       params.pageSize = this.pageSize;
-      if (this.active === 0) {
-        this.orderStatus = "";
-        params.orderStatus = this.orderStatus;
+
+      if (this.clickIndex === 0) {
+        params = {};
       }
-      if (this.active === 1) {
-        this.orderStatus = orderStatusEnum.have_signed.value;
-        params.orderStatus = this.orderStatus;
+      if (this.clickIndex === 1) {
+        params = {};
+        params.orderCommentStatus = orderCommentStatusEnum.open_comment.value;
       }
-      if (this.active === 2) {
-        this.orderStatus = orderStatusEnum.INIT.value;
-        params.orderStatus = this.orderStatus;
+      if (this.clickIndex === 2) {
+        params = {};
+        params.orderStatus = orderStatusEnum.INIT.value;
       }
 
       this.getOrderListByUserId(params);
@@ -139,11 +141,20 @@
         params
       ).then(
         response => {
+          let orderList = response.list;
+          let data = orderList;
           if (params.pageNum > 1) {
-            this.orderItems = this.orderItems.concat(response.list);
+            this.orderItems = this.orderItems.concat(data);
           } else {
-            this.orderItems = response.list;
+            this.orderItems = data;
             this.totalPage = response.totalPage;
+          }
+          this.active = this.clickIndex;
+          console.log("this.orderItems.length", this.orderItems.length);
+          if (this.orderItems.length === 0) {
+            this.hasNoOrder = true;
+          }else {
+            this.hasNoOrder = false;
           }
         }
       )
@@ -156,24 +167,16 @@
           'isLogin'
         ]
       ),
-      hasNoOrder() {
-        if (this.orderItems.length == 0) {
-          return true;
-        }
-        return false;
-      }
 
     },
     onShow() {
     if (this.isLogin) {
       let params = {};
       this.getOrderListByUserId(params);
-      this.active = 0;
     }
     },
     onReachBottom() {
       //要做个判断， 如果size已经小于10， 则不再分页查询
-      console.log("到达底部");
       if (this.pageNum === this.totalPage && this.pageNum !== 1) {
         toast("没有更多订单");
         return;
@@ -181,7 +184,6 @@
       if (this.pageNum === this.totalPage && this.pageNum === 1) {
         return;
       }
-
       let params = {};
       params.pageSize = this.pageSize;
       params.pageNum = this.pageNum + 1;
@@ -189,7 +191,9 @@
       if (null !== this.orderStatus) {
         params.orderStatus = this.orderStatus;
       }
-
+      if (null !== this.orderCommentStatus) {
+        params.orderCommentStatus = this.orderCommentStatus;
+      }
       this.getOrderListByUserId(params);
     },
 
